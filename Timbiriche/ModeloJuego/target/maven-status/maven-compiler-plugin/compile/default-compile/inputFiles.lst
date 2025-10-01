@@ -1,0 +1,10 @@
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Cuadro.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Jugador.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Linea.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/ManejadorTurnos.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Partida.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Punto.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Entidades/Tablero.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Fachada/PartidaFachada.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Observer/ObservableTurnos.java
+/Users/victoria/NetBeansProjects/Timbiriche/ModeloJuego/src/main/java/Observer/ObservadorTurnos.java

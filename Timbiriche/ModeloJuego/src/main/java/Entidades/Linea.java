@@ -1,0 +1,44 @@
+package Entidades;
+
+import java.awt.Color;
+
+/**
+ *
+ * @author victoria
+ */
+public class Linea {
+
+    private Punto origen;
+    private Punto destino;
+    private Color color;
+
+    public Linea(Punto origen, Punto destino) {
+        this.origen = origen;
+        this.destino = destino;
+    }
+
+    public Punto getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(Punto origen) {
+        this.origen = origen;
+    }
+
+    public Punto getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Punto destino) {
+        this.destino = destino;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+}

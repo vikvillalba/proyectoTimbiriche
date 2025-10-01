@@ -1,0 +1,10 @@
+Entidades/Tablero.class
+Fachada/PartidaFachada.class
+Observer/ObservableTurnos.class
+Entidades/Cuadro.class
+Entidades/ManejadorTurnos.class
+Entidades/Partida.class
+Observer/ObservadorTurnos.class
+Entidades/Punto.class
+Entidades/Jugador.class
+Entidades/Linea.class
