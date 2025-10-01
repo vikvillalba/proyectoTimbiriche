@@ -20,8 +20,8 @@ public class Partida implements PartidaFachada{
     public Partida() {
         // tablero mock
         this.tablero = new Tablero(10, 10);
-        Jugador jugador1 = new Jugador("sol"); // cambiar cuando se arreglen los constructores
-        Jugador jugador2 = new Jugador("pablo");
+        Jugador jugador1 = new Jugador("sol", AvatarEnum.JUGADOR1, null, 0, false); // cambiar cuando se arreglen los constructores
+        Jugador jugador2 = new Jugador("pablo", AvatarEnum.JUGADOR2, null, 0, false);
         this.jugadores = Arrays.asList(jugador1, jugador2);
         this.turnos = new ManejadorTurnos(jugadores);
     }

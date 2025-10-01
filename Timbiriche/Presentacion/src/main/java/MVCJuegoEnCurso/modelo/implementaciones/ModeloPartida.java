@@ -13,8 +13,11 @@ import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import Observer.ObservadorTurnos;
 import java.awt.Color;
+import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import objetosPresentables.JugadorPresentable;
 import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
@@ -29,6 +32,8 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
     private ObservadorTablero observadorTablero;
+    private static final Map<String, Color> COLORES = new HashMap<>();
+    private static final Map<String, Image> AVATARES = new HashMap<>();
 
     public ModeloPartida(PartidaFachada partida) {
         this.partida = partida;
@@ -40,21 +45,34 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         return jugadoresEntidadAPresentable(partida.getJugadores());
 
     }
+    
+    static {
+        // Mapa con los nombres que se usan
+        COLORES.put("rojo_pastel", Color.RED);
+        COLORES.put("azul_pastel", Color.BLUE);
+        COLORES.put("verde_pastel", Color.GREEN);
+        COLORES.put("amarillo_pastel", Color.YELLOW);
+        COLORES.put("magenta", Color.MAGENTA);
+        COLORES.put("naranja_pastel", Color.ORANGE);
+        COLORES.put("rosa_pastel", Color.PINK);
+        COLORES.put("azul_marino", Color.BLUE);
+    }
 
     private List<JugadorPresentable> jugadoresEntidadAPresentable(List<Jugador> jugadores) {
         List<JugadorPresentable> jugadoresVista = new ArrayList<>();
 
         for (Jugador jugador : jugadores) {
+            
             JugadorPresentable jugadorVista = new JugadorPresentable(jugador.getNombre(),
-                    null, //jugador.getAvatar(),
-                    null, //jugador.getColor(),
+                    null,
+                    null,
                     jugador.getScore(),
                     jugador.isTurno());
             jugadoresVista.add(jugadorVista);
         }
         return jugadoresVista;
     }
-
+    
     // traduce a entidad y llama al validar de fachada
     @Override
     public boolean unirPuntos(PuntoPresentable[] puntos) {
@@ -94,7 +112,8 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         for (Linea linea : lineasTablero) {
             PuntoPresentable origen = new PuntoPresentable(linea.getOrigen().getX(), linea.getOrigen().getY());
             PuntoPresentable destino = new PuntoPresentable(linea.getDestino().getX(), linea.getDestino().getY());
-            LineaPresentable lineaVista = new LineaPresentable(origen, destino, linea.getColor());
+            
+            LineaPresentable lineaVista = new LineaPresentable(origen, destino,COLORES.get(linea.getColor())); //Solo toma el color del  primero
             lineasVista.add(lineaVista);
 
         }

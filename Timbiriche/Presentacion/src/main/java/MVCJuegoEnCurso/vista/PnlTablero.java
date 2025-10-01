@@ -4,10 +4,15 @@ import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
 import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
@@ -30,32 +35,53 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
         this.controlador = controlador;
         this.tablero = modelo.getTablero();
 
-        setLayout(null);
         this.setMinimumSize(new Dimension(600, 600));
         this.setPreferredSize(new Dimension(600, 600));
-        this.setMaximumSize(new Dimension(600, 600));
 
         cargarPuntos();
 
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Restablece la posición de los puntos
+                recalcularPosicionesPuntos();
+                repaint();
+            }
+        });
     }
 
     private void cargarPuntos() {
-        int alto = 600;
-        int ancho = 600;
+        // Añade los paneles PnlPunto al tablero
+        for (PuntoPresentable punto : tablero.getPuntos()) {
+            PnlPunto pnl = new PnlPunto(punto, this);
+            this.add(pnl);
+        }
+        recalcularPosicionesPuntos(); // Se manda a llamar otra vez en caso de cambios
+    }
+
+    private void recalcularPosicionesPuntos() {
+        // Se obtiene el tamaño actual del panelTablero
+        int alto = this.getHeight();
+        int ancho = this.getWidth();
         int filas = this.tablero.getAlto();
         int columnas = this.tablero.getAncho();
 
+        //Calcula el espacio que abarca cada panel de los puntos en el tablero xd
         int anchoPunto = ancho / columnas;
         int altoPunto = alto / filas;
+        int diametro = 10;
 
-        for (PuntoPresentable punto : tablero.getPuntos()) {
-            PnlPunto pnl = new PnlPunto(punto, this); // acomoda los puntos de manera dinámica en el tablero sin importar
-            int diametro = 10;
+        // Recorre todos los PnlPunto que ya estaban
+        for (Component comp : this.getComponents()) {
+            PnlPunto pnl = (PnlPunto) comp;
+            PuntoPresentable punto = pnl.getPunto();
+
+            // Recalcula la posición del nuevo tamaño del frame
             int x = punto.getX() * anchoPunto + anchoPunto / 2 - diametro / 2;
             int y = punto.getY() * altoPunto + altoPunto / 2 - diametro / 2;
 
+            // Nuevos límites :p
             pnl.setBounds(x, y, diametro, diametro);
-            add(pnl);
         }
     }
 
@@ -81,10 +107,10 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
         g2.setStroke(new BasicStroke(3));
 
         for (LineaPresentable linea : tablero.getLineas()) {
-            //g2.setColor(linea.getColor());
+//            g2.setColor(linea.getColor());
             g2.setColor(Color.BLUE);
-            PuntoPresentable origen = linea.getOrigen();
-            PuntoPresentable destino = linea.getDestino();
+//            PuntoPresentable origen = linea.getOrigen();
+//            PuntoPresentable destino = linea.getDestino();
             int anchoPunto = getWidth() / tablero.getAncho();
             int altoPunto = getHeight() / tablero.getAlto();
 

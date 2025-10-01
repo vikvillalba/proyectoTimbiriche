@@ -12,7 +12,7 @@ public class Tablero {
       private Punto[][] puntos;
     private int alto;
     private int ancho;
-    private String color; // enum para el color
+    private ColorEnum color; // enum para el color
     private List<Linea> lineasExistentes;
     private List<Cuadro> cuadrosExistentes; // los cuadros ya se crean pero están vacíos
     private List<Cuadro> cuadrosCompletados; // cuando se llenan
@@ -119,7 +119,7 @@ public class Tablero {
         return ancho;
     }
 
-    public String getColor() {
+    public ColorEnum getColor() {
         return color;
     }
 

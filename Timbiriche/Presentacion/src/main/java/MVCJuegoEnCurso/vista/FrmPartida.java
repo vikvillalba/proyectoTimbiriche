@@ -26,6 +26,7 @@ public class FrmPartida extends JFrame {
 
         add(tablero, BorderLayout.CENTER);
         add(jugadores, BorderLayout.WEST);
+        setSize(1050, 640);
     }
 
     public ObservadorTablero getObservadorTablero() {

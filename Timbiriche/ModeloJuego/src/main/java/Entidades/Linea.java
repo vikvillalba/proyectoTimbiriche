@@ -10,7 +10,8 @@ public class Linea {
 
     private Punto origen;
     private Punto destino;
-    private Color color;
+    private ColorEnum color;
+    private Jugador dueño;
 
     public Linea(Punto origen, Punto destino) {
         this.origen = origen;
@@ -33,12 +34,11 @@ public class Linea {
         this.destino = destino;
     }
 
-    public Color getColor() {
+    public ColorEnum getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColor(ColorEnum color) {
+        this.color = dueño.getColor();
     }
-
 }
