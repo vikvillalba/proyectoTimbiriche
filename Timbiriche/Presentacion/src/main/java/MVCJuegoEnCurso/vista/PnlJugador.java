@@ -19,16 +19,17 @@ public class PnlJugador extends JPanel {
         initComponents();
         this.jugador = jugador;
         cargarDatos();
-        enTurno();
+        //enTurno();
 
     }
 
     public void cargarDatos() {
         Image avatar = jugador.getAvatar();
-        //this.lblAvatar.setIcon(new ImageIcon(avatar));
+        this.lblAvatar.setIcon(new ImageIcon(avatar));
         this.lblNombre.setText(jugador.getNombre());
+        this.lblNombre.setForeground(jugador.getColor());
         this.lblPuntos.setText(String.valueOf(jugador.getScore()));
-        enTurno();
+        //enTurno();
 
     }
 
@@ -64,13 +65,12 @@ public class PnlJugador extends JPanel {
         jLabel3 = new javax.swing.JLabel();
         lblAvatar = new javax.swing.JLabel();
 
+        lblNombre.setForeground(new java.awt.Color(204, 204, 255));
         lblNombre.setText("NombreJugador");
 
         lblPuntos.setText("00");
 
         jLabel3.setText("puntos");
-
-        lblAvatar.setText("avatar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -81,7 +81,7 @@ public class PnlJugador extends JPanel {
                 .addComponent(lblAvatar)
                 .addGap(109, 109, 109)
                 .addComponent(lblNombre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()

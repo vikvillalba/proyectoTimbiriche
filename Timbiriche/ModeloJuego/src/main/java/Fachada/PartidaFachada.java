@@ -3,14 +3,14 @@ package Fachada;
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
-import Observer.ObservableTurnos;
 import java.util.List;
+import Observer.Observable;
 
 /**
  *
  * @author victoria
  */
-public interface PartidaFachada extends ObservableTurnos{
+public interface PartidaFachada extends Observable{
     Punto[][] getTablero();
     List<Linea> getLineasTablero();
     Punto[] seleccionarPuntos(Punto origen, Punto destino);
@@ -18,4 +18,6 @@ public interface PartidaFachada extends ObservableTurnos{
     List<Jugador> getJugadores();
     void actualizarTurno();
     Punto getPuntoTablero(int x, int y);
+    
+   
 }

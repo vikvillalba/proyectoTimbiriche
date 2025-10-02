@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package Entidades;
 
 /**
@@ -9,12 +5,13 @@ package Entidades;
  * @author pablo
  */
 public enum AvatarEnum {
-    JUGADOR1,
-    JUGADOR2,
-    JUGADOR3,
-    JUGADOR4,
-    JUGADOR5,
-    JUGADOR6,
-    JUGADOR7,
-    JUGADOR8,
+    TIBURON_BALLENA,
+    TIBURON_MARTILLO,
+    TIBURON_BLANCO,
+    TIBURON_SMILE_BLUE,
+    TIBURON_SMILE_GRAY,
+    TIBURON_JUMP_BLUE,
+    TIBURON_JUMP_GRAY,
+    TIBURON_STILL_BLUE,
+    TIBURON_STILL_GRAY
 }

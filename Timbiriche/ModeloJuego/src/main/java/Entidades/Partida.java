@@ -1,9 +1,8 @@
 package Entidades;
 
 import Fachada.PartidaFachada;
+import Observer.ObservadorInicio;
 import Observer.ObservadorTurnos;
-import java.awt.Color;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,21 +10,20 @@ import java.util.Objects;
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada{
+public class Partida implements PartidaFachada {
+
     private Tablero tablero;
     private ManejadorTurnos turnos;
     private ObservadorTurnos observadorTurnos;
+    private ObservadorInicio observadorInicioJuego;
     private List<Jugador> jugadores;
 
-    public Partida() {
+    public Partida(List<Jugador> jugadores, int alto, int ancho) {
         // tablero mock
-        this.tablero = new Tablero(10, 10);
-        Jugador jugador1 = new Jugador("sol", AvatarEnum.JUGADOR1, null, 0, false); // cambiar cuando se arreglen los constructores
-        Jugador jugador2 = new Jugador("pablo", AvatarEnum.JUGADOR2, null, 0, false);
-        this.jugadores = Arrays.asList(jugador1, jugador2);
-        this.turnos = new ManejadorTurnos(jugadores);
+        this.jugadores = jugadores;
+        this.tablero = new Tablero(alto, ancho);
+        this.turnos = new ManejadorTurnos(this.jugadores);
     }
-    
 
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino) {
@@ -52,7 +50,7 @@ public class Partida implements PartidaFachada{
             return null;
         }
         // si se puede realizar la jugada:
-         return seleccionarPuntos(origen, destino);
+        return seleccionarPuntos(origen, destino);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class Partida implements PartidaFachada{
 
     @Override
     public Punto getPuntoTablero(int x, int y) {
-       return tablero.getPunto(x, y);
+        return tablero.getPunto(x, y);
     }
 
     @Override
@@ -90,5 +88,15 @@ public class Partida implements PartidaFachada{
     public void agregarObservadorTurnos(ObservadorTurnos ob) {
         this.observadorTurnos = ob;
     }
-    
+
+    @Override
+    public void notificarObservadorInicioJuego() {
+        observadorInicioJuego.iniciarJuego();
+    }
+
+    @Override
+    public void agregarObservadorInicioJuego(ObservadorInicio ob) {
+        observadorInicioJuego = ob;
+    }
+
 }

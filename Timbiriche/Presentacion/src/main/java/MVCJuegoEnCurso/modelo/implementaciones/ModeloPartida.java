@@ -1,6 +1,5 @@
 package MVCJuegoEnCurso.modelo.implementaciones;
 
-
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
@@ -14,24 +13,29 @@ import MVCJuegoEnCurso.observer.ObservadorTablero;
 import Observer.ObservadorTurnos;
 import java.awt.Color;
 import java.awt.Image;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import objetosPresentables.JugadorPresentable;
 import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
+import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import Observer.ObservadorInicio;
 
 /**
  *
  * @author victoria
  */
-public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEscritura, IModeloTableroLectura, ObservablePartida, ObservadorTurnos {
+public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEscritura, IModeloTableroLectura, ObservablePartida, ObservadorTurnos, ObservadorInicio {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
     private ObservadorTablero observadorTablero;
+    private ObservadorInicioPartida observadorInicioJuego;
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
@@ -45,34 +49,65 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         return jugadoresEntidadAPresentable(partida.getJugadores());
 
     }
-    
+
     static {
         // Mapa con los nombres que se usan
-        COLORES.put("rojo_pastel", Color.RED);
-        COLORES.put("azul_pastel", Color.BLUE);
-        COLORES.put("verde_pastel", Color.GREEN);
-        COLORES.put("amarillo_pastel", Color.YELLOW);
-        COLORES.put("magenta", Color.MAGENTA);
-        COLORES.put("naranja_pastel", Color.ORANGE);
-        COLORES.put("rosa_pastel", Color.PINK);
-        COLORES.put("azul_marino", Color.BLUE);
+        COLORES.put("rojo", new Color(220, 20, 60));
+        COLORES.put("azul_pastel", new Color(135, 206, 235));
+        COLORES.put("verde", new Color(143, 188, 139));
+        COLORES.put("amarillo", new Color(242, 201, 104));
+        COLORES.put("magenta", new Color(201, 91, 170));
+        COLORES.put("naranja", new Color(240, 120, 77));
+        COLORES.put("rosa_pastel", new Color(247, 163, 176));
+        COLORES.put("azul_marino", new Color(49, 49, 125));
+        COLORES.put("morado", new Color(147, 112, 219));
+
+        // mapa con los avatares disponibles
+
+        AVATARES.put("tiburon_ballena", cargarAvatar("tiburonBallena.png"));
+        AVATARES.put("tiburon_blanco", cargarAvatar("tiburonBlanco.png"));
+        AVATARES.put("tiburon_martillo", cargarAvatar("tiburonMartillo.png"));
+        AVATARES.put("tiburon_smile_blue", cargarAvatar("tiburonSmileBlue.png"));
+        AVATARES.put("tiburon_smile_gray", cargarAvatar("tiburonSmileGray.png"));
+        AVATARES.put("tiburon_jump_blue", cargarAvatar("tiburonJumpBlue.png"));
+        AVATARES.put("tiburon_jump_gray", cargarAvatar("tiburonJumpGray.png"));
+        AVATARES.put("tiburon_still_blue", cargarAvatar("tiburonStillBlue.png"));
+        AVATARES.put("tiburon_still_gray", cargarAvatar("tiburonStillGray.png"));
+    }
+
+    private static Image cargarAvatar(String nombreArchivo) {
+        URL url = ModeloPartida.class.getResource("/avatares/" + nombreArchivo);
+        if (url != null) {
+            return new ImageIcon(url).getImage();
+        } else {
+            System.out.println("No se encontró la imagen: " + nombreArchivo);
+            return null; 
+        }
     }
 
     private List<JugadorPresentable> jugadoresEntidadAPresentable(List<Jugador> jugadores) {
         List<JugadorPresentable> jugadoresVista = new ArrayList<>();
 
         for (Jugador jugador : jugadores) {
-            
+
             JugadorPresentable jugadorVista = new JugadorPresentable(jugador.getNombre(),
-                    null,
-                    null,
+                    obtenerAvatar(jugador.getAvatar().toString()),
+                    obtenerColor(jugador.getColor().toString()),
                     jugador.getScore(),
                     jugador.isTurno());
             jugadoresVista.add(jugadorVista);
         }
         return jugadoresVista;
     }
-    
+
+    private Color obtenerColor(String colorEnum) {
+        return COLORES.get(colorEnum.toLowerCase());
+    }
+
+    private Image obtenerAvatar(String avatarEnum) {
+        return AVATARES.get(avatarEnum.toLowerCase());
+    }
+
     // traduce a entidad y llama al validar de fachada
     @Override
     public boolean unirPuntos(PuntoPresentable[] puntos) {
@@ -112,8 +147,8 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         for (Linea linea : lineasTablero) {
             PuntoPresentable origen = new PuntoPresentable(linea.getOrigen().getX(), linea.getOrigen().getY());
             PuntoPresentable destino = new PuntoPresentable(linea.getDestino().getX(), linea.getDestino().getY());
-            
-            LineaPresentable lineaVista = new LineaPresentable(origen, destino,COLORES.get(linea.getColor())); //Solo toma el color del  primero
+
+            LineaPresentable lineaVista = new LineaPresentable(origen, destino, COLORES.get(linea.getColor())); //Solo toma el color del  primero
             lineasVista.add(lineaVista);
 
         }
@@ -151,6 +186,17 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
     @Override
     public void agregarObservadorJugadores(ObservadorJugadores ob) {
         this.observadorJugadores = ob;
+    }
+
+
+    @Override
+    public void agregarObservadorInicioJuego(ObservadorInicioPartida ob) {
+       this.observadorInicioJuego = ob;
+    }
+
+    @Override
+    public void iniciarJuego() {
+        observadorInicioJuego.mostrarJuego();
     }
 
 }

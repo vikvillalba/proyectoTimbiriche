@@ -1,13 +1,11 @@
 package org.itson.presentacion;
 
-import Entidades.Partida;
-import Fachada.PartidaFachada;
-import MVCJuegoEnCurso.controlador.ControladorPartida;
-import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
-import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
-import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
-import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
-import MVCJuegoEnCurso.vista.FrmPartida;
+import Entidades.AvatarEnum;
+import Entidades.ColorEnum;
+import Entidades.Jugador;
+import java.util.Arrays;
+import java.util.List;
+import partidaFactory.PartidaFactory;
 
 /**
  *
@@ -16,20 +14,12 @@ import MVCJuegoEnCurso.vista.FrmPartida;
 public class Presentacion {
 
     public static void main(String[] args) {
-        PartidaFachada partidaFachada = new Partida();
-        ModeloPartida modeloPartida = new ModeloPartida(partidaFachada);
 
-        IModeloJugadoresLectura modeloJugadoresLectura = modeloPartida;
-        IModeloTableroLectura modeloTableroLectura = modeloPartida;
-        IModeloPartidaEscritura modeloPartidaEscritura = modeloPartida;
-
-        ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura);
-        FrmPartida partida = new FrmPartida(modeloJugadoresLectura, modeloTableroLectura, controlador);
-
-        partidaFachada.agregarObservadorTurnos(modeloPartida);
-        modeloPartida.agregarObservadorJugadores(partida.getObservadorJugadores());
-        modeloPartida.agregarObservadorTablero(partida.getObservadorTablero());
-
-        partida.setVisible(true);
+        Jugador jugador1 = new Jugador("sol", AvatarEnum.TIBURON_BALLENA, ColorEnum.MAGENTA, 0, false); // cambiar cuando se arreglen los constructores
+        Jugador jugador2 = new Jugador("pablo", AvatarEnum.TIBURON_MARTILLO, ColorEnum.AZUL_PASTEL, 0, false);
+        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
+        int alto = 10;
+        int ancho = 10;
+        PartidaFactory.iniciarPartida(jugadores, alto, ancho);
     }
 }

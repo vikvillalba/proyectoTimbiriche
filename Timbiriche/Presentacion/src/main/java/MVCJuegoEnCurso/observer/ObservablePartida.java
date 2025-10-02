@@ -12,4 +12,5 @@ public interface ObservablePartida {
     void notificarObservadorJugadores(List<Jugador> jugadores);
     void agregarObservadorTablero(ObservadorTablero ob); 
     void agregarObservadorJugadores(ObservadorJugadores ob); 
+    void agregarObservadorInicioJuego(ObservadorInicioPartida ob);
 }

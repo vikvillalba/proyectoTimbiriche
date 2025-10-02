@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package Entidades;
 
 /**
@@ -16,5 +12,6 @@ public enum ColorEnum {
     ROJO_PASTEL,
     AMARILLO_PASTEL,
     NARANJA__PASTEL,
-    AZUL_MARINO
+    AZUL_MARINO,
+    MORAS
 }

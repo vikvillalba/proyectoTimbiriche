@@ -7,7 +7,7 @@ package Entidades;
 public class Jugador {
 
     private String nombre;
-    private AvatarEnum avatar; //enums para color y avatar (tenemos 8 avatars nomas)
+    private AvatarEnum avatar; //enums para color y avatar (tenemos 9 avatars nomas)
     private ColorEnum color;
     private int score;
     private boolean turno;

@@ -8,12 +8,13 @@ import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 
 /**
  *
  * @author victoria
  */
-public class FrmPartida extends JFrame {
+public class FrmPartida extends JFrame implements ObservadorInicioPartida {
 
     private PnlTablero tablero;
     private PnlJugadores jugadores;
@@ -50,6 +51,11 @@ public class FrmPartida extends JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    public void mostrarJuego() {
+       this.setVisible(true);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
