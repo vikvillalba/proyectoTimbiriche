@@ -63,7 +63,6 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         COLORES.put("morado", new Color(147, 112, 219));
 
         // mapa con los avatares disponibles
-
         AVATARES.put("tiburon_ballena", cargarAvatar("tiburonBallena.png"));
         AVATARES.put("tiburon_blanco", cargarAvatar("tiburonBlanco.png"));
         AVATARES.put("tiburon_martillo", cargarAvatar("tiburonMartillo.png"));
@@ -81,7 +80,7 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
             return new ImageIcon(url).getImage();
         } else {
             System.out.println("No se encontró la imagen: " + nombreArchivo);
-            return null; 
+            return null;
         }
     }
 
@@ -116,15 +115,29 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
 
         if (puntosSeleccionados != null) {
             notificarObservadorTablero();
+            //si en la jugada se realizo un cuadrado jugador repite turno
+            if ((realizoCudrado())) {
+                //cambio de turno
+                actualizarTurnos();
+
+            }
             return true;
+
         }
         return false;
+    }
+
+    //metodo validar si se realizo un cuadrado
+    public boolean realizoCudrado() {
+        return true;
     }
 
     // llama a fachada q actualice los turnos
     @Override
     public void actualizarTurnos() {
         partida.actualizarTurno();
+        //cambia el estado de turno en la lista de jugadores 
+        notificarObservadorJugadores(partida.getJugadores());
     }
 
     // traduce a presentable
@@ -188,10 +201,9 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
         this.observadorJugadores = ob;
     }
 
-
     @Override
     public void agregarObservadorInicioJuego(ObservadorInicioPartida ob) {
-       this.observadorInicioJuego = ob;
+        this.observadorInicioJuego = ob;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Partida implements PartidaFachada {
         // tablero mock
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
-        this.turnos = new ManejadorTurnos(this.jugadores);
+        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
     }
 
     @Override
@@ -51,6 +51,7 @@ public class Partida implements PartidaFachada {
         }
         // si se puede realizar la jugada:
         return seleccionarPuntos(origen, destino);
+
     }
 
     @Override
