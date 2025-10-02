@@ -107,10 +107,8 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
         g2.setStroke(new BasicStroke(3));
 
         for (LineaPresentable linea : tablero.getLineas()) {
-//            g2.setColor(linea.getColor());
-            g2.setColor(Color.BLUE);
-//            PuntoPresentable origen = linea.getOrigen();
-//            PuntoPresentable destino = linea.getDestino();
+            g2.setColor(linea.getColor());
+
             int anchoPunto = getWidth() / tablero.getAncho();
             int altoPunto = getHeight() / tablero.getAlto();
 

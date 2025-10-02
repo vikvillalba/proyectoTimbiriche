@@ -19,7 +19,7 @@ public class PnlJugador extends JPanel {
         initComponents();
         this.jugador = jugador;
         cargarDatos();
-        //enTurno();
+        enTurno();
 
     }
 
@@ -29,7 +29,7 @@ public class PnlJugador extends JPanel {
         this.lblNombre.setText(jugador.getNombre());
         this.lblNombre.setForeground(jugador.getColor());
         this.lblPuntos.setText(String.valueOf(jugador.getScore()));
-        //enTurno();
+        enTurno();
 
     }
 
