@@ -24,7 +24,9 @@ public class ControladorPartida {
             boolean realizado = modelo.unirPuntos(puntosSeleccionados); // ya se seleccionaron los 2 puntos lol
             puntosSeleccionados[0] = null;
             puntosSeleccionados[1] = null;
+            actualizarTurno();
             return realizado;
+            
         }
         return false;
     }

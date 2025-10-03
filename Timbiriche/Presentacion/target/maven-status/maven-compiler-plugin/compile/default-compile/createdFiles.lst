@@ -16,6 +16,7 @@ MVCJuegoEnCurso\modelo\interfaces\IModeloTableroLectura.class
 MVCJuegoEnCurso\vista\PnlPunto.class
 MVCJuegoEnCurso\vista\PnlTablero$1.class
 objetosPresentables\TableroPresentable.class
+objetosPresentables\CuadroPresentable.class
 MVCJuegoEnCurso\observer\ObservadorInicioPartida.class
 MVCJuegoEnCurso\vista\PnlJugadores.class
 MVCJuegoEnCurso\observer\ObservadorTablero.class

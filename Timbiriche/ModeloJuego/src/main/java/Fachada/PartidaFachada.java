@@ -1,5 +1,6 @@
 package Fachada;
 
+import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
@@ -13,7 +14,8 @@ import Observer.Observable;
 public interface PartidaFachada extends Observable{
     Punto[][] getTablero();
     List<Linea> getLineasTablero();
-    Punto[] seleccionarPuntos(Punto origen, Punto destino);
+    List<Cuadro> getCuadrosTablero();
+    Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual);
     Punto[] validarPuntos(Punto origen, Punto destino);
     List<Jugador> getJugadores();
     void actualizarTurno();

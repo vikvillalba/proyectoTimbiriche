@@ -9,12 +9,14 @@ import java.util.List;
 public class TableroPresentable {
     private List<PuntoPresentable> puntos;
     private List<LineaPresentable> lineas;
+    private List <CuadroPresentable> cuadros; //tablero tiene los cuadro para poderlo llenar
     private int alto;
     private int ancho;
 
-    public TableroPresentable(List<PuntoPresentable> puntos, List<LineaPresentable> lineas, int alto, int ancho) {
+    public TableroPresentable(List<PuntoPresentable> puntos, List<LineaPresentable> lineas, List<CuadroPresentable> cuadros, int alto, int ancho) {
         this.puntos = puntos;
         this.lineas = lineas;
+        this.cuadros = cuadros;
         this.alto = alto;
         this.ancho = ancho;
     }
@@ -34,6 +36,15 @@ public class TableroPresentable {
     public int getAncho() {
         return ancho;
     }
+
+    public List<CuadroPresentable> getCuadros() {
+        return cuadros;
+    }
+
+    public void setCuadros(List<CuadroPresentable> cuadros) {
+        this.cuadros = cuadros;
+    }
+    
 
 
     

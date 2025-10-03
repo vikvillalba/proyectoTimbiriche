@@ -10,8 +10,10 @@ import java.util.Objects;
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada {
-
+public class Partida implements PartidaFachada, ObservadorTurnos{
+    
+    
+    
     private Tablero tablero;
     private ManejadorTurnos turnos;
     private ObservadorTurnos observadorTurnos;
@@ -23,11 +25,14 @@ public class Partida implements PartidaFachada {
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
         this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
+        
+        // Registrar la partida como observador de turnos
+        this.turnos.agregarObservadorTurnos(this);
     }
 
     @Override
-    public Punto[] seleccionarPuntos(Punto origen, Punto destino) {
-        tablero.unirPuntos(origen, destino);
+    public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
+        tablero.unirPuntos(origen, destino, jugadorActual); // <-- pasa jugador
         return new Punto[]{origen, destino};
     }
 
@@ -50,7 +55,7 @@ public class Partida implements PartidaFachada {
             return null;
         }
         // si se puede realizar la jugada:
-        return seleccionarPuntos(origen, destino);
+        return seleccionarPuntos(origen, destino, turnos.getJugadorEnTurno());
 
     }
 
@@ -62,7 +67,7 @@ public class Partida implements PartidaFachada {
 
     @Override
     public List<Jugador> getJugadores() {
-        return this.jugadores;
+        return turnos.getTurnos();
     }
 
     @Override
@@ -82,7 +87,9 @@ public class Partida implements PartidaFachada {
 
     @Override
     public void notificarObservadorTurnos() {
-        observadorTurnos.actualizar(turnos.getTurnos());
+        if (observadorTurnos != null) {
+            observadorTurnos.actualizar(jugadores);
+        }
     }
 
     @Override
@@ -98,6 +105,15 @@ public class Partida implements PartidaFachada {
     @Override
     public void agregarObservadorInicioJuego(ObservadorInicio ob) {
         observadorInicioJuego = ob;
+    }
+    @Override
+    public List<Cuadro> getCuadrosTablero() {
+        return tablero.getCuadrosExistentes();
+    }
+
+    @Override
+    public void actualizar(List<Jugador> jugadores) {
+        notificarObservadorTurnos();
     }
 
 }

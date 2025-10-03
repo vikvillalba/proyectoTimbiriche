@@ -1,5 +1,6 @@
 package MVCJuegoEnCurso.modelo.implementaciones;
 
+import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
@@ -25,6 +26,8 @@ import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import Observer.ObservadorInicio;
+import java.util.stream.Collectors;
+import objetosPresentables.CuadroPresentable;
 
 /**
  *
@@ -154,22 +157,47 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
             }
         }
 
+       // Líneas
         List<Linea> lineasTablero = partida.getLineasTablero();
         List<LineaPresentable> lineasVista = new ArrayList<>();
-
         for (Linea linea : lineasTablero) {
             PuntoPresentable origen = new PuntoPresentable(linea.getOrigen().getX(), linea.getOrigen().getY());
             PuntoPresentable destino = new PuntoPresentable(linea.getDestino().getX(), linea.getDestino().getY());
 
-            LineaPresentable lineaVista = new LineaPresentable(origen, destino, COLORES.get(linea.getColor())); //Solo toma el color del  primero
-            lineasVista.add(lineaVista);
+            Color colorLinea;
+            if (linea.getDueño() != null) {
+                colorLinea = obtenerColor(linea.getDueño().getColor().toString());
+            } else {
+                colorLinea = Color.BLACK; // color por defecto para líneas vacías
+            }
 
+            lineasVista.add(new LineaPresentable(origen, destino, colorLinea));
         }
-
-        // construir tablero presentable (tipo de objeto con el que la vista trabaja)
-        TableroPresentable tableroVista = new TableroPresentable(puntosVista, lineasVista, tablero.length, tablero[0].length);
-        return tableroVista;
-    }
+         // Cuadros
+        List<CuadroPresentable> cuadrosVista = new ArrayList<>();
+        for (Cuadro cuadro : partida.getCuadrosTablero()) {
+            List<PuntoPresentable> aristasVista = cuadro.getAristas().stream()
+                    .map(p -> new PuntoPresentable(p.getX(), p.getY()))
+                    .collect(Collectors.toList());
+            Color colorDueno = new Color(0, 0, 0, 0);// color transparente para que no se vean al inicio
+            if (cuadro.getDueno() != null){
+                colorDueno = (obtenerColor(cuadro.getDueno().getColor().toString()));
+            }
+            Color base = colorDueno;
+            Color colorTransparente = new Color(base.getRed(), base.getGreen(), base.getBlue(), 150);
+            CuadroPresentable cuadroP = new CuadroPresentable(aristasVista, colorDueno);
+            cuadrosVista.add(cuadroP);
+            cuadroP.setColor(colorDueno);
+            if (cuadro.getDueno() != null){
+                cuadroP.setDueno(cuadro.getDueno().getNombre());
+            }
+            System.out.println(colorDueno);
+        }
+            
+            // construir tablero presentable (tipo de objeto con el que la vista trabaja)
+           TableroPresentable tableroVista = new TableroPresentable(puntosVista, lineasVista, cuadrosVista, tablero.length, tablero[0].length);
+           return tableroVista;
+        }
 
     // actualizar del observador
     @Override

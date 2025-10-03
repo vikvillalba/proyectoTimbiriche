@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author victoria
  */
 public class Tablero {
-      private Punto[][] puntos;
+    private Punto[][] puntos;
     private int alto;
     private int ancho;
     private ColorEnum color; // enum para el color
@@ -80,24 +80,22 @@ public class Tablero {
         }
     }
 
-    public void unirPuntos(Punto origen, Punto destino) {
-        // crea la linea y la agrega
-        Linea lineaTemp = new Linea(origen, destino);
+    public void unirPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
+        Linea lineaTemp = new Linea(origen, destino, jugadorActual); // línea sabe su dueño
         this.lineasExistentes.add(lineaTemp);
-        System.out.println("se creó la línea");
-
-        llenarCuadro(lineaTemp);  
-
+        llenarCuadro(lineaTemp, jugadorActual);  
     }
     
-    private void llenarCuadro(Linea linea){
-         for (Cuadro cuadro : this.cuadrosExistentes) {
-            List<Punto> aristas = cuadro.getAristas(); // agarra las aristas(puntos)
-            if (aristas.contains(linea.getOrigen()) && aristas.contains(linea.getDestino())) { // si los puntos de la linea están en las aristas del cuadro
-                cuadro.agregarVertice(linea); // agrega el vértice (linea)
-                if (cuadro.getVertices().size() == 4 && !cuadrosCompletados.contains(cuadro)) { // cuando el cuadro ya tenga las 4 lineas
-                    System.out.println("¡Cuadro completo!");
-                    cuadrosCompletados.add(cuadro); // ps se completa y se guarda en los cuadros completados
+    private void llenarCuadro(Linea linea, Jugador jugador) {
+        for (Cuadro cuadro : this.cuadrosExistentes) {
+            List<Punto> aristas = cuadro.getAristas();
+            if (aristas.contains(linea.getOrigen()) && aristas.contains(linea.getDestino())) {
+                cuadro.agregarVertice(linea);
+                if (cuadro.getVertices().size() == 4 ) {
+                    cuadro.setDueno(jugador); // asigna el jugador que completo el cuadro
+                    cuadro.setColor(cuadro.getDueno().getColor());
+                    cuadrosCompletados.add(cuadro);
+                    System.out.println("Cuadro completo, cuadro de: "+ cuadro.getDueno().getNombre());
                 }
             }
         }
@@ -125,6 +123,10 @@ public class Tablero {
 
     public List<Linea> getLineasExistentes() {
         return lineasExistentes;
+    }
+    
+    public List<Cuadro> getCuadrosExistentes(){
+        return cuadrosExistentes;
     }
 
     

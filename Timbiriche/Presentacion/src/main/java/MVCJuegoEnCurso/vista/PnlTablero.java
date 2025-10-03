@@ -3,17 +3,22 @@ package MVCJuegoEnCurso.vista;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 import javax.swing.JPanel;
+import objetosPresentables.CuadroPresentable;
 import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
@@ -105,10 +110,50 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // ← 1.0f = opaco
+
+        for (CuadroPresentable cuadro : tablero.getCuadros()) {
+            List<PuntoPresentable> ps = cuadro.getVertices();
+            if (ps.size() == 4) {
+                int anchoPunto = getWidth() / tablero.getAncho();
+                int altoPunto = getHeight() / tablero.getAlto();
+
+                // Calcula coordenadas mínimas y máximas
+                int minX = ps.stream().mapToInt(PuntoPresentable::getX).min().getAsInt();
+                int maxX = ps.stream().mapToInt(PuntoPresentable::getX).max().getAsInt();
+                int minY = ps.stream().mapToInt(PuntoPresentable::getY).min().getAsInt();
+                int maxY = ps.stream().mapToInt(PuntoPresentable::getY).max().getAsInt();
+
+                int x = minX * anchoPunto + anchoPunto / 2;
+                int y = minY * altoPunto + altoPunto / 2;
+                int width = (maxX - minX) * anchoPunto;
+                int height = (maxY - minY) * altoPunto;
+
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f)); // ← 60% opacidad
+                g2.setColor(cuadro.getColor());
+                g2.fillRect(x, y, width, height);
+                
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // regresar la opacidad
+                if(cuadro.getDueno() != null){
+                String inicial = cuadro.getDueno().substring(0, 1).toUpperCase();
+
+                g2.setColor(Color.BLACK); 
+                g2.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+                FontMetrics fm = g2.getFontMetrics();
+                int textWidth = fm.stringWidth(inicial);
+                int textHeight = fm.getAscent();
+
+                int centerX = x + width / 2 - textWidth / 2;
+                int centerY = y + height / 2 + textHeight / 4;
+
+                g2.drawString(inicial, centerX, centerY);}
+
+            }
+        }
 
         for (LineaPresentable linea : tablero.getLineas()) {
-//            g2.setColor(linea.getColor());
-            g2.setColor(Color.BLUE);
+            g2.setColor(linea.getColor());
 //            PuntoPresentable origen = linea.getOrigen();
 //            PuntoPresentable destino = linea.getDestino();
             int anchoPunto = getWidth() / tablero.getAncho();
@@ -119,8 +164,10 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
             int x2 = linea.getDestino().getX() * anchoPunto + anchoPunto / 2;
             int y2 = linea.getDestino().getY() * altoPunto + altoPunto / 2;
 
+
             g2.drawLine(x1, y1, x2, y2);
         }
+
     }
 
     /**

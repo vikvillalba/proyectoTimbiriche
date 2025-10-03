@@ -24,7 +24,9 @@ public class InicioJuego{
         int alto = 10;
         int ancho = 10;
         PartidaFachada partida = new Partida(jugadores, alto, ancho);
-        partida.seleccionarPuntos(partida.getPuntoTablero(0, 1), partida.getPuntoTablero(0, 0));
+        //partida.seleccionarPuntos(partida.getPuntoTablero(0, 1), partida.getPuntoTablero(0, 0) );
+        Jugador jugadorActual = partida.getJugadores().get(0); // empieza con jugador1
+        partida.seleccionarPuntos(partida.getPuntoTablero(0, 1),partida.getPuntoTablero(0, 0),jugadorActual);
 
     }
     
