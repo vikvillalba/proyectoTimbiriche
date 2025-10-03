@@ -3,6 +3,7 @@ package Entidades;
 import java.util.Objects;
 
 /**
+ * Clase que representa a un punto dentro del tablero de juego.
  *
  * @author victoria
  */
@@ -18,6 +19,14 @@ public class Punto {
     private Punto arriba;
     private Punto abajo;
 
+    /**
+     * Constructor del punto.
+     * 
+     * @param x coordenada x en el tablero
+     * @param y coordenada y en el tablero
+     * 
+     * inicia a sus adyacentes en null
+     */
     public Punto(int x, int y) {
         this.x = x;
         this.y = y;

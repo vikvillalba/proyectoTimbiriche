@@ -1,7 +1,7 @@
-package partidaFactory;
+package configuracionesPartida;
 
 import Entidades.Jugador;
-import Entidades.Partida;
+import Fachada.Partida;
 import Fachada.PartidaFachada;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author victoria
  */
-public class PartidaFactory {
+public class ConfiguracionesPartida {
     public static void iniciarPartida(List<Jugador> jugadores, int alto, int ancho){
 
         PartidaFachada partida = new Partida(jugadores, alto, ancho);

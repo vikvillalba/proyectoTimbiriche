@@ -3,7 +3,7 @@ package objetosPresentables;
 import java.awt.Color;
 
 /**
- *
+ * representación presentable de una línea del tablero.
  * @author victoria
  */
 public class LineaPresentable {

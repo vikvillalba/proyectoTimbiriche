@@ -26,6 +26,8 @@ import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import Observer.ObservadorInicio;
+import excepciones.JugadaException;
+import excepciones.PartidaExcepcion;
 import java.util.stream.Collectors;
 import objetosPresentables.CuadroPresentable;
 
@@ -33,7 +35,12 @@ import objetosPresentables.CuadroPresentable;
  *
  * @author victoria
  */
-public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEscritura, IModeloTableroLectura, ObservablePartida, ObservadorTurnos, ObservadorInicio {
+public class ModeloPartida implements IModeloJugadoresLectura, 
+                                      IModeloPartidaEscritura, 
+                                      IModeloTableroLectura, 
+                                      ObservablePartida, 
+                                      ObservadorTurnos, 
+                                      ObservadorInicio {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -112,16 +119,20 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
 
     // traduce a entidad y llama al validar de fachada
     @Override
-    public boolean unirPuntos(PuntoPresentable[] puntos) {
-        boolean jugada = partida.validarPuntos(
-                partida.getPuntoTablero(puntos[0].getX(), puntos[0].getY()), partida.getPuntoTablero(puntos[1].getX(), puntos[1].getY()));
+    public boolean unirPuntos(PuntoPresentable[] puntos) throws JugadaException{
+        boolean jugada;
+        try {
+            jugada = partida.validarPuntos(partida.getPuntoTablero(puntos[0].getX(), puntos[0].getY()), partida.getPuntoTablero(puntos[1].getX(), puntos[1].getY()));
+        } catch (PartidaExcepcion ex) {
+            throw new JugadaException(ex.getMessage());
+        }
 
         if (jugada) {
             notificarObservadorTablero();
             return true;
         }
-        
-        if(!jugada) {
+
+        if (!jugada) {
             notificarObservadorTablero();
             actualizarTurnos();
             return true;
@@ -151,7 +162,7 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
             }
         }
 
-       // Líneas
+        // Líneas
         List<Linea> lineasTablero = partida.getLineasTablero();
         List<LineaPresentable> lineasVista = new ArrayList<>();
         for (Linea linea : lineasTablero) {
@@ -167,14 +178,14 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
 
             lineasVista.add(new LineaPresentable(origen, destino, colorLinea));
         }
-         // Cuadros
+        // Cuadros
         List<CuadroPresentable> cuadrosVista = new ArrayList<>();
         for (Cuadro cuadro : partida.getCuadrosTablero()) {
             List<PuntoPresentable> aristasVista = cuadro.getAristas().stream()
                     .map(p -> new PuntoPresentable(p.getX(), p.getY()))
                     .collect(Collectors.toList());
             Color colorDueno = new Color(0, 0, 0, 0);// color transparente para que no se vean al inicio
-            if (cuadro.getDueno() != null){
+            if (cuadro.getDueno() != null) {
                 colorDueno = (obtenerColor(cuadro.getDueno().getColor().toString()));
             }
             Color base = colorDueno;
@@ -182,15 +193,15 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
             CuadroPresentable cuadroP = new CuadroPresentable(aristasVista, colorDueno);
             cuadrosVista.add(cuadroP);
             cuadroP.setColor(colorDueno);
-            if (cuadro.getDueno() != null){
+            if (cuadro.getDueno() != null) {
                 cuadroP.setDueno(cuadro.getDueno().getNombre());
             }
         }
-            
-            // construir tablero presentable (tipo de objeto con el que la vista trabaja)
-           TableroPresentable tableroVista = new TableroPresentable(puntosVista, lineasVista, cuadrosVista, tablero.length, tablero[0].length);
-           return tableroVista;
-        }
+
+        // construir tablero presentable (tipo de objeto con el que la vista trabaja)
+        TableroPresentable tableroVista = new TableroPresentable(puntosVista, lineasVista, cuadrosVista, tablero.length, tablero[0].length);
+        return tableroVista;
+    }
 
     // actualizar del observador
     @Override

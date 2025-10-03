@@ -1,6 +1,7 @@
 package Entidades;
 
 /**
+ * Clase que representa a un jugador de manera abstracta.
  *
  * @author victoria
  */
@@ -12,6 +13,15 @@ public class Jugador {
     private int score;
     private boolean turno;
 
+    /**
+     * Construye a un nuevo jugador.
+     *
+     * @param nombre nombre del jugador
+     * @param avatar enum correspondiente al avatar
+     * @param color enum correspondiente al color
+     * @param score puntos de juego inicializado en 0
+     * @param turno inicializado en false
+     */
     public Jugador(String nombre, AvatarEnum avatar, ColorEnum color, int score, boolean turno) {
         this.nombre = nombre;
         this.avatar = avatar;
@@ -58,7 +68,10 @@ public class Jugador {
     public void setColor(ColorEnum color) {
         this.color = color;
     }
-    
+
+    /**
+     * Suma un punto al score del jugador.
+     */
     public void sumarScore() {
         this.score++;
     }

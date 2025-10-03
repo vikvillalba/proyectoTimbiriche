@@ -1,7 +1,8 @@
 package Entidades;
 
 /**
- *
+ * Enumerador que representa de manera abstracta los avatares existentes en el juego.
+ * cada literal corresponde a un objeto Image en presentación
  * @author pablo
  */
 public enum AvatarEnum {

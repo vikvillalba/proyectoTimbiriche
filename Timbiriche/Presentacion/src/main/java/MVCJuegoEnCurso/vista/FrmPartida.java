@@ -9,15 +9,18 @@ import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import java.awt.Color;
 
 /**
- *
+ * Vista que engloba una partida en curso.
+ * contiene a los jugadores y al tablero.
  * @author victoria
  */
 public class FrmPartida extends JFrame implements ObservadorInicioPartida {
 
     private PnlTablero tablero;
     private PnlJugadores jugadores;
+    private final Color COLOR_FONDO = new Color(224, 233, 255);
 
     public FrmPartida(IModeloJugadoresLectura modeloJugadores, IModeloTableroLectura modeloTablero, ControladorPartida controlador) {
         initComponents();
@@ -27,6 +30,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
 
         add(tablero, BorderLayout.CENTER);
         add(jugadores, BorderLayout.WEST);
+        this.setBackground(COLOR_FONDO);
         setSize(1050, 640);
     }
 
@@ -52,6 +56,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // recibe notificacion del modelo de que el juego ya inicia
     @Override
     public void mostrarJuego() {
        this.setVisible(true);

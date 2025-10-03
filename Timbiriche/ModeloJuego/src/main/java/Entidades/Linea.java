@@ -1,8 +1,7 @@
 package Entidades;
 
-import java.awt.Color;
-
 /**
+ * Clase que representa una linea del tablero de juego.
  *
  * @author victoria
  */
@@ -10,9 +9,14 @@ public class Linea {
 
     private Punto origen;
     private Punto destino;
-    //private ColorEnum color; estoy cocinando trust me 
     private Jugador dueño;
 
+    /**
+     * Construye una nueva línea.
+     * @param origen donde inicia la linea
+     * @param destino donde termina la linea
+     * @param dueño jugador al que pertenece la linea
+     */
     public Linea(Punto origen, Punto destino, Jugador dueño) {
         this.origen = origen;
         this.destino = destino;
@@ -34,15 +38,10 @@ public class Linea {
     public void setDestino(Punto destino) {
         this.destino = destino;
     }
-    
-    // regreas el color del dueño 
+
     public ColorEnum getColor() {
-            return dueño != null ? dueño.getColor() : null;
-        }
-//
-//    public void setColor(ColorEnum color) {
-//        this.color = dueño.getColor();
-//    }
+        return dueño != null ? dueño.getColor() : null;
+    }
 
     public Jugador getDueño() {
         return dueño;

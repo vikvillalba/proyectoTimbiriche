@@ -3,13 +3,12 @@ package MVCJuegoEnCurso.vista;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
+import excepciones.JugadaException;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -17,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import objetosPresentables.CuadroPresentable;
 import objetosPresentables.LineaPresentable;
@@ -24,6 +24,7 @@ import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 
 /**
+ * representación gráfica del tablero de juego.
  *
  * @author victoria
  */
@@ -97,8 +98,22 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
         controlador.actualizarTurno(); // cambia de turno ya que se realiza la jugada
     }
 
+    private void resetearColores() {
+        for (Component comp : this.getComponents()) {
+            if (comp instanceof PnlPunto) {
+                ((PnlPunto) comp).setColor(Color.BLACK);
+            }
+        }
+    }
+
     public void agregarPuntoSeleccionado(PuntoPresentable punto) {
-        controlador.agregarPuntoSeleccionado(punto);
+        try {
+            controlador.agregarPuntoSeleccionado(punto);
+
+        } catch (JugadaException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Jugada inválida", JOptionPane.ERROR_MESSAGE);
+            resetearColores();
+        }
     }
 
     @Override
@@ -110,7 +125,7 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // ← 1.0f = opaco
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
         for (CuadroPresentable cuadro : tablero.getCuadros()) {
             List<PuntoPresentable> ps = cuadro.getVertices();
@@ -129,25 +144,26 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
                 int width = (maxX - minX) * anchoPunto;
                 int height = (maxY - minY) * altoPunto;
 
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f)); // ← 60% opacidad
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
                 g2.setColor(cuadro.getColor());
                 g2.fillRect(x, y, width, height);
-                
+
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // regresar la opacidad
-                if(cuadro.getDueno() != null){
-                String inicial = cuadro.getDueno().substring(0, 1).toUpperCase();
+                if (cuadro.getDueno() != null) {
+                    String inicial = cuadro.getDueno().substring(0, 1).toUpperCase();
 
-                g2.setColor(Color.BLACK); 
-                g2.setFont(new Font("Arial", Font.BOLD, 20)); 
+                    g2.setColor(Color.BLACK);
+                    g2.setFont(new Font("Arial", Font.BOLD, 20));
 
-                FontMetrics fm = g2.getFontMetrics();
-                int textWidth = fm.stringWidth(inicial);
-                int textHeight = fm.getAscent();
+                    FontMetrics fm = g2.getFontMetrics();
+                    int textWidth = fm.stringWidth(inicial);
+                    int textHeight = fm.getAscent();
 
-                int centerX = x + width / 2 - textWidth / 2;
-                int centerY = y + height / 2 + textHeight / 4;
+                    int centerX = x + width / 2 - textWidth / 2;
+                    int centerY = y + height / 2 + textHeight / 4;
 
-                g2.drawString(inicial, centerX, centerY);}
+                    g2.drawString(inicial, centerX, centerY);
+                }
 
             }
         }
@@ -162,7 +178,6 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
             int y1 = linea.getOrigen().getY() * altoPunto + altoPunto / 2;
             int x2 = linea.getDestino().getX() * anchoPunto + anchoPunto / 2;
             int y2 = linea.getDestino().getY() * altoPunto + altoPunto / 2;
-
 
             g2.drawLine(x1, y1, x2, y2);
         }

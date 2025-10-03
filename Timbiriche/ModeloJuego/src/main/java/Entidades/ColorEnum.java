@@ -1,7 +1,8 @@
 package Entidades;
 
 /**
- *
+ * Enumerador que representa de forma abstracta los colores existentes para los jugadores.
+ * cada literal corresponde a un Color en presentación.
  * @author pablo
  */
 public enum ColorEnum {

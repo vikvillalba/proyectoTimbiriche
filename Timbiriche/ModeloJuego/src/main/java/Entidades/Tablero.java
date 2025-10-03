@@ -2,13 +2,14 @@ package Entidades;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
+ * Clase que representa a un tablero de juego.
  *
  * @author victoria
  */
 public class Tablero {
+
     private Punto[][] puntos;
     private int alto;
     private int ancho;
@@ -17,6 +18,16 @@ public class Tablero {
     private List<Cuadro> cuadrosExistentes; // los cuadros ya se crean pero están vacíos
     private List<Cuadro> cuadrosCompletados; // cuando se llenan
 
+    /**
+     * Constructor del tablero.
+     *
+     * @param alto alto del tablero
+     * @param ancho ancho del tablero
+     *
+     * ambas medidas deben de ser iguales (el tablero es cuadrado) llena el
+     * tablero de puntos, configura las adyacencias de cada punto e inicializa
+     * cuadros vacíos.
+     */
     public Tablero(int alto, int ancho) {
         this.alto = alto;
         this.ancho = ancho;
@@ -24,13 +35,16 @@ public class Tablero {
         this.cuadrosExistentes = new ArrayList<>();
         this.cuadrosCompletados = new ArrayList<>();
 
-        puntos = new Punto[alto][ancho];
+        puntos = new Punto[alto][ancho]; // crea la matriz vacía
         llenarTablero();
         configurarAdyacencias();
         configurarCuadrosVacios();
 
     }
 
+    /**
+     * Llena el tablero con puntos.
+     */
     private void llenarTablero() {
         //llenar la matriz con puntos
         for (int i = 0; i < alto; i++) { // recorre filas
@@ -42,6 +56,9 @@ public class Tablero {
         }
     }
 
+    /**
+     * Configura las adyacencias de cada punto.
+     */
     private void configurarAdyacencias() {
         for (int i = 0; i < alto; i++) { // fila
             for (int j = 0; j < ancho; j++) { // elementos de la fila
@@ -66,8 +83,12 @@ public class Tablero {
         }
     }
 
+    /**
+     * Crea cuadros vacíos. el tablero ya conoce los cuadros que se pueden
+     * llenar durante el juego.
+     */
     private void configurarCuadrosVacios() {
-        // crea los cuadros vacíos, pero el tablero ya sabe cuales son los cuadros q se pueden formar bua chaval q pro
+        // crea los cuadros vacíos, pero el tablero ya sabe cuales son los cuadros q se pueden formar 
         for (int i = 0; i < alto - 1; i++) {
             for (int j = 0; j < ancho - 1; j++) { // omite los puntos de los bordes (pero si se agregan como aristas)
                 Cuadro cuadro = new Cuadro();
@@ -80,23 +101,35 @@ public class Tablero {
         }
     }
 
+    /**
+     * Une dos puntos para crear una linea.
+     *
+     * @param origen punto de inicio
+     * @param destino punto de fin
+     * @param jugadorActual jugador que conecta los puntos
+     * @return llamada al método llenar cuadro, que determina si un cuadro se
+     * completa o no.
+     */
     public boolean unirPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
         Linea lineaTemp = new Linea(origen, destino, jugadorActual); // línea sabe su dueño
         this.lineasExistentes.add(lineaTemp);
-        return llenarCuadro(lineaTemp, jugadorActual);  
+        return llenarCuadro(lineaTemp, jugadorActual);
     }
-    
+
+    /**
+     * Verifica si una línea creada puede completar un cuadro.
+     */
     private boolean llenarCuadro(Linea linea, Jugador jugador) {
         boolean completado = false;
         for (Cuadro cuadro : this.cuadrosExistentes) {
             List<Punto> aristas = cuadro.getAristas();
             if (aristas.contains(linea.getOrigen()) && aristas.contains(linea.getDestino())) {
                 cuadro.agregarVertice(linea);
-                if (cuadro.getVertices().size() == 4 ) {
+                if (cuadro.getVertices().size() == 4) {
                     cuadro.setDueno(jugador); // asigna el jugador que completo el cuadro
                     cuadro.setColor(cuadro.getDueno().getColor());
                     cuadrosCompletados.add(cuadro);
-                    System.out.println("Cuadro completo, cuadro de: "+ cuadro.getDueno().getNombre());
+                    System.out.println("Cuadro completo, cuadro de: " + cuadro.getDueno().getNombre());
                     completado = true;
                     cuadro.getDueno().sumarScore();
                 }
@@ -128,10 +161,9 @@ public class Tablero {
     public List<Linea> getLineasExistentes() {
         return lineasExistentes;
     }
-    
-    public List<Cuadro> getCuadrosExistentes(){
+
+    public List<Cuadro> getCuadrosExistentes() {
         return cuadrosExistentes;
     }
 
-    
 }

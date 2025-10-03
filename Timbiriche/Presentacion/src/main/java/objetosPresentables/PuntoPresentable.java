@@ -1,7 +1,7 @@
 package objetosPresentables;
 
 /**
- *
+ * represetnación presentable de un punto del tablero.
  * @author victoria
  */
 public class PuntoPresentable {

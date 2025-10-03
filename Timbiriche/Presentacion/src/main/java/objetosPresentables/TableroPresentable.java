@@ -3,7 +3,7 @@ package objetosPresentables;
 import java.util.List;
 
 /**
- *
+ * Representación presentable del tablero de juego.
  * @author victoria
  */
 public class TableroPresentable {

@@ -1,12 +1,14 @@
 package MVCJuegoEnCurso.vista;
 
-import java.awt.Color;
 import java.awt.Image;
+import javax.swing.BorderFactory;
+import javax.swing.GrayFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import objetosPresentables.JugadorPresentable;
 
 /**
+ * Panel que representa gráficamente a un jugador de la partida.
  *
  * @author victoria
  */
@@ -18,6 +20,7 @@ public class PnlJugador extends JPanel {
     public PnlJugador(JugadorPresentable jugador) {
         initComponents();
         this.jugador = jugador;
+        this.setOpaque(false);
         cargarDatos();
         enTurno();
 
@@ -29,17 +32,21 @@ public class PnlJugador extends JPanel {
         this.lblNombre.setText(jugador.getNombre());
         this.lblNombre.setForeground(jugador.getColor());
         this.lblPuntos.setText(String.valueOf(jugador.getScore()));
+        this.lblPuntos.setForeground(jugador.getColor());
         enTurno();
 
     }
 
     private void enTurno() {
         if (jugador.isTurno()) {
-            this.lblNombre.setForeground(jugador.getColor());
-            this.lblPuntos.setForeground(jugador.getColor());
+
+            lblAvatar.setIcon(new ImageIcon(jugador.getAvatar()));
+            this.setBorder(BorderFactory.createLineBorder(jugador.getColor(), 2, true));
         } else {
-            this.lblNombre.setForeground(Color.GRAY);
-            this.lblPuntos.setForeground(Color.GRAY);
+            ImageIcon iconoOriginal = new ImageIcon(jugador.getAvatar());
+            Image imgGris = GrayFilter.createDisabledImage(iconoOriginal.getImage());
+            this.lblAvatar.setIcon(new ImageIcon(imgGris));
+            this.setBorder(null);
         }
     }
 
@@ -65,45 +72,52 @@ public class PnlJugador extends JPanel {
         jLabel3 = new javax.swing.JLabel();
         lblAvatar = new javax.swing.JLabel();
 
-        lblNombre.setForeground(new java.awt.Color(204, 204, 255));
+        setMaximumSize(new java.awt.Dimension(451, 124));
+        setMinimumSize(new java.awt.Dimension(451, 124));
+        setSize(new java.awt.Dimension(451, 124));
+
+        lblNombre.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lblNombre.setText("NombreJugador");
 
-        lblPuntos.setText("00");
+        lblPuntos.setFont(new java.awt.Font("Monospaced", 0, 24)); // NOI18N
+        lblPuntos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPuntos.setText("0");
 
+        jLabel3.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         jLabel3.setText("puntos");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(lblAvatar)
-                .addGap(109, 109, 109)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(lblNombre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(38, 38, 38))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblPuntos)
-                        .addGap(14, 14, 14)))
-                .addGap(43, 43, 43))
+                        .addGap(58, 58, 58))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
+                        .addGap(32, 32, 32)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblPuntos))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblNombre)
-                            .addComponent(lblAvatar))))
-                .addContainerGap(34, Short.MAX_VALUE))
+                        .addGap(45, 45, 45)
+                        .addComponent(lblNombre)))
+                .addContainerGap(40, Short.MAX_VALUE))
+            .addComponent(lblAvatar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

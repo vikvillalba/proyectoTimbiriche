@@ -5,7 +5,7 @@ import Entidades.ColorEnum;
 import Entidades.Jugador;
 import java.util.Arrays;
 import java.util.List;
-import partidaFactory.PartidaFactory;
+import configuracionesPartida.ConfiguracionesPartida;
 
 /**
  *
@@ -20,6 +20,6 @@ public class Presentacion {
         List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
         int alto = 10;
         int ancho = 10;
-        PartidaFactory.iniciarPartida(jugadores, alto, ancho);
+        ConfiguracionesPartida.iniciarPartida(jugadores, alto, ancho);
     }
 }

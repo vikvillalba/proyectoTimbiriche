@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 
 /**
- *
+ * representación presentable de un jugador en la partida.
  * @author victoria
  */
 public class JugadorPresentable {

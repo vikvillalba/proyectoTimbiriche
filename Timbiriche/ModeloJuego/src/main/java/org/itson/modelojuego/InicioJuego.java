@@ -3,7 +3,7 @@ package org.itson.modelojuego;
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
-import Entidades.Partida;
+import Fachada.Partida;
 import Fachada.PartidaFachada;
 import java.util.Arrays;
 import java.util.List;

@@ -1,11 +1,11 @@
 package MVCJuegoEnCurso.vista;
 
-
 import java.awt.Color;
 import java.awt.Graphics;
 import objetosPresentables.PuntoPresentable;
 
 /**
+ * representación gráfica de un punto del tablero.
  *
  * @author victoria
  */
@@ -26,12 +26,18 @@ public class PnlPunto extends javax.swing.JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-       g.setColor(this.color);
-       g.fillOval(getWidth() / 2 - 5, getHeight() / 2 - 5, 10, 10);
+        super.paintComponent(g);
+        g.setColor(this.color);
+        g.fillOval(getWidth() / 2 - 5, getHeight() / 2 - 5, 10, 10);
     }
 
     public PuntoPresentable getPunto() {
         return punto;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+        repaint();
     }
 
     /**
@@ -72,9 +78,10 @@ public class PnlPunto extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        this.color = Color.LIGHT_GRAY;
+        this.setColor(Color.LIGHT_GRAY);
         repaint();
         tablero.agregarPuntoSeleccionado(punto);
+
     }//GEN-LAST:event_formMouseClicked
 
 

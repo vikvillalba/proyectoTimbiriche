@@ -3,13 +3,14 @@ package MVCJuegoEnCurso.vista;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import objetosPresentables.JugadorPresentable;
 
 /**
- *
+ * Representación gráfica de los jugadores de la partida.
  * @author victoria
  */
 public class PnlJugadores extends JPanel implements ObservadorJugadores {
@@ -18,12 +19,14 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores {
     private List<PnlJugador> panelesJugadores = new ArrayList<>();
     private IModeloJugadoresLectura modelo;
     private ControladorPartida controlador;
+     private final Color COLOR_FONDO = new Color(224, 233, 255);
 
     public PnlJugadores(IModeloJugadoresLectura modelo, ControladorPartida controlador) {
         initComponents();
         this.modelo = modelo;
         this.controlador = controlador;
         this.jugadores = modelo.getJugadores();
+        this.setBackground(COLOR_FONDO);
         mostrarJugadores();
     }
 
