@@ -154,8 +154,7 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
 
         for (LineaPresentable linea : tablero.getLineas()) {
             g2.setColor(linea.getColor());
-//            PuntoPresentable origen = linea.getOrigen();
-//            PuntoPresentable destino = linea.getDestino();
+
             int anchoPunto = getWidth() / tablero.getAncho();
             int altoPunto = getHeight() / tablero.getAlto();
 
