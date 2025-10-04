@@ -98,6 +98,7 @@ public class Tablero {
                     cuadrosCompletados.add(cuadro);
                     System.out.println("Cuadro completo, cuadro de: "+ cuadro.getDueno().getNombre());
                     completado = true;
+                    cuadro.getDueno().sumarScore();
                 }
             }
         }

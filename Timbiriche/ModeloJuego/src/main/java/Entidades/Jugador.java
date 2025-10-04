@@ -58,4 +58,8 @@ public class Jugador {
     public void setColor(ColorEnum color) {
         this.color = color;
     }
+    
+    public void sumarScore() {
+        this.score++;
+    }
 }
