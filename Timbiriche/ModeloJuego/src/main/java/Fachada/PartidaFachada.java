@@ -16,7 +16,7 @@ public interface PartidaFachada extends Observable{
     List<Linea> getLineasTablero();
     List<Cuadro> getCuadrosTablero();
     Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual);
-    Punto[] validarPuntos(Punto origen, Punto destino);
+    boolean validarPuntos(Punto origen, Punto destino);
     List<Jugador> getJugadores();
     void actualizarTurno();
     Punto getPuntoTablero(int x, int y);

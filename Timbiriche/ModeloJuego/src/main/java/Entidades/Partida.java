@@ -32,17 +32,16 @@ public class Partida implements PartidaFachada, ObservadorTurnos{
 
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
-        tablero.unirPuntos(origen, destino, jugadorActual); // <-- pasa jugador
         return new Punto[]{origen, destino};
     }
 
     @Override
-    public Punto[] validarPuntos(Punto origen, Punto destino) {
+    public boolean validarPuntos(Punto origen, Punto destino) {
         for (Linea linea : tablero.getLineasExistentes()) {
             // validar que la linea no exista 
             if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino)) || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
                 System.out.println("la linea ya existe"); // TODO: lanzar excepcion
-                return null;
+                return false;
             }
 
         }
@@ -52,10 +51,10 @@ public class Partida implements PartidaFachada, ObservadorTurnos{
                 || Objects.equals(origen.getIzquierda(), destino)
                 || Objects.equals(origen.getDerecha(), destino))) {
             System.out.println("Los puntos no se pueden conectar"); // TODO: lanzar excepcion
-            return null;
+            return false;
         }
         // si se puede realizar la jugada:
-        return seleccionarPuntos(origen, destino, turnos.getJugadorEnTurno());
+        return tablero.unirPuntos(origen, destino, turnos.getJugadorEnTurno());
 
     }
 

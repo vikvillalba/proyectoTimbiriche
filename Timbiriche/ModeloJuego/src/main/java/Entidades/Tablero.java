@@ -80,13 +80,14 @@ public class Tablero {
         }
     }
 
-    public void unirPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
+    public boolean unirPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
         Linea lineaTemp = new Linea(origen, destino, jugadorActual); // línea sabe su dueño
         this.lineasExistentes.add(lineaTemp);
-        llenarCuadro(lineaTemp, jugadorActual);  
+        return llenarCuadro(lineaTemp, jugadorActual);  
     }
     
-    private void llenarCuadro(Linea linea, Jugador jugador) {
+    private boolean llenarCuadro(Linea linea, Jugador jugador) {
+        boolean completado = false;
         for (Cuadro cuadro : this.cuadrosExistentes) {
             List<Punto> aristas = cuadro.getAristas();
             if (aristas.contains(linea.getOrigen()) && aristas.contains(linea.getDestino())) {
@@ -96,9 +97,11 @@ public class Tablero {
                     cuadro.setColor(cuadro.getDueno().getColor());
                     cuadrosCompletados.add(cuadro);
                     System.out.println("Cuadro completo, cuadro de: "+ cuadro.getDueno().getNombre());
+                    completado = true;
                 }
             }
         }
+        return completado;
     }
 
     public Punto getPunto(int x, int y) {

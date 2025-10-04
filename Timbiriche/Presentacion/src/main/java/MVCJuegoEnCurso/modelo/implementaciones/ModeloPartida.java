@@ -113,26 +113,20 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
     // traduce a entidad y llama al validar de fachada
     @Override
     public boolean unirPuntos(PuntoPresentable[] puntos) {
-        Punto[] puntosSeleccionados = partida.validarPuntos(
+        boolean jugada = partida.validarPuntos(
                 partida.getPuntoTablero(puntos[0].getX(), puntos[0].getY()), partida.getPuntoTablero(puntos[1].getX(), puntos[1].getY()));
 
-        if (puntosSeleccionados != null) {
+        if (jugada) {
             notificarObservadorTablero();
-            //si en la jugada se realizo un cuadrado jugador repite turno
-            if ((realizoCudrado())) {
-                //cambio de turno
-                actualizarTurnos();
-
-            }
             return true;
-
+        }
+        
+        if(!jugada) {
+            notificarObservadorTablero();
+            actualizarTurnos();
+            return true;
         }
         return false;
-    }
-
-    //metodo validar si se realizo un cuadrado
-    public boolean realizoCudrado() {
-        return true;
     }
 
     // llama a fachada q actualice los turnos
@@ -191,7 +185,6 @@ public class ModeloPartida implements IModeloJugadoresLectura, IModeloPartidaEsc
             if (cuadro.getDueno() != null){
                 cuadroP.setDueno(cuadro.getDueno().getNombre());
             }
-            System.out.println(colorDueno);
         }
             
             // construir tablero presentable (tipo de objeto con el que la vista trabaja)
