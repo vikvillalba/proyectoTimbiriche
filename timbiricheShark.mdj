@@ -57737,7 +57737,7 @@
 													"font": "Arial;13;1",
 													"left": 273,
 													"top": 935,
-													"width": 299,
+													"width": 387,
 													"height": 13,
 													"underline": true,
 													"text": "Arquitectura"
@@ -57773,7 +57773,7 @@
 											"font": "Arial;13;0",
 											"left": 268,
 											"top": 928,
-											"width": 309,
+											"width": 397,
 											"height": 25,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAGaVmmZROyejbg="
@@ -57793,7 +57793,7 @@
 									"containerChangeable": true,
 									"left": 248,
 									"top": 928,
-									"width": 328,
+									"width": 416,
 									"height": 144,
 									"nameCompartment": {
 										"$ref": "AAAAAAGaVmmZROyd6DU="
@@ -59331,8 +59331,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 485,
-											"top": 870,
+											"left": 500,
+											"top": 873,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -59352,8 +59352,8 @@
 											},
 											"visible": null,
 											"font": "Arial;13;0",
-											"left": 473,
-											"top": 861,
+											"left": 487,
+											"top": 866,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 30,
@@ -59373,8 +59373,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 508,
-											"top": 889,
+											"left": 527,
+											"top": 886,
 											"height": 13,
 											"alpha": -1.5707963267948966,
 											"distance": 15,
@@ -59392,7 +59392,7 @@
 										"$ref": "AAAAAAGaVmmZROycvTQ="
 									},
 									"lineStyle": 1,
-									"points": "467:927;527:846",
+									"points": "493:927;535:846",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAGaV3QyBA2hBbI="
@@ -59613,8 +59613,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 299,
-											"top": 865,
+											"left": 316,
+											"top": 864,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -59634,8 +59634,8 @@
 											},
 											"visible": null,
 											"font": "Arial;13;0",
-											"left": 309,
-											"top": 854,
+											"left": 325,
+											"top": 852,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 30,
@@ -59655,8 +59655,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 278,
-											"top": 886,
+											"left": 297,
+											"top": 887,
 											"height": 13,
 											"alpha": -1.5707963267948966,
 											"distance": 15,
@@ -59674,7 +59674,7 @@
 										"$ref": "AAAAAAGaV3O55g0VIMY="
 									},
 									"lineStyle": 1,
-									"points": "243:838;336:927",
+									"points": "251:838;363:927",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAGaV6vq4xVfx4o="
@@ -59727,7 +59727,7 @@
 													"font": "Arial;13;1",
 													"left": 285,
 													"top": 975,
-													"width": 257.876953125,
+													"width": 322.19140625,
 													"height": 13,
 													"text": "EventBus"
 												},
@@ -59762,7 +59762,7 @@
 											"font": "Arial;13;0",
 											"left": 280,
 											"top": 968,
-											"width": 267.876953125,
+											"width": 332.19140625,
 											"height": 25,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAGaV7cMsx2LsEQ="
@@ -59789,7 +59789,7 @@
 											"font": "Arial;13;0",
 											"left": 280,
 											"top": 993,
-											"width": 267.876953125,
+											"width": 332.19140625,
 											"height": 10
 										},
 										{
@@ -59814,16 +59814,16 @@
 													"font": "Arial;13;0",
 													"left": 285,
 													"top": 1008,
-													"width": 257.876953125,
+													"width": 322.19140625,
 													"height": 13,
-													"text": "+recibirEvento(String evento, Socket cliente)",
+													"text": "+recibirEvento(String eventoSerializado, Socket cliente)",
 													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 280,
 											"top": 1003,
-											"width": 267.876953125,
+											"width": 332.19140625,
 											"height": 23
 										},
 										{
@@ -59863,7 +59863,7 @@
 									"containerChangeable": true,
 									"left": 280,
 									"top": 968,
-									"width": 266.876953125,
+									"width": 331.19140625,
 									"height": 73,
 									"nameCompartment": {
 										"$ref": "AAAAAAGaV7cMsx2KHlM="
@@ -104918,17 +104918,17 @@
 																"$ref": "AAAAAAGaV7Z3sB1vvLU="
 															},
 															"font": "Arial;13;0",
-															"left": 702,
+															"left": 712,
 															"top": 232,
-															"width": 149.59521484375,
+															"width": 291.19873046875,
 															"height": 13,
-															"alpha": 1.5707963267948966,
-															"distance": 10,
+															"alpha": 0.12283522386513597,
+															"distance": 81.61494961096282,
 															"hostEdge": {
 																"$ref": "AAAAAAGaV7Z3sB1w618="
 															},
 															"edgePosition": 1,
-															"text": "5 : recibirEvento(evento)"
+															"text": "5 : recibirEvento(eventoSerializado, socketCliente)"
 														},
 														{
 															"_type": "EdgeLabelView",
@@ -105988,7 +105988,7 @@
 											"target": {
 												"$ref": "AAAAAAGaV7WyBh1K3os="
 											},
-											"arguments": "evento"
+											"arguments": "eventoSerializado, socketCliente"
 										},
 										{
 											"_type": "UMLMessage",
@@ -106322,8 +106322,7 @@
 											"_parent": {
 												"$ref": "AAAAAAGaV7ftDB3r5Q8="
 											},
-											"name": "String evento",
-											"type": ""
+											"name": "String eventoSerializado"
 										},
 										{
 											"_type": "UMLParameter",
@@ -106331,8 +106330,7 @@
 											"_parent": {
 												"$ref": "AAAAAAGaV7ftDB3r5Q8="
 											},
-											"name": "Socket cliente",
-											"type": ""
+											"name": "Socket cliente"
 										}
 									]
 								}
