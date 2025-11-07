@@ -31,7 +31,9 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
         add(tablero, BorderLayout.CENTER);
         add(jugadores, BorderLayout.WEST);
         this.setBackground(COLOR_FONDO);
-        setSize(1050, 640);
+        this.pnlFooter.setBackground(COLOR_FONDO);
+        this.setLocationRelativeTo(null);
+        setSize(1050, 740);
     }
 
     public ObservadorTablero getObservadorTablero() {
@@ -50,8 +52,50 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlFooter = new javax.swing.JPanel();
+        btnFinalizarPartida = new javax.swing.JButton();
+        btnAbandonarPartida = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1000, 800));
+
+        pnlFooter.setPreferredSize(new java.awt.Dimension(300, 100));
+
+        btnFinalizarPartida.setBackground(null);
+        btnFinalizarPartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartida.png"))); // NOI18N
+        btnFinalizarPartida.setBorder(null);
+        btnFinalizarPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
+        btnFinalizarPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
+        btnFinalizarPartida.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
+
+        btnAbandonarPartida.setBackground(null);
+        btnAbandonarPartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartida.png"))); // NOI18N
+        btnAbandonarPartida.setActionCommand("");
+        btnAbandonarPartida.setBorder(null);
+        btnAbandonarPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
+        btnAbandonarPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlFooterLayout = new javax.swing.GroupLayout(pnlFooter);
+        pnlFooter.setLayout(pnlFooterLayout);
+        pnlFooterLayout.setHorizontalGroup(
+            pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFooterLayout.createSequentialGroup()
+                .addGap(215, 215, 215)
+                .addComponent(btnFinalizarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnAbandonarPartida)
+                .addContainerGap())
+        );
+        pnlFooterLayout.setVerticalGroup(
+            pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFooterLayout.createSequentialGroup()
+                .addGroup(pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFinalizarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAbandonarPartida))
+                .addGap(69, 69, 69))
+        );
+
+        getContentPane().add(pnlFooter, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -64,5 +108,8 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbandonarPartida;
+    private javax.swing.JButton btnFinalizarPartida;
+    private javax.swing.JPanel pnlFooter;
     // End of variables declaration//GEN-END:variables
 }

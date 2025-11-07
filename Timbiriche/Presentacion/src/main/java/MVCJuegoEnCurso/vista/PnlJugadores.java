@@ -19,7 +19,7 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores {
     private List<PnlJugador> panelesJugadores = new ArrayList<>();
     private IModeloJugadoresLectura modelo;
     private ControladorPartida controlador;
-     private final Color COLOR_FONDO = new Color(224, 233, 255);
+    private final Color COLOR_FONDO = new Color(224, 233, 255);
 
     public PnlJugadores(IModeloJugadoresLectura modelo, ControladorPartida controlador) {
         initComponents();
