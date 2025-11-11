@@ -1,6 +1,7 @@
 MVCJuegoEnCurso/modelo/interfaces/IModeloPartidaEscritura.class
 MVCJuegoEnCurso/observer/ObservadorTablero.class
 MVCJuegoEnCurso/modelo/interfaces/IModeloTableroLectura.class
+org/itson/presentacion/FrmMenuInicio.class
 MVCJuegoEnCurso/vista/PnlPunto.class
 MVCJuegoEnCurso/observer/ObservablePartida.class
 MVCJuegoEnCurso/vista/PnlTablero.class

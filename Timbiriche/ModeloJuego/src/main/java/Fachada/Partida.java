@@ -69,7 +69,7 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
                 || Objects.equals(origen.getDerecha(), destino))) {
            throw new PartidaExcepcion("Los puntos seleccionados no se pueden conectar.");
         }
-        // si se puede realizar la jugada:
+        // si se puede realizar la jugada: checar turnero
         return tablero.unirPuntos(origen, destino, turnos.getJugadorEnTurno());
 
     }
