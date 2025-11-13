@@ -61,16 +61,13 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
 
         pnlFooter.setPreferredSize(new java.awt.Dimension(300, 100));
 
-        btnFinalizarPartida.setBackground(null);
         btnFinalizarPartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartida.png"))); // NOI18N
         btnFinalizarPartida.setBorder(null);
         btnFinalizarPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
         btnFinalizarPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
         btnFinalizarPartida.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/finalizarPartidaHover.png"))); // NOI18N
 
-        btnAbandonarPartida.setBackground(null);
         btnAbandonarPartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartida.png"))); // NOI18N
-        btnAbandonarPartida.setActionCommand("");
         btnAbandonarPartida.setBorder(null);
         btnAbandonarPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
         btnAbandonarPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
