@@ -6,21 +6,27 @@ import Entidades.Linea;
 import Entidades.ManejadorTurnos;
 import Entidades.Punto;
 import Entidades.Tablero;
+import Entidades.TipoEvento;
 import Fachada.PartidaFachada;
+import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
+import Observer.ObservadorJugadores;
 import Observer.ObservadorTurnos;
 import excepciones.PartidaExcepcion;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.itson.componentereceptor.IReceptor;
+import org.itson.dto.PaqueteDTO;
 
 /**
  * Clase que representa una partida de juego. Engloba a todas las clases
- * necesarias para iniciar una partida.
- * Observa al manejador de turnos para notificar cambios en los turnos.
+ * necesarias para iniciar una partida. Observa al manejador de turnos para
+ * notificar cambios en los turnos.
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada, ObservadorTurnos {
+public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
 
     private Tablero tablero;
     private ManejadorTurnos turnos;
@@ -28,14 +34,18 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
     private ObservadorInicio observadorInicioJuego;
     private List<Jugador> jugadores;
 
+    private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
+    private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
+
     /**
      * Constructor de partida.
+     *
      * @param jugadores jugadores que estarán en la partida
      * @param alto alto del tablero
      * @param ancho ancho del tablero
-     * 
+     *
      * inicializa un tablero y un manejador de turnos.
-     * 
+     *
      */
     public Partida(List<Jugador> jugadores, int alto, int ancho) {
         // tablero mock
@@ -58,7 +68,7 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
             // validar que la linea no exista 
             if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino)) || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
                 throw new PartidaExcepcion("Los puntos seleccionados forman una línea que ya existe.");
-               
+
             }
 
         }
@@ -67,7 +77,7 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
                 || Objects.equals(origen.getAbajo(), destino)
                 || Objects.equals(origen.getIzquierda(), destino)
                 || Objects.equals(origen.getDerecha(), destino))) {
-           throw new PartidaExcepcion("Los puntos seleccionados no se pueden conectar.");
+            throw new PartidaExcepcion("Los puntos seleccionados no se pueden conectar.");
         }
         // si se puede realizar la jugada: checar turnero
         return tablero.unirPuntos(origen, destino, turnos.getJugadorEnTurno());
@@ -100,14 +110,12 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
         return tablero.getLineasExistentes();
     }
 
-    @Override
     public void notificarObservadorTurnos() {
         if (observadorTurnos != null) {
             observadorTurnos.actualizar(jugadores);
         }
     }
 
-    @Override
     public void agregarObservadorTurnos(ObservadorTurnos ob) {
         this.observadorTurnos = ob;
     }
@@ -130,6 +138,117 @@ public class Partida implements PartidaFachada, ObservadorTurnos {
     @Override
     public void actualizar(List<Jugador> jugadores) {
         notificarObservadorTurnos();
+    }
+
+    @Override
+    public void agregarObservadorJugadores(ObservadorJugadores ob) {
+        this.observadoresJugadores.add(ob);
+    }
+
+    @Override
+    public void notificarObservadorJugadores() {
+        for (ObservadorJugadores ob : observadoresJugadores) {
+            ob.actualizar(jugadores);
+        }
+    }
+
+    @Override
+    public void agregarObservadorEventos(ObservadorEventos<?> ob) {
+        this.observadoresEventos.add(ob);
+    }
+
+    @Override
+    public void notificarEventoRecibido(Object evento) {
+        for (ObservadorEventos ob : observadoresEventos) {
+            ob.actualizar(evento);
+        }
+    }
+
+    @Override
+    public void recibirCambio(PaqueteDTO paquete) {
+
+        TipoEvento tipo;
+
+        try {
+            tipo = TipoEvento.valueOf(paquete.getTipoEvento());
+        } catch (IllegalArgumentException e) {
+            notificarEventoRecibido("ERROR: Tipo de evento desconocido: " + paquete.getTipoEvento());
+            return;
+        }
+
+        switch (tipo) {
+
+            case NUEVA_LINEA: {
+                // Se espera un PaqueteDTO<Punto[]>
+                Punto[] puntos;
+
+                try {
+                    puntos = (Punto[]) paquete.getContenido();
+                } catch (ClassCastException e) {
+                    notificarEventoRecibido("ERROR: contenido no es Punto[]");
+                    return;
+                }
+
+                if (puntos == null || puntos.length != 2) {
+                    notificarEventoRecibido("ERROR: Punto[] inválido en NUEVA_LINEA");
+                    return;
+                }
+
+                Punto origen = puntos[0];
+                Punto destino = puntos[1];
+
+                try {
+                    boolean hizoCuadro = validarPuntos(origen, destino);
+
+                    // Notificar que se recibió un movimiento válido
+                    notificarEventoRecibido("Línea agregada: " + origen + " → " + destino);
+
+                    // Si no hizo cuadro, actualizar turno
+                    if (!hizoCuadro) {
+                        actualizarTurno();
+                    }
+
+                } catch (PartidaExcepcion e) {
+                    notificarEventoRecibido(e);
+                }
+
+                break;
+            }
+
+            case ACTUALIZAR_TURNO:
+                actualizarTurno();
+                notificarEventoRecibido("Turno actualizado");
+                break;
+
+            case SOLICITAR_INICIAR_PARTIDA:
+            case INICIO_PARTIDA:
+                notificarObservadorInicioJuego();
+                notificarEventoRecibido("Partida iniciada");
+                break;
+
+            case UNIRSE_PARTIDA:
+                notificarEventoRecibido("Un jugador se unió a la partida");
+                break;
+
+            case ABANDONAR_PARTIDA:
+                notificarEventoRecibido("Un jugador abandonó la partida");
+                break;
+
+            case CONFIGURAR_PARTIDA:
+                notificarEventoRecibido("Partida configurada");
+                break;
+
+            case SOLICITAR_FINALIZAR_PARTIDA:
+                notificarEventoRecibido("Se solicitó finalizar la partida");
+                break;
+
+            case ACTUALIZAR_PUNTOS:
+                notificarEventoRecibido("Se actualizaron los puntos");
+                break;
+
+            default:
+                notificarEventoRecibido("Evento no manejado: " + tipo);
+        }
     }
 
 }

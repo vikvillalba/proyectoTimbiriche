@@ -28,7 +28,7 @@ public class ConfiguracionesPartida {
         ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura);
         FrmPartida frmPartida = new FrmPartida(modeloJugadoresLectura, modeloTableroLectura, controlador);
 
-        partida.agregarObservadorTurnos(modeloPartida);
+        //partida.agregarObservadorTurnos(modeloPartida);
         partida.agregarObservadorInicioJuego(modeloPartida);
         partida.agregarObservadorInicioJuego(modeloPartida);
         modeloPartida.agregarObservadorJugadores(frmPartida.getObservadorJugadores());

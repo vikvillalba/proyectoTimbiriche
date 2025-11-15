@@ -7,27 +7,15 @@ package Observer;
  */
 public interface Observable {
 
-    /**
-     * Agrega un observador para el orden de los turnos
-     *
-     * @param ob observador a suscribir.
-     */
-    void agregarObservadorTurnos(ObservadorTurnos ob);
+    // Jugadores
+    void agregarObservadorJugadores(ObservadorJugadores ob);
+    void notificarObservadorJugadores();
 
-    /**
-     * notifica al observador de turnos que hay un nuevo jugador en turno.
-     */
-    void notificarObservadorTurnos();
-
-    /**
-     * Agrega un observador para el inicio del juego
-     *
-     * @param ob observador a suscribir.
-     */
+    // Inicio de partida
     void agregarObservadorInicioJuego(ObservadorInicio ob);
-
-    /**
-     * Notifica al observador cuando el juego inicia.
-     */
     void notificarObservadorInicioJuego();
+
+    // Eventos
+    void agregarObservadorEventos(ObservadorEventos<?> ob);
+    void notificarEventoRecibido(Object evento);
 }
