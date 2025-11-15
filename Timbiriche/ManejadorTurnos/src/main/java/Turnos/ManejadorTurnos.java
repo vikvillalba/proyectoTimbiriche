@@ -1,68 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Turnos;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.itson.componenteemisor.IEmisor;
+import org.itson.componentereceptor.IReceptor;
+import org.itson.dto.PaqueteDTO;
 
 /**
  *
  * @author erika
  */
-public class ManejadorTurnos {
-    
-    private List<JugadorDTO> turnos;
+public class ManejadorTurnos implements IReceptor {
+
+    private List<JugadorDTO> turnos = new ArrayList<>();
     private JugadorDTO jugadorEnTurno;
+    private final IEmisor emisor;
     private int indiceActual; // en que turno va
 
-   // private ObservadorTurnos observadorTurnos;
+    public ManejadorTurnos(IEmisor emisor) {
+//      this.indiceActual = -1; // inicia en -1 para que el primer actualizarTurno() ponga al jugador 0
 
-    /**
-     * Asigna los turnos para una partida.
-     *
-     * @param jugadores jugadores de la partida.
-     *
-     * mezcla a los jugadores de manera aleatoria y reparte los turnos de juego.
-     */
-    public ManejadorTurnos(List<JugadorDTO> jugadores) {
-        this.turnos = new ArrayList<>(jugadores);
-        this.indiceActual = -1; // inicia en -1 para que el primer actualizarTurno() ponga al jugador 0
-        asignarTurnos();        // mezcla los jugadores de forma aleatoria
-      //  actualizarTurno();      // setea el primer jugador en turno
+        this.emisor = emisor;
     }
 
-    private void asignarTurnos() {
-        // revuelve lista de jugadores
+    public List<JugadorDTO> getTurnos() {
+        return this.turnos;
+    }
+
+    public void repartirTurnos(List<JugadorDTO> jugadores) {
+        turnos = new ArrayList<>(jugadores);
         Collections.shuffle(turnos);
     }
 
-//    public void agregarObservadorTurnos(ObservadorTurnos obs) {
-//        this.observadorTurnos = obs;
-//    }
-//
-//    public void actualizarTurno() {
-//        if (jugadorEnTurno != null) {
-//            jugadorEnTurno.setTurno(false);
-//        }
-//
-//        indiceActual = (indiceActual + 1) % turnos.size();
-//        jugadorEnTurno = turnos.get(indiceActual);
-//        jugadorEnTurno.setTurno(true);
-//
-//        // Notificar al observador que cambió el turno
-//        if (observadorTurnos != null) {
-//            observadorTurnos.actualizar(turnos);
-//        }
-//    }
-
-    /**
-     * Determina si un jugador está en turno o no.
-     * @param jugador específico del que se desea conocer si es su turno.
-     * @return true si es su turno, false en caso contrario.
-     */
     public boolean isTurno(JugadorDTO jugador) {
         return jugador != null && jugador.equals(jugadorEnTurno);
     }
@@ -71,7 +41,36 @@ public class ManejadorTurnos {
         return jugadorEnTurno;
     }
 
-    public List<JugadorDTO> getTurnos() {
-        return this.turnos;
+    private void actualizarTurno() {
+        for (JugadorDTO j : turnos) {
+            j.setTurno(false);
+        }
+
+        indiceActual = (indiceActual + 1) % turnos.size();
+        jugadorEnTurno = turnos.get(indiceActual);
+        jugadorEnTurno.setTurno(true);
+        notificarTurnoActualizado();
+    }
+
+    private void notificarTurnoActualizado() {
+        if (emisor != null) {
+            emisor.enviarCambio(new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO"));
+        }
+    }
+
+    @Override
+    public void recibirCambio(PaqueteDTO paquete) {
+        switch (paquete.getTipoEvento()) {
+
+            case "INICIO_PARTIDA" -> {
+                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();
+                repartirTurnos(jugadores);
+                indiceActual = -1;
+                actualizarTurno();
+            }
+
+            case "ACTUALIZAR_TURNO" ->
+                actualizarTurno();
+        }
     }
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Turnos;
 
 /**
@@ -9,5 +5,30 @@ package Turnos;
  * @author erika
  */
 public class JugadorDTO {
-    
+    private String id;
+    private boolean turno;
+
+    public JugadorDTO() {
+    }
+
+    public JugadorDTO(String id, boolean turno) {
+        this.id = id;
+        this.turno = turno;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isTurno() {
+        return turno;
+    }
+
+    public void setTurno(boolean turno) {
+        this.turno = turno;
+    }
 }
