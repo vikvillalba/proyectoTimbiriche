@@ -8,6 +8,10 @@
     <modules>
         <module>ModeloJuego</module>
         <module>Presentacion</module>
+        <module>Red</module>
+        <module>ComponenteReceptor</module>
+        <module>DTO</module>
+        <module>ComponenteEmisor</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
