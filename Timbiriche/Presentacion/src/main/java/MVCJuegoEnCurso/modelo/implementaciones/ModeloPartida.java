@@ -39,7 +39,6 @@ public class ModeloPartida implements IModeloJugadoresLectura,
                                       IModeloPartidaEscritura, 
                                       IModeloTableroLectura, 
                                       ObservablePartida, 
-                                      ObservadorTurnos, 
                                       ObservadorInicio {
 
     private PartidaFachada partida;
@@ -143,7 +142,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     // llama a fachada q actualice los turnos
     @Override
     public void actualizarTurnos() {
-        partida.actualizarTurno();
+//        partida.actualizarTurno();
         //cambia el estado de turno en la lista de jugadores 
         notificarObservadorJugadores(partida.getJugadores());
     }
@@ -218,10 +217,10 @@ public class ModeloPartida implements IModeloJugadoresLectura,
 
     // observa a la partida y cuando se actualizan los turnos notifica 
     // al observador de los jugadores (metodo d arriba)
-    @Override
-    public void actualizar(List<Jugador> jugadores) {
-        notificarObservadorJugadores(jugadores);
-    }
+//    @Override
+//    public void actualizar(List<Jugador> jugadores) {
+//        notificarObservadorJugadores(jugadores);
+//    }
 
     @Override
     public void agregarObservadorTablero(ObservadorTablero ob) {

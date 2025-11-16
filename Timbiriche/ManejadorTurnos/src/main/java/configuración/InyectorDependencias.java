@@ -9,5 +9,6 @@ import org.itson.componentereceptor.IReceptor;
 public class InyectorDependencias {
 
     public void setReceptor(IReceptor receptor) {
+        
     }
 }

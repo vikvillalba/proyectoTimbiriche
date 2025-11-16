@@ -68,7 +68,7 @@ public interface PartidaFachada extends Observable {
      * Actualiza el turno de los jugadores.
      * llama al manejador de turnos para que continúe con el jugador que sigue.
      */
-    void actualizarTurno();
+//    void actualizarTurno();
 
     /** Obtiene un punto del tablero.
      * @param x posicion x en la matriz del tablero

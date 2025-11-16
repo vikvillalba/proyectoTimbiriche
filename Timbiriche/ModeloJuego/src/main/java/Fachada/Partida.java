@@ -16,6 +16,7 @@ import excepciones.PartidaExcepcion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
 
@@ -26,16 +27,19 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
+public class Partida implements PartidaFachada, IReceptor {
 
     private Tablero tablero;
-    private ManejadorTurnos turnos;
-    private ObservadorTurnos observadorTurnos;
+
     private ObservadorInicio observadorInicioJuego;
     private List<Jugador> jugadores;
+    private Jugador jugadorEnTurno;
+    private IEmisor emisor;
 
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
+//    private ManejadorTurnos turnos;
+//    private ObservadorTurnos observadorTurnos;
 
     /**
      * Constructor de partida.
@@ -51,10 +55,10 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
         // tablero mock
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
-        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
+//        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
 
         // Registrar la partida como observador de turnos (para notificar al modelo cuando se avance de turno)
-        this.turnos.agregarObservadorTurnos(this);
+//        this.turnos.agregarObservadorTurnos(this);
     }
 
     @Override
@@ -80,19 +84,13 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
             throw new PartidaExcepcion("Los puntos seleccionados no se pueden conectar.");
         }
         // si se puede realizar la jugada: checar turnero
-        return tablero.unirPuntos(origen, destino, turnos.getJugadorEnTurno());
+        return tablero.unirPuntos(origen, destino, jugadorEnTurno);
 
-    }
-
-    @Override
-    public void actualizarTurno() {
-        turnos.actualizarTurno();
-        notificarObservadorTurnos();
     }
 
     @Override
     public List<Jugador> getJugadores() {
-        return turnos.getTurnos();
+        return jugadores;
     }
 
     @Override
@@ -110,16 +108,6 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
         return tablero.getLineasExistentes();
     }
 
-    public void notificarObservadorTurnos() {
-        if (observadorTurnos != null) {
-            observadorTurnos.actualizar(jugadores);
-        }
-    }
-
-    public void agregarObservadorTurnos(ObservadorTurnos ob) {
-        this.observadorTurnos = ob;
-    }
-
     @Override
     public void notificarObservadorInicioJuego() {
         observadorInicioJuego.iniciarJuego();
@@ -133,11 +121,6 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
     @Override
     public List<Cuadro> getCuadrosTablero() {
         return tablero.getCuadrosExistentes();
-    }
-
-    @Override
-    public void actualizar(List<Jugador> jugadores) {
-        notificarObservadorTurnos();
     }
 
     @Override
@@ -164,6 +147,21 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
         }
     }
 
+//    @Override
+//    public void actualizarTurno() {
+//        jugadorEnTurno = jugador;
+//        turnos.actualizarTurno();
+//        notificarObservadorTurnos();
+//    }
+//    public void notificarObservadorTurnos() {
+//        if (observadorTurnos != null) {
+//            observadorTurnos.actualizar(jugadores);
+//        }
+//    }
+//    public void agregarObservadorTurnos(ObservadorTurnos ob) {
+//        this.observadorTurnos = ob;
+//    }
+    
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
 
@@ -204,10 +202,9 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
                     notificarEventoRecibido("Línea agregada: " + origen + " → " + destino);
 
                     // Si no hizo cuadro, actualizar turno
-                    if (!hizoCuadro) {
-                        actualizarTurno();
-                    }
-
+//                    if (!hizoCuadro) {
+//                        actualizarTurno();
+//                    }
                 } catch (PartidaExcepcion e) {
                     notificarEventoRecibido(e);
                 }
@@ -215,9 +212,17 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
                 break;
             }
 
-            case ACTUALIZAR_TURNO:
-                actualizarTurno();
-                notificarEventoRecibido("Turno actualizado");
+            case TURNO_ACTUALIZADO:
+
+                //Lógica para cambiar de dto a entidad
+                
+                Jugador jugadorTurno = (Jugador) paquete.getContenido();
+
+                if (jugadorTurno != null) {
+                    jugadorEnTurno = jugadorTurno;
+                    notificarEventoRecibido("Turno actualizado: " + jugadorEnTurno.getNombre());
+                }
+                notificarEventoRecibido("TURNO_ACTUALIZADO");
                 break;
 
             case SOLICITAR_INICIAR_PARTIDA:
@@ -250,5 +255,4 @@ public class Partida implements PartidaFachada, ObservadorTurnos, IReceptor {
                 notificarEventoRecibido("Evento no manejado: " + tipo);
         }
     }
-
 }

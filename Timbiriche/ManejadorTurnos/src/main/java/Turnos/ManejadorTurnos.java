@@ -19,8 +19,6 @@ public class ManejadorTurnos implements IReceptor {
     private int indiceActual; // en que turno va
 
     public ManejadorTurnos(IEmisor emisor) {
-//      this.indiceActual = -1; // inicia en -1 para que el primer actualizarTurno() ponga al jugador 0
-
         this.emisor = emisor;
     }
 
@@ -54,6 +52,9 @@ public class ManejadorTurnos implements IReceptor {
 
     private void notificarTurnoActualizado() {
         if (emisor != null) {
+            
+            //Logica para cambiar de DTO a entidad
+            
             emisor.enviarCambio(new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO"));
         }
     }
@@ -62,15 +63,20 @@ public class ManejadorTurnos implements IReceptor {
     public void recibirCambio(PaqueteDTO paquete) {
         switch (paquete.getTipoEvento()) {
 
-            case "INICIO_PARTIDA" -> {
-                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();
+            case "INICIO_PARTIDA":
+                
+                //Lógica para cambiar de entidad a DTO
+                
+                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();              
+                
                 repartirTurnos(jugadores);
                 indiceActual = -1;
                 actualizarTurno();
-            }
+            break;
 
-            case "ACTUALIZAR_TURNO" ->
+            case "ACTUALIZAR_TURNO":
                 actualizarTurno();
+            break;
         }
     }
 }
