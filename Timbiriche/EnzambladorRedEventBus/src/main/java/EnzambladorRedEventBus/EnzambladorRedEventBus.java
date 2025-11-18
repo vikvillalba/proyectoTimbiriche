@@ -10,7 +10,7 @@ import IEmisorBus.ColaEnviosBus;
 import IEmisorBus.EmisorBus;
 import IEmisorBus.IEmisorBus;
 import ObserverReceptor.ObservadorRecibos;
-import Receptor.Receptor;
+import Receptor.ReceptorBus;
 import Receptor.ServidorTCP;
 import org.itson.componentereceptor.IReceptor;
 
@@ -28,7 +28,7 @@ public class EnzambladorRedEventBus {
     private IReceptor receptorInyectado;
 
     private IEmisorBus emisor;
-    private Receptor receptor;
+    private ReceptorBus receptor;
     private ServidorTCP servidorTCP;
 
     private EnzambladorRedEventBus() {
@@ -62,15 +62,15 @@ public class EnzambladorRedEventBus {
     public void ensamblar() {
 
         ColaRecibosBus colaRecibos = new ColaRecibosBus();
-        
-        receptor = new Receptor(colaRecibos, receptorInyectado);
+
+        receptor = new ReceptorBus(colaRecibos, receptorInyectado);
 
         // Observador de recibos
         ObservadorRecibos obs = receptor;
         colaRecibos.agregarObservador(obs);
 
         // Servidor TCP para escuchar eventos
-        servidorTCP = new ServidorTCP(colaRecibos, puertoEntrada,host);
+        servidorTCP = new ServidorTCP(colaRecibos, puertoEntrada, host);
         new Thread(() -> servidorTCP.iniciar()).start();
 
         ColaEnviosBus colaEnvios = new ColaEnviosBus();
@@ -86,7 +86,7 @@ public class EnzambladorRedEventBus {
         return emisor;
     }
 
-    public Receptor getReceptor() {
+    public ReceptorBus getReceptor() {
         return receptor;
     }
 

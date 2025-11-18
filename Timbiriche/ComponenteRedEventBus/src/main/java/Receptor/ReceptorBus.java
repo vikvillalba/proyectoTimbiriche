@@ -13,12 +13,12 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Jack Murrieta
  */
-public class Receptor implements ObservadorRecibos {
+public class ReceptorBus implements ObservadorRecibos {
 
     private ColaRecibosBus cola;
     private IReceptor receptor;
 
-    public Receptor(ColaRecibosBus cola, IReceptor receptor) {
+    public ReceptorBus(ColaRecibosBus cola, IReceptor receptor) {
         this.cola = cola;
         this.receptor = receptor;
     }
