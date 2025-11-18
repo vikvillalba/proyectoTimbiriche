@@ -4,6 +4,7 @@
  */
 package IEmisorBus;
 
+import Emisor.ColaEnvios;
 import org.itson.dto.PaqueteDTO;
 
 /**
@@ -12,9 +13,9 @@ import org.itson.dto.PaqueteDTO;
  */
 public class EmisorBus implements IEmisorBus {
 
-    private ColaEnviosBus cola;
+    private ColaEnvios cola;
 
-    public EmisorBus(ColaEnviosBus cola) {
+    public EmisorBus(ColaEnvios cola) {
         this.cola = cola;
     }
 
@@ -24,7 +25,7 @@ public class EmisorBus implements IEmisorBus {
         if (paquete == null) {
             throw new IllegalArgumentException("El paquete no puede ser null");
         }
-        cola.queue(paquete,host,puertoServicio);
+        cola.queue(paquete);
     }
 
 }

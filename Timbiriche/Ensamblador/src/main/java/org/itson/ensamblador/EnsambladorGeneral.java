@@ -4,15 +4,12 @@
  */
 package org.itson.ensamblador;
 
-import ColaRecibosBus.ColaRecibosBus;
+import Emisor.ColaEnvios;
+import Emisor.Emisor;
 import Entidades.Jugador;
 import EventBus.EventBus;
 import Fachada.Partida;
 import Fachada.PartidaFachada;
-import IEmisorBus.ClienteTCPBus;
-import IEmisorBus.ColaEnviosBus;
-import IEmisorBus.EmisorBus;
-import IEmisorBus.IEmisorBus;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
@@ -26,6 +23,7 @@ import Receptor.ServidorTCP;
 import ReceptorEventos.ReceptorEventos;
 import Turnos.ManejadorTurnos;
 import java.util.List;
+import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 
 /**
@@ -43,7 +41,7 @@ public class EnsambladorGeneral {
 
     // Componentes del sistema
     private EventBus eventBus;
-    private IEmisorBus emisorBus;
+    private IEmisor emisorBus;
 
     private EnsambladorGeneral() {
     }
@@ -60,14 +58,14 @@ public class EnsambladorGeneral {
         IReceptor adaptadorReceptor = new ReceptorEventos(eventBus);
         ColaRecibos cr = new ColaRecibos();
         ReceptorBus receptorBus = new ReceptorBus(cr, adaptadorReceptor);
+        cr.agregarObservador(receptorBus);
         ServidorTCP servidorTCP = new ServidorTCP(cr, puertoEntrada);
         new Thread(() -> servidorTCP.iniciar()).start();
-        ColaEnviosBus colaEnvios = new ColaEnviosBus();
-        ClienteTCPBus cliente = new ClienteTCPBus(colaEnvios);
-        emisorBus = new EmisorBus(colaEnvios);
-        colaEnvios.agregarObservador(cliente);
+        ColaEnvios colaEnvios = new ColaEnvios();
+//        ClienteTCPBus cliente = new ClienteTCPBus(colaEnvios);
+        emisorBus = new Emisor(colaEnvios);
+//        colaEnvios.agregarObservador(cliente);
         PublicadorEventos publicador = new PublicadorEventos(emisorBus);
-        eventBus.setPublicadorEventos(publicador);
         ManejadorTurnos manejador = new ManejadorTurnos(emisorBus, host, puertoBus);
         eventBus.registrarServicio("INICIO_PARTIDA", manejador);
         eventBus.registrarServicio("ACTUALIZAR_TURNO", manejador);

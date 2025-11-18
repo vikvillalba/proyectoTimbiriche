@@ -16,6 +16,7 @@ public class Emisor implements IEmisor{
     
     public Emisor(ColaEnvios cola) {
         this.cola = cola;
+        System.out.println("cuadruple explosion");
     }
 
     @Override

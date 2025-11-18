@@ -4,7 +4,8 @@
  */
 package PublicadorEventos;
 
-import IEmisorBus.IEmisorBus;
+import EventBus.EventBus;
+import org.itson.componenteemisor.IEmisor;
 import org.itson.dto.PaqueteDTO;
 
 /**
@@ -13,16 +14,19 @@ import org.itson.dto.PaqueteDTO;
  */
 public class PublicadorEventos {
 
-    private final IEmisorBus emisor;
+    private final IEmisor emisor;
+    private int puerto;
+    private String host;
+    private EventBus eventBus;
 
-    public PublicadorEventos(IEmisorBus emisor) {
+    public PublicadorEventos(IEmisor emisor) {
         this.emisor = emisor;
     }
 
-    public void publicar(PaqueteDTO paquete,String host, int puerto) {
+    public void publicar(PaqueteDTO paquete) {
         // lógica interna del EventBus
         // salida a la red
-        emisor.enviarCambio(paquete, host, puerto);
+        emisor.enviarCambio(paquete);
     }
 
 }

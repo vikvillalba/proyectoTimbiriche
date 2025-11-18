@@ -37,7 +37,6 @@ public class Ensamblador {
         int alto = 10;
         int ancho = 10;
 
-        // ⬇️ Aquí se sustituye el ensamblador viejo
         EnsambladorGeneral
                 .getInstancia()
                 .iniciar(jugadores, alto, ancho);

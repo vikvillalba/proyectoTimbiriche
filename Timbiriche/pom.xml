@@ -16,11 +16,8 @@
         <module>Bus</module>
         <module>ComponenteEmisorBus</module>
         <module>DTOEventBus</module>
-        <module>EnzambladorEventBus</module>
         <module>ComponenteRedEventBus</module>
-        <module>EnzambladorRed</module>
         <module>IServicio</module>
-        <module>EnzambladorRedEventBus</module>
         <module>Ensamblador</module>
     </modules>
     <properties>

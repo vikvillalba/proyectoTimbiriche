@@ -22,24 +22,11 @@ import org.itson.dto.PaqueteDTO;
 public class EventBus {
 
     private Map<String, List<IServicio>> suscriptores;
-    public int puertoEntrada;
-    public int puertoSalida;
-    public String host;
     private PublicadorEventos publicadorEventos;
 
     public EventBus(int puertoEntrada, String host) {
-        this.puertoEntrada = puertoEntrada;
-        this.host = host;
         this.suscriptores = new ConcurrentHashMap<>();
         System.out.println("new eventBus");
-    }
-
-    public PublicadorEventos getPublicadorEventos() {
-        return publicadorEventos;
-    }
-
-    public void setPublicadorEventos(PublicadorEventos publicadorEventos) {
-        this.publicadorEventos = publicadorEventos;
     }
 
     public void registrarServicio(String tipoEvento, IServicio servicio) {
@@ -53,7 +40,6 @@ public class EventBus {
                 return;
             }
         }
-
         lista.add(servicio);
         System.out.println("Iservicio registrado");
     }
@@ -81,7 +67,7 @@ public class EventBus {
             //  Notificar a cada servicio por red usando su host y puerto
             for (IServicio servicio : lista) {
 
-                publicadorEventos.publicar(paquete, servicio.getHost(), servicio.getPuerto());
+                publicadorEventos.publicar(paquete);
             }
         }
     }

@@ -17,12 +17,12 @@ public class ManejadorTurnos implements IReceptor, IServicio {
 
     private List<JugadorDTO> turnos = new ArrayList<>();
     private JugadorDTO jugadorEnTurno;
-    private final IEmisorBus emisor;
+    private final IEmisor emisor;
     private int indiceActual; // en que turno va
     private final String host;
     private final int puerto;
 
-    public ManejadorTurnos(IEmisorBus emisor, String host, int puerto) {
+    public ManejadorTurnos(IEmisor emisor, String host, int puerto) {
         this.emisor = emisor;
         this.host = host;
         this.puerto = puerto;
@@ -62,7 +62,7 @@ public class ManejadorTurnos implements IReceptor, IServicio {
             //Logica para cambiar de DTO a entidad
             
             PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO");
-            emisor.enviarCambio(paquete, host, puerto);
+            emisor.enviarCambio(paquete);
         }
     }
 
