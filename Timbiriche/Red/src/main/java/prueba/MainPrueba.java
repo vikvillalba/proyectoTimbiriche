@@ -21,45 +21,45 @@ import org.itson.dto.PaqueteDTO;
 public class MainPrueba {
 
     public static void main(String[] args) throws InterruptedException {
-        int puerto = 5000;
-        
-        IReceptor componenteReceptor = new IReceptor() {
-            @Override
-            public void recibirCambio(PaqueteDTO paquete) {
-                System.out.println("[IReceptor] Recibí paquete:");
-                System.out.println("  Tipo: " + paquete.getTipoEvento());
-                System.out.println("  Contenido: " + paquete.getContenido());
-            }
-        };
-        
-        ColaRecibos colaRecibos = new ColaRecibos();
-        Receptor receptor = new Receptor(colaRecibos, componenteReceptor);
-
-        // Observador de recibos
-        ObservadorRecibos obsRecibos = receptor;
-        colaRecibos.agregarObservador(obsRecibos);
-
-        // Servidor TCP
-        ServidorTCP servidor = new ServidorTCP(colaRecibos, puerto);
-        new Thread(() -> servidor.iniciar()).start();
-
-        Thread.sleep(500);
-        
-        ColaEnvios colaEnvios = new ColaEnvios();
-        ClienteTCP cliente = new ClienteTCP(colaEnvios, puerto, "localhost");
-
-        // Observador de envíos
-        colaEnvios.agregarObservador(cliente);
-
-        Emisor emisor = new Emisor(colaEnvios);
-        
-        PaqueteDTO<String> paquete = new PaqueteDTO<>("Hola receptor!", "MENSAJE");
-
-        System.out.println("[MAIN] Enviando paquete del emisor...");
-        emisor.enviarCambio(paquete);
-
-        // Esperar para ver toda la secuencia
-        Thread.sleep(2000);
+//        int puerto = 5000;
+//        
+//        IReceptor componenteReceptor = new IReceptor() {
+//            @Override
+//            public void recibirCambio(PaqueteDTO paquete) {
+//                System.out.println("[IReceptor] Recibí paquete:");
+//                System.out.println("  Tipo: " + paquete.getTipoEvento());
+//                System.out.println("  Contenido: " + paquete.getContenido());
+//            }
+//        };
+//        
+//        ColaRecibos colaRecibos = new ColaRecibos();
+//        Receptor receptor = new Receptor(colaRecibos, componenteReceptor);
+//
+//        // Observador de recibos
+//        ObservadorRecibos obsRecibos = receptor;
+//        colaRecibos.agregarObservador(obsRecibos);
+//
+//        // Servidor TCP
+//        ServidorTCP servidor = new ServidorTCP(colaRecibos, puerto);
+//        new Thread(() -> servidor.iniciar()).start();
+//
+//        Thread.sleep(500);
+//        
+//        ColaEnvios colaEnvios = new ColaEnvios();
+//        ClienteTCP cliente = new ClienteTCP(colaEnvios, puerto, "localhost");
+//
+//        // Observador de envíos
+//        colaEnvios.agregarObservador(cliente);
+//
+//        Emisor emisor = new Emisor(colaEnvios);
+//        
+//        PaqueteDTO<String> paquete = new PaqueteDTO<>("Hola receptor!", "MENSAJE");
+//
+//        System.out.println("[MAIN] Enviando paquete del emisor...");
+//        emisor.enviarCambio(paquete);
+//
+//        // Esperar para ver toda la secuencia
+//        Thread.sleep(2000);
     }
 }
 

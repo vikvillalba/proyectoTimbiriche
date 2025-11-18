@@ -17,16 +17,16 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author erika
  */
-public class ColaRecibos implements ObservableRecibos{
+public class ColaRecibos implements ObservableRecibos {
+
     private Queue<String> cola = new LinkedList<>();
     private Gson serializador = new Gson();
     private ObservableRecibos observadorRecibos;
     private List<ObservadorRecibos> observadores = new ArrayList<>();
-    
 
     @Override
     public void agregarObservador(ObservadorRecibos ob) {
-       observadores.add(ob);
+        observadores.add(ob);
     }
 
     @Override
@@ -35,17 +35,18 @@ public class ColaRecibos implements ObservableRecibos{
             ob.actualizar();
         }
     }
-    
+
     public void queue(String paquete) {
         cola.add(paquete);
         notificar();
+        System.out.println("[ColaRecibosBus] agregado: " + paquete);
     }
-    
+
     public PaqueteDTO<?> dequeue() {
         String paquete = cola.poll();
         return deserializar(paquete);
     }
-    
+
     public PaqueteDTO<?> deserializar(String paquete) {
         return serializador.fromJson(paquete, PaqueteDTO.class);
     }

@@ -15,17 +15,18 @@ import java.net.Socket;
  * @author erika
  */
 public class ServidorTCP {
+
     private ColaRecibos cola;
     private int puerto;
     private ServerSocket socket;
-    
+
     public ServidorTCP(ColaRecibos cola, int puerto) {
         this.cola = cola;
         this.puerto = puerto;
     }
-    
-   public void iniciar() {
-       try {
+
+    public void iniciar() {
+        try {
             socket = new ServerSocket(puerto);
             System.out.println("Servidor TCP iniciado en puerto: " + puerto);
 
@@ -57,7 +58,7 @@ public class ServidorTCP {
             if (recibido != null) {
                 cola.queue(recibido);
             }
-
+            System.out.println("[ServidorTCP] recibido paquete: " + recibido);
         } catch (IOException e) {
             System.err.println("Error recibiendo paquete: " + e.getMessage());
         } finally {
@@ -67,7 +68,5 @@ public class ServidorTCP {
                 System.err.println("No se pudo cerrar el socket cliente");
             }
         }
-    }   
+    }
 }
-
-

@@ -4,7 +4,6 @@
  */
 package Receptor;
 
-import ColaRecibosBus.ColaRecibosBus;
 import ObserverReceptor.ObservadorRecibos;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
@@ -15,10 +14,10 @@ import org.itson.dto.PaqueteDTO;
  */
 public class ReceptorBus implements ObservadorRecibos {
 
-    private ColaRecibosBus cola;
+    private ColaRecibos cola;
     private IReceptor receptor;
 
-    public ReceptorBus(ColaRecibosBus cola, IReceptor receptor) {
+    public ReceptorBus(ColaRecibos cola, IReceptor receptor) {
         this.cola = cola;
         this.receptor = receptor;
     }
@@ -26,7 +25,7 @@ public class ReceptorBus implements ObservadorRecibos {
     @Override
     public void actualizar() {
         PaqueteDTO paquete = cola.dequeue();
-
+        System.out.println("[ReceptorBus] despachando al EventBus: " + paquete.getTipoEvento());
         if (paquete == null) {
             System.out.println("No hay paquetes en cola al recibir la notificación.");
             return;

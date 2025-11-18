@@ -31,6 +31,7 @@ public class EventBus {
         this.puertoEntrada = puertoEntrada;
         this.host = host;
         this.suscriptores = new ConcurrentHashMap<>();
+        System.out.println("new eventBus");
     }
 
     public PublicadorEventos getPublicadorEventos() {

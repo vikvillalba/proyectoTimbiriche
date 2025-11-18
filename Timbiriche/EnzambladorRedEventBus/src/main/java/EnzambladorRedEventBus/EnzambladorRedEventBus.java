@@ -19,78 +19,78 @@ import org.itson.componentereceptor.IReceptor;
  * @author Jack Murrieta
  */
 public class EnzambladorRedEventBus {
-
-    private static EnzambladorRedEventBus instancia;
-
-    private String host;
-    private int puertoEntrada;
-
-    private IReceptor receptorInyectado;
-
-    private IEmisorBus emisor;
-    private ReceptorBus receptor;
-    private ServidorTCP servidorTCP;
-
-    private EnzambladorRedEventBus() {
-    }
-
-    public static synchronized EnzambladorRedEventBus getInstancia() {
-        if (instancia == null) {
-            instancia = new EnzambladorRedEventBus();
-        }
-        return instancia;
-    }
-
-    /**
-     * configurar
-     */
-    public EnzambladorRedEventBus configurar(
-            String host,
-            int puertoEntrada,
-            IReceptor receptorInyectado) {
-
-        this.host = host;
-        this.puertoEntrada = puertoEntrada;
-        this.receptorInyectado = receptorInyectado;
-
-        return this;
-    }
-
-    /**
-     * enzambla componentes de red e inyecta el Ireceptor como param
-     */
-    public void ensamblar() {
-
-        ColaRecibosBus colaRecibos = new ColaRecibosBus();
-
-        receptor = new ReceptorBus(colaRecibos, receptorInyectado);
-
-        // Observador de recibos
-        ObservadorRecibos obs = receptor;
-        colaRecibos.agregarObservador(obs);
-
-        // Servidor TCP para escuchar eventos
-        servidorTCP = new ServidorTCP(colaRecibos, puertoEntrada, host);
-        new Thread(() -> servidorTCP.iniciar()).start();
-
-        ColaEnviosBus colaEnvios = new ColaEnviosBus();
-
-        ClienteTCPBus cliente = new ClienteTCPBus(colaEnvios);
-
-        colaEnvios.agregarObservador(cliente);
-
-        emisor = new EmisorBus(colaEnvios);
-    }
-
-    public IEmisorBus getEmisor() {
-        return emisor;
-    }
-
-    public ReceptorBus getReceptor() {
-        return receptor;
-    }
-
-    public ServidorTCP getServidorTCP() {
-        return servidorTCP;
-    }
+//
+//    private static EnzambladorRedEventBus instancia;
+//
+//    private String host;
+//    private int puertoEntrada;
+//
+//    private IReceptor receptorInyectado;
+//
+//    private IEmisorBus emisor;
+//    private ReceptorBus receptor;
+//    private ServidorTCP servidorTCP;
+//
+//    private EnzambladorRedEventBus() {
+//    }
+//
+//    public static synchronized EnzambladorRedEventBus getInstancia() {
+//        if (instancia == null) {
+//            instancia = new EnzambladorRedEventBus();
+//        }
+//        return instancia;
+//    }
+//
+//    /**
+//     * configurar
+//     */
+//    public EnzambladorRedEventBus configurar(
+//            String host,
+//            int puertoEntrada,
+//            IReceptor receptorInyectado) {
+//
+//        this.host = host;
+//        this.puertoEntrada = puertoEntrada;
+//        this.receptorInyectado = receptorInyectado;
+//
+//        return this;
+//    }
+//
+//    /**
+//     * enzambla componentes de red e inyecta el Ireceptor como param
+//     */
+//    public void ensamblar() {
+//
+//        ColaRecibosBus colaRecibos = new ColaRecibosBus();
+//
+//        receptor = new ReceptorBus(colaRecibos, receptorInyectado);
+//
+//        // Observador de recibos
+//        ObservadorRecibos obs = receptor;
+//        colaRecibos.agregarObservador(obs);
+//
+//        // Servidor TCP para escuchar eventos
+//        servidorTCP = new ServidorTCP(colaRecibos, puertoEntrada, host);
+//        new Thread(() -> servidorTCP.iniciar()).start();
+//
+//        ColaEnviosBus colaEnvios = new ColaEnviosBus();
+//
+//        ClienteTCPBus cliente = new ClienteTCPBus(colaEnvios);
+//
+//        colaEnvios.agregarObservador(cliente);
+//
+//        emisor = new EmisorBus(colaEnvios);
+//    }
+//
+//    public IEmisorBus getEmisor() {
+//        return emisor;
+//    }
+//
+//    public ReceptorBus getReceptor() {
+//        return receptor;
+//    }
+//
+//    public ServidorTCP getServidorTCP() {
+//        return servidorTCP;
+//    }
 }

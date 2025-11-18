@@ -68,6 +68,7 @@ public class ManejadorTurnos implements IReceptor, IServicio {
 
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
+        System.out.println("[ManejadorTurnos] evento recibido: " + paquete.getTipoEvento());
         switch (paquete.getTipoEvento()) {
 
             case "INICIO_PARTIDA":
