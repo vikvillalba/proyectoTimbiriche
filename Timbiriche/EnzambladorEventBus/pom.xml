@@ -31,13 +31,18 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ComponenteRedEventBus</artifactId>
+            <artifactId>EnzambladorRedEventBus</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>EnzambladorRedEventBus</artifactId>
+            <artifactId>ComponenteRedEventBus</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mycompany</groupId>
+            <artifactId>EnzambladorRedEventBus</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
