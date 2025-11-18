@@ -12,7 +12,6 @@ import ObserverReceptor.ObservadorRecibos;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
-import java.util.Objects;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 

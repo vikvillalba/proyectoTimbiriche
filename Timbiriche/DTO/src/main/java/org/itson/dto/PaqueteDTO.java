@@ -19,6 +19,12 @@ public class PaqueteDTO<T> {
         this.tipoEvento = tipoEvento;
     }
 
+    public PaqueteDTO(T contenido, String tipoEvento, String tipoContenido) {
+        this.contenido = contenido;
+        this.tipoEvento = tipoEvento;
+        this.tipoContenido = tipoContenido;
+    }
+
     public T getContenido() {
         return contenido;
     }

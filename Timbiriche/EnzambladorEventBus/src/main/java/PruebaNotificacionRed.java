@@ -1,6 +1,5 @@
 
 import EnzambladorEventBus.EnzambladorEventBus;
-import org.itson.dto.PaqueteDTO;
 
 /**
  * Prueba de notificación de servicios por red. Cada servicio externo tiene su propio servidor TCP que recibe notificaciones.

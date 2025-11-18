@@ -17,7 +17,7 @@ import org.itson.dto.PaqueteDTO;
 
 /**
  *
- * @author Jack Murrita
+ * @author Jack Murrieta
  */
 public class EventBus {
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Bus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Bus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteEmisor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteEmisor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteEmisorBus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteEmisorBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteReceptor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteReceptor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteRedEventBus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ComponenteRedEventBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DTO/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DTO/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DTOEventBus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DTOEventBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorEventBus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorEventBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorRed/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorRed/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorRedEventBus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/EnzambladorRedEventBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IServicio/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IServicio/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ManejadorTurnos/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ManejadorTurnos/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ModeloJuego/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ModeloJuego/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Presentacion/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Presentacion/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Red/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Red/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

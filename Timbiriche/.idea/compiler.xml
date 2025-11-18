@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="EnzambladorEventBus" />
+        <module name="Bus" />
+        <module name="DTOEventBus" />
+        <module name="Presentacion" />
+        <module name="EnzambladorRed" />
+        <module name="IServicio" />
+        <module name="Red" />
+        <module name="ComponenteEmisor" />
+        <module name="ComponenteRedEventBus" />
+        <module name="ManejadorTurnos" />
+        <module name="ModeloJuego" />
+        <module name="ComponenteReceptor" />
+        <module name="EnzambladorRedEventBus" />
+        <module name="DTO" />
+        <module name="ComponenteEmisorBus" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
