@@ -13,7 +13,14 @@
         <module>DTO</module>
         <module>ComponenteEmisor</module>
         <module>ManejadorTurnos</module>
+        <module>Bus</module>
+        <module>ComponenteEmisorBus</module>
+        <module>DTOEventBus</module>
+        <module>EnzambladorEventBus</module>
+        <module>ComponenteRedEventBus</module>
+        <module>EnzambladorRed</module>
         <module>IServicio</module>
+        <module>EnzambladorRedEventBus</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

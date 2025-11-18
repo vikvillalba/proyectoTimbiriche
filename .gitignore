@@ -7,3 +7,7 @@
 /Timbiriche/Bus/target/
 /Timbiriche/ComponenteEmisorBus/target/
 /Timbiriche/ComponenteRedEventBus/target/
+/Timbiriche/DTOEventBus/target/
+/Timbiriche/EnzambladorEventBus/target/
+/Timbiriche/EnzambladorRed/target/
+/Timbiriche/EnzambladorRedEventBus/target/

@@ -9,9 +9,11 @@ package org.itson.dto;
  * @author erika
  */
 public class PaqueteDTO<T> {
-    private T contenido;
-    private String tipoEvento;
-    
+
+    public T contenido;
+    public String tipoEvento;
+    public String tipoContenido;
+
     public PaqueteDTO(T contenido, String tipoEvento) {
         this.contenido = contenido;
         this.tipoEvento = tipoEvento;
@@ -24,4 +26,13 @@ public class PaqueteDTO<T> {
     public String getTipoEvento() {
         return tipoEvento;
     }
+
+    public String getTipoContenido() {
+        return tipoContenido;
+    }
+
+    public void setTipoContenido(String tipoContenido) {
+        this.tipoContenido = tipoContenido;
+    }
+
 }
