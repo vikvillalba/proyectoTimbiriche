@@ -13,6 +13,7 @@
         <module>DTO</module>
         <module>ComponenteEmisor</module>
         <module>ManejadorTurnos</module>
+        <module>IServicio</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

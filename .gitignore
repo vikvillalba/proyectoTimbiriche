@@ -4,3 +4,6 @@
 /Timbiriche/ComponenteEmisor/target/
 /Timbiriche/ManejadorTurnos/target/
 /Timbiriche/IServicio/target/
+/Timbiriche/Bus/target/
+/Timbiriche/ComponenteEmisorBus/target/
+/Timbiriche/ComponenteRedEventBus/target/
