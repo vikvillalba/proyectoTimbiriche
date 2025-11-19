@@ -18,9 +18,7 @@ import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.vista.FrmPartida;
 import PublicadorEventos.PublicadorEventos;
 import Receptor.ColaRecibos;
-import Receptor.ReceptorBus;
 import Receptor.ServidorTCP;
-import ReceptorEventos.ReceptorEventos;
 import Turnos.ManejadorTurnos;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
@@ -55,10 +53,9 @@ public class EnsambladorGeneral {
 
     public void iniciar(List<Jugador> jugadores, int alto, int ancho) {
         eventBus = new EventBus(puertoEntrada, host);
-        IReceptor adaptadorReceptor = new ReceptorEventos(eventBus);
         ColaRecibos cr = new ColaRecibos();
-        ReceptorBus receptorBus = new ReceptorBus(cr, adaptadorReceptor);
-        cr.agregarObservador(receptorBus);
+//        ReceptorBus receptorBus = new ReceptorBus(cr, adaptadorReceptor);
+//        cr.agregarObservador(receptorBus);
         ServidorTCP servidorTCP = new ServidorTCP(cr, puertoEntrada);
         new Thread(() -> servidorTCP.iniciar()).start();
         ColaEnvios colaEnvios = new ColaEnvios();
@@ -67,9 +64,9 @@ public class EnsambladorGeneral {
 //        colaEnvios.agregarObservador(cliente);
         PublicadorEventos publicador = new PublicadorEventos(emisorBus);
         ManejadorTurnos manejador = new ManejadorTurnos(emisorBus, host, puertoBus);
-        eventBus.registrarServicio("INICIO_PARTIDA", manejador);
-        eventBus.registrarServicio("ACTUALIZAR_TURNO", manejador);
-        eventBus.registrarServicio("TURNO_ACTUALIZADO", manejador);
+//        eventBus.registrarServicio("INICIO_PARTIDA", manejador);
+//        eventBus.registrarServicio("ACTUALIZAR_TURNO", manejador);
+//        eventBus.registrarServicio("TURNO_ACTUALIZADO", manejador);
         PartidaFachada partida = new Partida(jugadores, alto, ancho);
         ModeloPartida modelo = new ModeloPartida(partida);
         IModeloJugadoresLectura imjl = modelo;

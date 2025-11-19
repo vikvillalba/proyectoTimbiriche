@@ -12,18 +12,33 @@ public class PaqueteDTO<T> {
 
     public T contenido;
     public String tipoEvento;
-    public String tipoContenido;
+    public String host;
+    //no se si se ocupa chat
+    public int puerto;
 
     public PaqueteDTO(T contenido, String tipoEvento) {
         this.contenido = contenido;
         this.tipoEvento = tipoEvento;
     }
 
-    public PaqueteDTO(T contenido, String tipoEvento, String tipoContenido) {
-        this.contenido = contenido;
-        this.tipoEvento = tipoEvento;
-        this.tipoContenido = tipoContenido;
+    public int getPuerto() {
+        return puerto;
     }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+
+    
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
 
     public T getContenido() {
         return contenido;
@@ -33,12 +48,6 @@ public class PaqueteDTO<T> {
         return tipoEvento;
     }
 
-    public String getTipoContenido() {
-        return tipoContenido;
-    }
 
-    public void setTipoContenido(String tipoContenido) {
-        this.tipoContenido = tipoContenido;
-    }
 
 }

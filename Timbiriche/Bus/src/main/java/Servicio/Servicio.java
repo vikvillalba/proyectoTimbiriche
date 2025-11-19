@@ -4,28 +4,29 @@
  */
 package Servicio;
 
-import InterfazServicio.IServicio;
+
 
 /**
  *
  * @author Jack Murrieta
  */
-public class ServicioRed implements IServicio {
-
+public class Servicio  {
+    
+    private String id;
     public int puerto;
     public String host;
 
-    public ServicioRed(int puerto, String host) {
+    public Servicio(int puerto, String host) {
         this.puerto = puerto;
         this.host = host;
     }
 
-    @Override
+    
     public int getPuerto() {
         return puerto;
     }
 
-    @Override
+
     public String getHost() {
         return host;
     }

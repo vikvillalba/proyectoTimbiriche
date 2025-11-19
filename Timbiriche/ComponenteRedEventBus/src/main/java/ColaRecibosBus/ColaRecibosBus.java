@@ -56,7 +56,7 @@ public class ColaRecibosBus implements ObservableRecibos {
             Object contenidoReal = serializador.fromJson(
                     serializador.toJson(paqueteTemp.getContenido()),
                     clase
-            );
+        instanceof );
             PaqueteDTO<?> paqueteFinal = new PaqueteDTO<>(
                     contenidoReal,
                     paqueteTemp.getTipoEvento()

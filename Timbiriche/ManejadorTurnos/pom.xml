@@ -24,11 +24,6 @@
             <artifactId>Bus</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>EnzambladorEventBus</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
     <properties>
         <maven.compiler.release>24</maven.compiler.release>

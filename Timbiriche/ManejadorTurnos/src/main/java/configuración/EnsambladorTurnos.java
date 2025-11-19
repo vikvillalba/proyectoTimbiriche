@@ -1,7 +1,6 @@
 package configuración;
 
 import EventBus.EventBus;
-import IEmisorBus.IEmisorBus;
 import Turnos.ManejadorTurnos;
 
 /**

@@ -4,14 +4,13 @@
  */
 package EventBus;
 
-import DTO.PaqueteSuscripcionDTO;
-import InterfazServicio.IServicio;
 import PublicadorEventos.PublicadorEventos;
-import Servicio.ServicioRed;
+import Servicio.Servicio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.itson.componenteemisor.IEmisor;
 
 import org.itson.dto.PaqueteDTO;
 
@@ -21,20 +20,26 @@ import org.itson.dto.PaqueteDTO;
  */
 public class EventBus {
 
-    private Map<String, List<IServicio>> suscriptores;
+    private Map<String, List<Servicio>> servicios;
     private PublicadorEventos publicadorEventos;
+    private IEmisor emisor;
 
     public EventBus(int puertoEntrada, String host) {
-        this.suscriptores = new ConcurrentHashMap<>();
+        this.servicios = new ConcurrentHashMap<>();
         System.out.println("new eventBus");
     }
 
-    public void registrarServicio(String tipoEvento, IServicio servicio) {
+    public void publicarEvento(String nombreEvento, String paquete) {
+        PaqueteDTO dto = new PaqueteDTO(nombreEvento, paquete);
+        notificarServicios(dto);
+    }
+
+    public void registrarServicio(String tipoEvento, Servicio servicio) {
         //registrar por local
-        List<IServicio> lista = suscriptores.computeIfAbsent(tipoEvento, k -> new ArrayList<>());
+        List<Servicio> lista = servicios.computeIfAbsent(tipoEvento, k -> new ArrayList<>());
 
         //valida que un servicio en un tipoevwnto no este registrado
-        for (IServicio s : lista) {
+        for (Servicio s : lista) {
             if (s.getHost().equals(servicio.getHost()) && s.getPuerto() == servicio.getPuerto()) {
                 System.out.println("Servicio duplicado, no se registra de nuevo.");
                 return;
@@ -45,14 +50,14 @@ public class EventBus {
     }
 
     //registra por red
-    public void registrarServicioRed(PaqueteSuscripcionDTO dto) {
+    public void registrarServicioRed(PaqueteDTO dto) {
 
-        IServicio servicioRed = new ServicioRed(dto.getPuerto(), dto.getHost());
-        registrarServicio(dto.getEvento(), servicioRed);
+        Servicio servicioRed = new Servicio(dto.getPuerto(), dto.getHost());
+        registrarServicio(dto.getTipoEvento(), servicioRed);
     }
 
-    public void eliminarServicio(String tipoEvento, IServicio servicio) {
-        List<IServicio> lista = suscriptores.get(tipoEvento);
+    public void eliminarServicio(String tipoEvento, Servicio servicio) {
+        List<Servicio> lista = servicios.get(tipoEvento);
         if (lista != null) {
             lista.remove(servicio);
         }
@@ -61,15 +66,34 @@ public class EventBus {
     //notificar servicios por red
     public void notificarServicios(PaqueteDTO paquete) {
         //  Obtener suscriptores del tipo de evento del paquete
-        List<IServicio> lista = suscriptores.get(paquete.getTipoEvento());
+        List<Servicio> lista = servicios.get(paquete.getTipoEvento());
 
         if (lista != null) {
             //  Notificar a cada servicio por red usando su host y puerto
-            for (IServicio servicio : lista) {
+            for (Servicio servicio : lista) {
 
                 publicadorEventos.publicar(paquete);
             }
         }
+    }
+
+    public void agregarEvento(String nombreEvento, Servicio servicio) {
+        List<Servicio> lista = servicios.get(nombreEvento);
+        if (lista == null) {
+            lista = new ArrayList<>();
+            servicios.put(nombreEvento, lista);
+        }
+
+        for (Servicio s : lista) {
+            boolean mismoHost = s.getHost().equals(servicio.getHost());
+            boolean mismoPuerto = s.getPuerto() == servicio.getPuerto();
+
+            if (mismoHost && mismoPuerto) {
+                System.out.println("[EventBus] Servicio ya registrado para este evento.");
+                return;
+            }
+        }
+        lista.add(servicio);
     }
 
 }
