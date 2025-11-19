@@ -142,7 +142,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     // llama a fachada q actualice los turnos
     @Override
     public void actualizarTurnos() {
-//        partida.actualizarTurno();
+        partida.actualizarTurno();
         //cambia el estado de turno en la lista de jugadores 
         notificarObservadorJugadores(partida.getJugadores());
     }

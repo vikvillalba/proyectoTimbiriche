@@ -1,7 +1,6 @@
 package Turnos;
 
-
-import InterfazServicio.IServicio;
+import org.itson.dto.JugadorDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,19 +12,15 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author erika
  */
-public class ManejadorTurnos implements IReceptor, IServicio {
+public class ManejadorTurnos implements IReceptor {
 
     private List<JugadorDTO> turnos = new ArrayList<>();
     private JugadorDTO jugadorEnTurno;
     private final IEmisor emisor;
     private int indiceActual; // en que turno va
-    private final String host;
-    private final int puerto;
 
-    public ManejadorTurnos(IEmisor emisor, String host, int puerto) {
+    public ManejadorTurnos(IEmisor emisor) {
         this.emisor = emisor;
-        this.host = host;
-        this.puerto = puerto;
     }
 
     public List<JugadorDTO> getTurnos() {
@@ -58,9 +53,6 @@ public class ManejadorTurnos implements IReceptor, IServicio {
 
     private void notificarTurnoActualizado() {
         if (emisor != null) {
-            
-            //Logica para cambiar de DTO a entidad
-            
             PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO");
             emisor.enviarCambio(paquete);
         }
@@ -73,31 +65,15 @@ public class ManejadorTurnos implements IReceptor, IServicio {
 
             case "INICIO_PARTIDA":
                 System.out.println(paquete.toString());
-                
-                //Lógica para cambiar de entidad a DTO
-                
-                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();              
-                
+                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();
                 repartirTurnos(jugadores);
                 indiceActual = -1;
                 actualizarTurno();
-                
-                
-            break;
+                break;
 
             case "ACTUALIZAR_TURNO":
                 actualizarTurno();
-            break;
+                break;
         }
-    }
-
-    @Override
-    public int getPuerto() {
-        return puerto;
-    }
-
-    @Override
-    public String getHost() {
-        return host;
     }
 }

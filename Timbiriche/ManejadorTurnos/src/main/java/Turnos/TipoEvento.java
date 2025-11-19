@@ -7,5 +7,6 @@ package Turnos;
 public enum TipoEvento {
     TURNO_ACTUALIZADO,
     INICIO_PARTIDA,
-    ACTUALIZAR_TURNO
+    ACTUALIZAR_TURNO,
+    INICIAR_CONEXION
 }

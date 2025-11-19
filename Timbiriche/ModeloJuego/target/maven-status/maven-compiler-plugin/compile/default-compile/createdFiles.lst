@@ -2,6 +2,7 @@ Entidades\TipoEvento.class
 Entidades\Punto.class
 Observer\ObservableEventos.class
 Observer\ObservadorTurnos.class
+Mapper\MapperJugadores.class
 Observer\ObservadorEventos.class
 Observer\Observable.class
 excepciones\PartidaExcepcion.class

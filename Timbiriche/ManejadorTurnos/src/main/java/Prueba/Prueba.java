@@ -8,7 +8,6 @@ import EventBus.EventBus;
 
 import PublicadorEventos.PublicadorEventos;
 import Turnos.ManejadorTurnos;
-import configuración.EnsambladorTurnos;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.dto.PaqueteDTO;
 

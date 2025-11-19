@@ -22,7 +22,6 @@ import Receptor.ServidorTCP;
 import Turnos.ManejadorTurnos;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
-import org.itson.componentereceptor.IReceptor;
 
 /**
  *
@@ -63,7 +62,7 @@ public class EnsambladorGeneral {
         emisorBus = new Emisor(colaEnvios);
 //        colaEnvios.agregarObservador(cliente);
         PublicadorEventos publicador = new PublicadorEventos(emisorBus);
-        ManejadorTurnos manejador = new ManejadorTurnos(emisorBus, host, puertoBus);
+        ManejadorTurnos manejador = new ManejadorTurnos(emisorBus);
 //        eventBus.registrarServicio("INICIO_PARTIDA", manejador);
 //        eventBus.registrarServicio("ACTUALIZAR_TURNO", manejador);
 //        eventBus.registrarServicio("TURNO_ACTUALIZADO", manejador);

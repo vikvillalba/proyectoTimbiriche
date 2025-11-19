@@ -8,6 +8,7 @@ import Entidades.Punto;
 import Entidades.Tablero;
 import Entidades.TipoEvento;
 import Fachada.PartidaFachada;
+import Mapper.MapperJugadores;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
+import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 
 /**
@@ -35,6 +37,7 @@ public class Partida implements PartidaFachada, IReceptor {
     private List<Jugador> jugadores;
     private Jugador jugadorEnTurno;
     private IEmisor emisor;
+    private MapperJugadores mapperJugadores;
 
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
@@ -147,12 +150,15 @@ public class Partida implements PartidaFachada, IReceptor {
         }
     }
 
-//    @Override
-//    public void actualizarTurno() {
-//        jugadorEnTurno = jugador;
+    @Override
+    public void actualizarTurno() {
+        JugadorDTO jugadorEnTurnoDTO = mapperJugadores.toDTO(jugadorEnTurno);
+        PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurnoDTO, "ACTUALIZAR_TURNO");
+        emisor.enviarCambio(paquete);
 //        turnos.actualizarTurno();
 //        notificarObservadorTurnos();
-//    }
+    }
+
 //    public void notificarObservadorTurnos() {
 //        if (observadorTurnos != null) {
 //            observadorTurnos.actualizar(jugadores);
@@ -161,7 +167,6 @@ public class Partida implements PartidaFachada, IReceptor {
 //    public void agregarObservadorTurnos(ObservadorTurnos ob) {
 //        this.observadorTurnos = ob;
 //    }
-    
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
 
@@ -202,9 +207,9 @@ public class Partida implements PartidaFachada, IReceptor {
                     notificarEventoRecibido("Línea agregada: " + origen + " → " + destino);
 
                     // Si no hizo cuadro, actualizar turno
-//                    if (!hizoCuadro) {
-//                        actualizarTurno();
-//                    }
+                    if (!hizoCuadro) {
+                        actualizarTurno();
+                    }
                 } catch (PartidaExcepcion e) {
                     notificarEventoRecibido(e);
                 }
@@ -213,10 +218,8 @@ public class Partida implements PartidaFachada, IReceptor {
             }
 
             case TURNO_ACTUALIZADO:
-
-                //Lógica para cambiar de dto a entidad
-                
-                Jugador jugadorTurno = (Jugador) paquete.getContenido();
+                JugadorDTO jugadorTurnoDTO = (JugadorDTO) paquete.getContenido();
+                Jugador jugadorTurno = mapperJugadores.toEntidad(jugadorTurnoDTO);
 
                 if (jugadorTurno != null) {
                     jugadorEnTurno = jugadorTurno;
@@ -226,6 +229,7 @@ public class Partida implements PartidaFachada, IReceptor {
                 break;
 
             case SOLICITAR_INICIAR_PARTIDA:
+                
             case INICIO_PARTIDA:
                 notificarObservadorInicioJuego();
                 notificarEventoRecibido("Partida iniciada");
