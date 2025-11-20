@@ -22,14 +22,9 @@ import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
 import Turnos.ManejadorTurnos;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
-import org.itson.dto.PaqueteDTO;
 
 /**
  *
@@ -85,14 +80,6 @@ public class EnsambladorGeneral {
         ManejadorTurnos manejador = new ManejadorTurnos(emisorBus);
         PartidaFachada partida = new Partida(jugadores, alto, ancho);
         partida.setEmisor(emisorBus);
-    // pruebas con el bus xd
-        PaqueteDTO conectar = new PaqueteDTO("hole", "INICIAR_CONEXION");
-        conectar.setPuertoOrigen(puertoEntrada);
-       
-        colaEnviosCliente.queue(conectar);
-        
-
-        
         
         ModeloPartida modelo = new ModeloPartida(partida);
         IModeloJugadoresLectura imjl = modelo;

@@ -55,9 +55,8 @@ public class Partida implements PartidaFachada, IReceptor {
         // tablero mock
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
-
+        this.mapperJugadores = new MapperJugadores();
 //        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
-
         // Registrar la partida como observador de turnos (para notificar al modelo cuando se avance de turno)
 //        this.turnos.agregarObservadorTurnos(this);
     }
@@ -86,7 +85,7 @@ public class Partida implements PartidaFachada, IReceptor {
         }
         // si se puede realizar la jugada: checar turnero
         // hacer paquete dto con la jugada 
-        PuntoDTO[] puntos = new PuntoDTO[] {new PuntoDTO(origen.getX(), origen.getY()), new PuntoDTO(destino.getX(), destino.getY())};
+        PuntoDTO[] puntos = new PuntoDTO[]{new PuntoDTO(origen.getX(), origen.getY()), new PuntoDTO(destino.getX(), destino.getY())};
         PaqueteDTO paquete = new PaqueteDTO(puntos, TipoEvento.NUEVA_LINEA.toString());
         emisor.enviarCambio(paquete);
         return tablero.unirPuntos(origen, destino, jugadorEnTurno);
@@ -262,14 +261,9 @@ public class Partida implements PartidaFachada, IReceptor {
         }
     }
 
-    public IEmisor getEmisor() {
-        return emisor;
-    }
-
     @Override
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
-    
-    
+
 }
