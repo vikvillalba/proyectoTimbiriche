@@ -25,12 +25,10 @@ public class EventBus {
     }
 
     public void publicarEvento(PaqueteDTO paquete) {
-
         if (paquete.getTipoEvento().equalsIgnoreCase("INICIAR_CONEXION")) {
             Servicio nuevoServicio = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
             registrarServicio(paquete.getTipoEvento(), nuevoServicio);
             System.out.println("servicio conectao" + nuevoServicio.toString());
-
         }
         notificarServicios(paquete);
     }
@@ -79,7 +77,6 @@ public class EventBus {
             lista = new ArrayList<>();
             servicios.put(nombreEvento, lista);
         }
-
         for (Servicio s : lista) {
             boolean mismoHost = s.getHost().equals(servicio.getHost());
             boolean mismoPuerto = s.getPuerto() == servicio.getPuerto();

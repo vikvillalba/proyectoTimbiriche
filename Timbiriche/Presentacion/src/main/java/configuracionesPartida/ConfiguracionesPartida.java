@@ -18,24 +18,24 @@ import java.util.List;
 public class ConfiguracionesPartida {
     public static void iniciarPartida(List<Jugador> jugadores, int alto, int ancho){
 
-//        PartidaFachada partida = new Partida(jugadores, alto, ancho);
-//        ModeloPartida modeloPartida = new ModeloPartida(partida);
-//
-//        IModeloJugadoresLectura modeloJugadoresLectura = modeloPartida;
-//        IModeloTableroLectura modeloTableroLectura = modeloPartida;
-//        IModeloPartidaEscritura modeloPartidaEscritura = modeloPartida;
-//
-//        ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura);
-//        FrmPartida frmPartida = new FrmPartida(modeloJugadoresLectura, modeloTableroLectura, controlador);
-//
-//        //partida.agregarObservadorTurnos(modeloPartida);
-//        partida.agregarObservadorInicioJuego(modeloPartida);
-//        partida.agregarObservadorInicioJuego(modeloPartida);
-//        modeloPartida.agregarObservadorJugadores(frmPartida.getObservadorJugadores());
-//        modeloPartida.agregarObservadorTablero(frmPartida.getObservadorTablero());
-//        modeloPartida.agregarObservadorInicioJuego(frmPartida);
-//        
-//        partida.notificarObservadorInicioJuego();
+        PartidaFachada partida = new Partida(jugadores, alto, ancho);
+        ModeloPartida modeloPartida = new ModeloPartida(partida);
+
+        IModeloJugadoresLectura modeloJugadoresLectura = modeloPartida;
+        IModeloTableroLectura modeloTableroLectura = modeloPartida;
+        IModeloPartidaEscritura modeloPartidaEscritura = modeloPartida;
+
+        ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura);
+        FrmPartida frmPartida = new FrmPartida(modeloJugadoresLectura, modeloTableroLectura, controlador);
+
+        //partida.agregarObservadorTurnos(modeloPartida);
+        partida.agregarObservadorInicioJuego(modeloPartida);
+        partida.agregarObservadorInicioJuego(modeloPartida);
+        modeloPartida.agregarObservadorJugadores(frmPartida.getObservadorJugadores());
+        modeloPartida.agregarObservadorTablero(frmPartida.getObservadorTablero());
+        modeloPartida.agregarObservadorInicioJuego(frmPartida);
+        
+        partida.notificarObservadorInicioJuego();
 
     }
 }

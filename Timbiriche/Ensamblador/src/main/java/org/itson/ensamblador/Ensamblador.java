@@ -18,7 +18,7 @@ public class Ensamblador {
                 AvatarEnum.TIBURON_MARTILLO,
                 ColorEnum.VERDE_PASTEL,
                 0,
-                false
+                true
         );
 
         Jugador jugador2 = new Jugador(

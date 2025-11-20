@@ -7,6 +7,7 @@ import Entidades.Punto;
 import java.util.List;
 import Observer.Observable;
 import excepciones.PartidaExcepcion;
+import org.itson.componenteemisor.IEmisor;
 
 /**
  * Interfaz fachada para acceder a los métodos de la partida.
@@ -77,4 +78,5 @@ public interface PartidaFachada extends Observable {
      */
     Punto getPuntoTablero(int x, int y);
 
+    public void setEmisor(IEmisor emisor);
 }

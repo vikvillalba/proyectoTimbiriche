@@ -83,8 +83,8 @@ public class EnsambladorGeneral {
         
         
         ManejadorTurnos manejador = new ManejadorTurnos(emisorBus);
-//        PartidaFachada partida = new Partida(jugadores, alto, ancho, puertoEntrada, host);
-
+        PartidaFachada partida = new Partida(jugadores, alto, ancho);
+        partida.setEmisor(emisorBus);
     // pruebas con el bus xd
         PaqueteDTO conectar = new PaqueteDTO("hole", "INICIAR_CONEXION");
         conectar.setPuertoOrigen(puertoEntrada);
@@ -92,19 +92,19 @@ public class EnsambladorGeneral {
         colaEnviosCliente.queue(conectar);
         
 
-//        
-//        
-//        ModeloPartida modelo = new ModeloPartida(partida);
-//        IModeloJugadoresLectura imjl = modelo;
-//        IModeloTableroLectura imtl = modelo;
-//        IModeloPartidaEscritura impe = modelo;
-//        ControladorPartida controlador = new ControladorPartida(impe);
-//        FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
-//        partida.agregarObservadorInicioJuego(modelo);
-//        modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
-//        modelo.agregarObservadorTablero(frm.getObservadorTablero());
-//        modelo.agregarObservadorInicioJuego(frm);
-//        partida.notificarObservadorInicioJuego();
+        
+        
+        ModeloPartida modelo = new ModeloPartida(partida);
+        IModeloJugadoresLectura imjl = modelo;
+        IModeloTableroLectura imtl = modelo;
+        IModeloPartidaEscritura impe = modelo;
+        ControladorPartida controlador = new ControladorPartida(impe);
+        FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
+        partida.agregarObservadorInicioJuego(modelo);
+        modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
+        modelo.agregarObservadorTablero(frm.getObservadorTablero());
+        modelo.agregarObservadorInicioJuego(frm);
+        partida.notificarObservadorInicioJuego();
         System.out.println("Jesus en moto");
     }
 }

@@ -19,6 +19,7 @@ import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
+import org.itson.dto.PuntoDTO;
 
 /**
  * Clase que representa una partida de juego. Engloba a todas las clases
@@ -35,8 +36,6 @@ public class Partida implements PartidaFachada, IReceptor {
     private Jugador jugadorEnTurno;
     private IEmisor emisor;
     private MapperJugadores mapperJugadores;
-
-
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
 //    private ManejadorTurnos turnos;
@@ -87,7 +86,7 @@ public class Partida implements PartidaFachada, IReceptor {
         }
         // si se puede realizar la jugada: checar turnero
         // hacer paquete dto con la jugada 
-        Punto[] puntos = new Punto[]{origen, destino};
+        PuntoDTO[] puntos = new PuntoDTO[] {new PuntoDTO(origen.getX(), origen.getY()), new PuntoDTO(destino.getX(), destino.getY())};
         PaqueteDTO paquete = new PaqueteDTO(puntos, TipoEvento.NUEVA_LINEA.toString());
         emisor.enviarCambio(paquete);
         return tablero.unirPuntos(origen, destino, jugadorEnTurno);
@@ -262,4 +261,15 @@ public class Partida implements PartidaFachada, IReceptor {
                 notificarEventoRecibido("Evento no manejado: " + tipo);
         }
     }
+
+    public IEmisor getEmisor() {
+        return emisor;
+    }
+
+    @Override
+    public void setEmisor(IEmisor emisor) {
+        this.emisor = emisor;
+    }
+    
+    
 }
