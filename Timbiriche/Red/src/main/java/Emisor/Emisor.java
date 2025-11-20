@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Emisor;
 
 import org.itson.componenteemisor.IEmisor;
@@ -16,7 +12,7 @@ public class Emisor implements IEmisor{
     
     public Emisor(ColaEnvios cola) {
         this.cola = cola;
-        System.out.println("cuadruple explosion");
+      
     }
 
     @Override

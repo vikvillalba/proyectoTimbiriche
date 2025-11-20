@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.itson.dto;
 
 /**
@@ -10,26 +6,43 @@ package org.itson.dto;
  */
 public class PaqueteDTO<T> {
 
-    public T contenido;
-    public String tipoEvento;
-    public String host;
+    private T contenido;
+    private String tipoEvento;
+    private String host;
     //no se si se ocupa chat
-    public int puerto;
+    private int puertoOrigen;
+    private int puertoDestino;
+
 
     public PaqueteDTO(T contenido, String tipoEvento) {
         this.contenido = contenido;
         this.tipoEvento = tipoEvento;
+
     }
 
-    public int getPuerto() {
-        return puerto;
+    public PaqueteDTO(T contenido, String tipoEvento, String host, int puertoOrigen, int puertoDestino) {
+        this.contenido = contenido;
+        this.tipoEvento = tipoEvento;
+        this.host = host;
+        this.puertoOrigen = puertoOrigen;
+        this.puertoDestino = puertoDestino;
     }
 
-    public void setPuerto(int puerto) {
-        this.puerto = puerto;
+    public T getContenido() {
+        return contenido;
     }
 
-    
+    public void setContenido(T contenido) {
+        this.contenido = contenido;
+    }
+
+    public String getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public void setTipoEvento(String tipoEvento) {
+        this.tipoEvento = tipoEvento;
+    }
 
     public String getHost() {
         return host;
@@ -39,14 +52,24 @@ public class PaqueteDTO<T> {
         this.host = host;
     }
 
-
-    public T getContenido() {
-        return contenido;
+    public int getPuertoOrigen() {
+        return puertoOrigen;
     }
 
-    public String getTipoEvento() {
-        return tipoEvento;
+    public void setPuertoOrigen(int puertoOrigen) {
+        this.puertoOrigen = puertoOrigen;
     }
+
+    public int getPuertoDestino() {
+        return puertoDestino;
+    }
+
+    public void setPuertoDestino(int puertoDestino) {
+        this.puertoDestino = puertoDestino;
+    }
+    
+    
+
 
 
 

@@ -10,6 +10,7 @@ package Entidades;
  */
 public enum TipoEvento {
     NUEVA_LINEA,
+    INICIAR_CONEXION,
     UNIRSE_PARTIDA,
     CONFIGURAR_PARTIDA,
     SOLICITAR_INICIAR_PARTIDA,

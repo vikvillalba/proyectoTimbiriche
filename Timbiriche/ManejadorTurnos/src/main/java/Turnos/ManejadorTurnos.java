@@ -18,10 +18,16 @@ public class ManejadorTurnos implements IReceptor {
     private JugadorDTO jugadorEnTurno;
     private final IEmisor emisor;
     private int indiceActual; // en que turno va
+    
+
 
     public ManejadorTurnos(IEmisor emisor) {
         this.emisor = emisor;
+        this.indiceActual = 0;
+        this.jugadorEnTurno = null;
+
     }
+
 
     public List<JugadorDTO> getTurnos() {
         return this.turnos;

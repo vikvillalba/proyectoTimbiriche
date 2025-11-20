@@ -3,7 +3,6 @@ package Fachada;
 import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
-import Entidades.ManejadorTurnos;
 import Entidades.Punto;
 import Entidades.Tablero;
 import Entidades.TipoEvento;
@@ -12,7 +11,6 @@ import Mapper.MapperJugadores;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
-import Observer.ObservadorTurnos;
 import excepciones.PartidaExcepcion;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +22,7 @@ import org.itson.dto.PaqueteDTO;
 
 /**
  * Clase que representa una partida de juego. Engloba a todas las clases
- * necesarias para iniciar una partida. Observa al manejador de turnos para
- * notificar cambios en los turnos.
+ * necesarias para iniciar una partida.
  *
  * @author victoria
  */
@@ -39,6 +36,7 @@ public class Partida implements PartidaFachada, IReceptor {
     private IEmisor emisor;
     private MapperJugadores mapperJugadores;
 
+
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
 //    private ManejadorTurnos turnos;
@@ -51,13 +49,14 @@ public class Partida implements PartidaFachada, IReceptor {
      * @param alto alto del tablero
      * @param ancho ancho del tablero
      *
-     * inicializa un tablero y un manejador de turnos.
+     * inicializa un tablero
      *
      */
     public Partida(List<Jugador> jugadores, int alto, int ancho) {
         // tablero mock
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
+
 //        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
 
         // Registrar la partida como observador de turnos (para notificar al modelo cuando se avance de turno)
@@ -87,6 +86,10 @@ public class Partida implements PartidaFachada, IReceptor {
             throw new PartidaExcepcion("Los puntos seleccionados no se pueden conectar.");
         }
         // si se puede realizar la jugada: checar turnero
+        // hacer paquete dto con la jugada 
+        Punto[] puntos = new Punto[]{origen, destino};
+        PaqueteDTO paquete = new PaqueteDTO(puntos, TipoEvento.NUEVA_LINEA.toString());
+        emisor.enviarCambio(paquete);
         return tablero.unirPuntos(origen, destino, jugadorEnTurno);
 
     }
@@ -229,7 +232,7 @@ public class Partida implements PartidaFachada, IReceptor {
                 break;
 
             case SOLICITAR_INICIAR_PARTIDA:
-                
+
             case INICIO_PARTIDA:
                 notificarObservadorInicioJuego();
                 notificarEventoRecibido("Partida iniciada");

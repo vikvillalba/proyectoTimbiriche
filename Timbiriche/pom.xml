@@ -14,8 +14,6 @@
         <module>ComponenteEmisor</module>
         <module>ManejadorTurnos</module>
         <module>Bus</module>
-        <module>ComponenteEmisorBus</module>
-        <module>DTOEventBus</module>
         <module>Ensamblador</module>
     </modules>
     <properties>
