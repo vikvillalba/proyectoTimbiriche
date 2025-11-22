@@ -17,14 +17,22 @@ public class MapperJugadores {
     public JugadorDTO toDTO(Jugador jugador){
         JugadorDTO jugadordto = new JugadorDTO();
         jugadordto.setId(jugador.getNombre());
-        jugadordto.setTurno(jugador.isTurno());
+        if (jugador.isTurno()!=true) {
+            jugadordto.setTurno(false);
+        }else{
+            jugadordto.setTurno(true);
+        }
         return jugadordto;
     }
     
     public Jugador toEntidad(JugadorDTO jugadordto){
         Jugador jugador = new Jugador();
         jugador.setNombre(jugadordto.getId());
-        jugador.setTurno(jugadordto.isTurno());
+        if (jugadordto.isTurno()!=true) {
+            jugador.setTurno(false);
+        }else{
+            jugador.setTurno(true);
+        }
         return jugador;
     }
     

@@ -1,5 +1,7 @@
 package Turnos;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.itson.dto.JugadorDTO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,26 +18,31 @@ public class ManejadorTurnos implements IReceptor {
 
     private List<JugadorDTO> turnos = new ArrayList<>();
     private JugadorDTO jugadorEnTurno;
-    private final IEmisor emisor;
+    private IEmisor emisor;
     private int indiceActual; // en que turno va
-    
 
-
-    public ManejadorTurnos(IEmisor emisor) {
-        this.emisor = emisor;
+    public ManejadorTurnos() {
         this.indiceActual = 0;
         this.jugadorEnTurno = null;
-
     }
 
+    public void setEmisor(IEmisor emisor) {
+        this.emisor = emisor;
+    }
 
     public List<JugadorDTO> getTurnos() {
         return this.turnos;
     }
 
     public void repartirTurnos(List<JugadorDTO> jugadores) {
-        turnos = new ArrayList<>(jugadores);
-        Collections.shuffle(turnos);
+        turnos = jugadores;
+        Collections.shuffle(jugadores);
+
+        jugadorEnTurno = turnos.get(indiceActual);
+        jugadorEnTurno.setTurno(true);
+
+        PaqueteDTO paqueteInicial = new PaqueteDTO(turnos, TipoEvento.INICIO_PARTIDA.toString());
+        emisor.enviarCambio(paqueteInicial);
     }
 
     public boolean isTurno(JugadorDTO jugador) {
@@ -58,8 +65,9 @@ public class ManejadorTurnos implements IReceptor {
     }
 
     private void notificarTurnoActualizado() {
-        if (emisor != null) {
-            PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO");
+        if (emisor == null) {
+        } else {
+            PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, TipoEvento.TURNO_ACTUALIZADO.toString());
             emisor.enviarCambio(paquete);
         }
     }
@@ -67,18 +75,28 @@ public class ManejadorTurnos implements IReceptor {
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
         System.out.println("[ManejadorTurnos] evento recibido: " + paquete.getTipoEvento());
-        switch (paquete.getTipoEvento()) {
+        TipoEvento tipo;
 
-            case "INICIO_PARTIDA":
-                System.out.println(paquete.toString());
-                List<JugadorDTO> jugadores = (List<JugadorDTO>) paquete.getContenido();
+        try {
+            tipo = TipoEvento.valueOf(paquete.getTipoEvento());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return;
+        }
+        switch (tipo) {
+
+            case SOLICITAR_TURNOS:
+                Gson gson = new Gson();
+                List<JugadorDTO> jugadores = gson.fromJson(gson.toJson(paquete.getContenido()), new TypeToken<List<JugadorDTO>>() {}.getType());
+
                 repartirTurnos(jugadores);
-                indiceActual = -1;
-                actualizarTurno();
+                System.out.println("Se repartieron los jugadores");
                 break;
 
-            case "ACTUALIZAR_TURNO":
+            case ACTUALIZAR_TURNO:
+                System.out.println("[ManejadorTurnos] Jugador en turno antes: " + jugadorEnTurno.getId());
                 actualizarTurno();
+                System.out.println("[ManejadorTurnos] Jugador en turno ahora: " + jugadorEnTurno.getId());
                 break;
         }
     }

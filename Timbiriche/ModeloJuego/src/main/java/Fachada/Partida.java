@@ -6,12 +6,17 @@ import Entidades.Linea;
 import Entidades.Punto;
 import Entidades.Tablero;
 import Entidades.TipoEvento;
+import static Entidades.TipoEvento.*;
 import Fachada.PartidaFachada;
 import Mapper.MapperJugadores;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import excepciones.PartidaExcepcion;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -56,6 +61,8 @@ public class Partida implements PartidaFachada, IReceptor {
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
         this.mapperJugadores = new MapperJugadores();
+        this.jugadorEnTurno = jugadores.get(0);
+
 //        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
         // Registrar la partida como observador de turnos (para notificar al modelo cuando se avance de turno)
 //        this.turnos.agregarObservadorTurnos(this);
@@ -154,7 +161,7 @@ public class Partida implements PartidaFachada, IReceptor {
     @Override
     public void actualizarTurno() {
         JugadorDTO jugadorEnTurnoDTO = mapperJugadores.toDTO(jugadorEnTurno);
-        PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurnoDTO, "ACTUALIZAR_TURNO");
+        PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurnoDTO, TipoEvento.ACTUALIZAR_TURNO.toString());
         emisor.enviarCambio(paquete);
 //        turnos.actualizarTurno();
 //        notificarObservadorTurnos();
@@ -168,9 +175,10 @@ public class Partida implements PartidaFachada, IReceptor {
 //    public void agregarObservadorTurnos(ObservadorTurnos ob) {
 //        this.observadorTurnos = ob;
 //    }
+    
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
-
+        System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
         TipoEvento tipo;
 
         try {
@@ -211,6 +219,8 @@ public class Partida implements PartidaFachada, IReceptor {
                     if (!hizoCuadro) {
                         actualizarTurno();
                     }
+                    notificarObservadorJugadores();
+                    
                 } catch (PartidaExcepcion e) {
                     notificarEventoRecibido(e);
                 }
@@ -219,20 +229,52 @@ public class Partida implements PartidaFachada, IReceptor {
             }
 
             case TURNO_ACTUALIZADO:
-                JugadorDTO jugadorTurnoDTO = (JugadorDTO) paquete.getContenido();
-                Jugador jugadorTurno = mapperJugadores.toEntidad(jugadorTurnoDTO);
-
-                if (jugadorTurno != null) {
-                    jugadorEnTurno = jugadorTurno;
-                    notificarEventoRecibido("Turno actualizado: " + jugadorEnTurno.getNombre());
+                System.out.println("Turno actualizado-------------------------------------------------");
+                System.out.println(paquete.getContenido().toString());
+                Gson gson = new Gson();
+                Object contenidoRaw = paquete.getContenido();
+                String jsonJugador = gson.toJson(contenidoRaw);
+                JugadorDTO jugadorTurnoDTO = gson.fromJson(jsonJugador, JugadorDTO.class);
+                for (Jugador j : jugadores) {
+                    j.setTurno(false);
                 }
-                notificarEventoRecibido("TURNO_ACTUALIZADO");
+                for (Jugador j : jugadores) {
+                    if (j.getNombre().equals(jugadorTurnoDTO.getId())) {
+                        if (j.isTurno()) {
+                            return;
+                        }
+                        j.setTurno(true);
+                        this.jugadorEnTurno = j;
+                    } else {
+                        j.setTurno(false);
+                    }
+                }
+                notificarObservadorJugadores();
+
+                notificarEventoRecibido("Turno actualizado");
                 break;
 
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA:
                 notificarObservadorInicioJuego();
+                Gson json = new Gson();
+                Type listType = new TypeToken<List<JugadorDTO>>() {
+                }.getType();
+                List<JugadorDTO> jugadoresDTO = json.fromJson(json.toJson(paquete.getContenido()), listType);
+                for (JugadorDTO dto : jugadoresDTO) {
+                    for (Jugador j : jugadores) {
+                        if (j.getNombre().equals(dto.getId())) {
+                            if (dto.isTurno()==true) {
+                                j.setTurno(true);
+                                this.jugadorEnTurno = j;
+                            }else{
+                                j.setTurno(false);
+                            }
+                        }
+                    }
+                }
+                notificarObservadorJugadores();
                 notificarEventoRecibido("Partida iniciada");
                 break;
 

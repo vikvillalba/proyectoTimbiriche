@@ -36,14 +36,14 @@ public class ControladorPartida {
             } catch (JugadaException ex) {
                 puntosSeleccionados[0] = null;
                 puntosSeleccionados[1] = null;
-                actualizarTurno();
+//                actualizarTurno();
 
                 throw ex;
 
             }
             puntosSeleccionados[0] = null;
             puntosSeleccionados[1] = null;
-            actualizarTurno();
+//            actualizarTurno();
 
         }
         return false;
@@ -52,7 +52,8 @@ public class ControladorPartida {
     /**
      * Llamada al modelo para que actualice los turnos de la partida.
      */
-    public void actualizarTurno() {
-        modelo.actualizarTurnos();
-    }
+//    public void actualizarTurno() {
+//        modelo.actualizarTurnos();
+//        System.out.println("Estuve en el controlador");
+//    }
 }

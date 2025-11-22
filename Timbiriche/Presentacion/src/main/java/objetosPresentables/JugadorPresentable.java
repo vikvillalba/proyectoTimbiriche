@@ -41,7 +41,9 @@ public class JugadorPresentable {
     public boolean isTurno() {
         return turno;
     }
-    
-    
 
+    @Override
+    public String toString() {
+        return "JugadorPresentable{" + "nombre=" + nombre + ", avatar=" + avatar + ", color=" + color + ", score=" + score + ", turno=" + turno + '}';
+    }
 }

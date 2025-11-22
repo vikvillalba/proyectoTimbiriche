@@ -31,4 +31,6 @@ public class JugadorDTO {
     public void setTurno(boolean turno) {
         this.turno = turno;
     }
+    
+    
 }

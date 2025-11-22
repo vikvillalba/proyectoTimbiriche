@@ -15,6 +15,7 @@
         <module>ManejadorTurnos</module>
         <module>Bus</module>
         <module>Ensamblador</module>
+        <module>EnsambladorTurnero</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

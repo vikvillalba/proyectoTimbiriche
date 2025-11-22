@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.componentereceptor.IReceptor;
 
 import org.itson.dto.PaqueteDTO;
 
@@ -19,9 +21,20 @@ public class EventBus {
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
 
+    private final Map<String, Set<IReceptor>> receptoresLocalesPorEvento;
+
     public EventBus(IEmisor emisor) {
         this.servicios = new ConcurrentHashMap<>();
         this.emisor = emisor;
+
+        this.receptoresLocalesPorEvento = new ConcurrentHashMap<>();
+    }
+
+    public void suscribirReceptorLocal(String tipoEvento, IReceptor receptor) {
+        if (receptor != null) {
+            Set<IReceptor> lista = receptoresLocalesPorEvento.computeIfAbsent(tipoEvento, k -> ConcurrentHashMap.newKeySet());
+            lista.add(receptor);
+        }
     }
 
     public void publicarEvento(PaqueteDTO paquete) {
@@ -30,6 +43,14 @@ public class EventBus {
             registrarServicio(paquete.getTipoEvento(), nuevoServicio);
             System.out.println("servicio conectao" + nuevoServicio.toString());
         }
+
+        Set<IReceptor> listaLocal = receptoresLocalesPorEvento.get(paquete.getTipoEvento());
+        if (listaLocal != null) {
+            for (IReceptor receptor : listaLocal) {
+                receptor.recibirCambio(paquete);
+            }
+        }
+
         notificarServicios(paquete);
     }
 

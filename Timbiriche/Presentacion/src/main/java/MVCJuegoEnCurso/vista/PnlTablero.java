@@ -95,7 +95,7 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
     public void actualizar(TableroPresentable tablero) {
         this.tablero = tablero;
         repaint(); // pinta el tablero
-        controlador.actualizarTurno(); // cambia de turno ya que se realiza la jugada
+//        controlador.actualizarTurno(); // cambia de turno ya que se realiza la jugada
     }
 
     private void resetearColores() {
