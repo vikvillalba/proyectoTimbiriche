@@ -33,6 +33,8 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
     private TableroPresentable tablero;
     private IModeloTableroLectura modelo;
     private ControladorPartida controlador;
+    //habilitado jugador en turno
+    private boolean interaccionHabilitada = true;
 
     public PnlTablero(IModeloTableroLectura modelo, ControladorPartida controlador) {
         initComponents();
@@ -114,6 +116,14 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Jugada inválida", JOptionPane.ERROR_MESSAGE);
             resetearColores();
         }
+    }
+
+    public void setInteraccionHabilitada(boolean habilitada) {
+        this.interaccionHabilitada = habilitada;
+    }
+
+    public boolean isInteraccionHabilitada() {
+        return interaccionHabilitada;
     }
 
     @Override

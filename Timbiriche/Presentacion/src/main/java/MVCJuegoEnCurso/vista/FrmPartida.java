@@ -33,16 +33,30 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
         jugadores.agregarObservadorturno(this);
         sesion = modeloJugadores.getJugadorSesion();
-        
+
         add(tablero, BorderLayout.CENTER);
         add(jugadores, BorderLayout.WEST);
         this.setBackground(COLOR_FONDO);
         this.pnlFooter.setBackground(COLOR_FONDO);
         this.setLocationRelativeTo(null);
         setSize(1050, 740);
-        
-        if (!sesion.isTurno()) {
-            tablero.setEnabled(false);
+
+        // Deshabilitar tablero si no es el turno del jugador sesion
+        actualizarEstadoTablero();
+    }
+
+    private void actualizarEstadoTablero() {
+        JugadorPresentable jugadorEnTurno = jugadores.getJugadorEnTurno();
+        boolean estaEnTurno = jugadorEnTurno != null &&
+                           jugadorEnTurno.getNombre().equals(sesion.getNombre());
+        tablero.setInteraccionHabilitada(estaEnTurno);
+
+        //jesus en moto
+        if (estaEnTurno) {
+            System.out.println("[" + sesion.getNombre() + "] Es tu turno!");
+        } else {
+            System.out.println("[" + sesion.getNombre() + "] Esperando turno de: " +
+                             (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
         }
     }
 
@@ -124,8 +138,6 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     @Override
     public void actualizar() {
-        if (!sesion.isTurno()) {
-            tablero.setEnabled(false);
-        }
+        actualizarEstadoTablero();
     }
 }

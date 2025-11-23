@@ -47,7 +47,7 @@
     </dependencies>
     <properties>
         <maven.compiler.release>24</maven.compiler.release>
-        <exec.mainClass>ensambladorPartida.EnsambladorJuego</exec.mainClass>
+        <exec.mainClass>ensambladorPartida.EnsambladorJuego1</exec.mainClass>
     </properties>
     <name>Configuraciones</name>
 </project>

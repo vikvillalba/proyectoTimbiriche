@@ -78,6 +78,11 @@ public class PnlPunto extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // Verificar si la interaccion esta habilitada (es turno del jugador)
+        if (!tablero.isInteraccionHabilitada()) {
+            return; // No es tu turno, ignorar click
+        }
+
         this.setColor(Color.LIGHT_GRAY);
         repaint();
         tablero.agregarPuntoSeleccionado(punto);
