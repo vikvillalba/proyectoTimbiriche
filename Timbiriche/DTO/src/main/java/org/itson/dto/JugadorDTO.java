@@ -16,6 +16,11 @@ public class JugadorDTO {
         this.turno = turno;
     }
 
+    public JugadorDTO(String id) {
+        this.id = id;
+    }
+    
+
     public String getId() {
         return id;
     }

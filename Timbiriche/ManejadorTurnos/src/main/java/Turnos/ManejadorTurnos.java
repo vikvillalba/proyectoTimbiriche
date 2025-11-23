@@ -1,7 +1,6 @@
 package Turnos;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.internal.LinkedTreeMap;
 import org.itson.dto.JugadorDTO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,14 +16,14 @@ import org.itson.dto.PaqueteDTO;
 public class ManejadorTurnos implements IReceptor {
 
     private List<JugadorDTO> turnos = new ArrayList<>();
+    ;
     private JugadorDTO jugadorEnTurno;
     private IEmisor emisor;
-    private int indiceActual; // en que turno va
+    private int indiceActual = 0; // en que turno va
 
-    public ManejadorTurnos() {
-        this.indiceActual = 0;
-        this.jugadorEnTurno = null;
-    }
+    private String host;
+    private int puertoOrigen;
+    private int puertoDestino;
 
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
@@ -35,14 +34,27 @@ public class ManejadorTurnos implements IReceptor {
     }
 
     public void repartirTurnos(List<JugadorDTO> jugadores) {
-        turnos = jugadores;
-        Collections.shuffle(jugadores);
+        turnos = new ArrayList<>();
+
+        for (JugadorDTO j : jugadores) {
+            JugadorDTO copia = new JugadorDTO(j.getId());
+            copia.setTurno(false);
+            turnos.add(copia);
+        }
+
+        Collections.shuffle(turnos);
 
         jugadorEnTurno = turnos.get(indiceActual);
         jugadorEnTurno.setTurno(true);
 
         PaqueteDTO paqueteInicial = new PaqueteDTO(turnos, TipoEvento.INICIO_PARTIDA.toString());
+        paqueteInicial.setHost(host);
+        paqueteInicial.setPuertoOrigen(puertoOrigen);
+        paqueteInicial.setPuertoDestino(puertoDestino);
         emisor.enviarCambio(paqueteInicial);
+
+        System.out.println("turnos repartidos");
+
     }
 
     public boolean isTurno(JugadorDTO jugador) {
@@ -61,15 +73,14 @@ public class ManejadorTurnos implements IReceptor {
         indiceActual = (indiceActual + 1) % turnos.size();
         jugadorEnTurno = turnos.get(indiceActual);
         jugadorEnTurno.setTurno(true);
-        notificarTurnoActualizado();
-    }
 
-    private void notificarTurnoActualizado() {
-        if (emisor == null) {
-        } else {
-            PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, TipoEvento.TURNO_ACTUALIZADO.toString());
-            emisor.enviarCambio(paquete);
-        }
+        PaqueteDTO paquete = new PaqueteDTO(jugadorEnTurno, "TURNO_ACTUALIZADO");
+        paquete.setHost(host);
+        paquete.setPuertoOrigen(puertoOrigen);
+        paquete.setPuertoDestino(puertoDestino);
+
+        emisor.enviarCambio(paquete);
+
     }
 
     @Override
@@ -86,18 +97,46 @@ public class ManejadorTurnos implements IReceptor {
         switch (tipo) {
 
             case SOLICITAR_TURNOS:
-                Gson gson = new Gson();
-                List<JugadorDTO> jugadores = gson.fromJson(gson.toJson(paquete.getContenido()), new TypeToken<List<JugadorDTO>>() {}.getType());
+                if (paquete.getTipoEvento().equals("SOLICITAR_TURNOS")) {
+                    
+                    Object contenido = paquete.getContenido();
+                    List<?> lista = (List<?>) contenido;
+                    List<JugadorDTO> jugadores = new ArrayList<>();
 
-                repartirTurnos(jugadores);
-                System.out.println("Se repartieron los jugadores");
-                break;
-
-            case ACTUALIZAR_TURNO:
+                    for (Object o : lista) {
+                        LinkedTreeMap<?, ?> map = (LinkedTreeMap<?, ?>) o;
+                        JugadorDTO j = new JugadorDTO((String) map.get("id"));
+                        Object turno = map.get("turno");
+                        if (turno != null) {
+                            j.setTurno((Boolean) turno);
+                        }
+                        jugadores.add(j);
+                    }
+                    repartirTurnos(jugadores);
+                    System.out.println("Se repartieron los jugadores");
+                    break;
+                }
+                
+        case ACTUALIZAR_TURNO:
                 System.out.println("[ManejadorTurnos] Jugador en turno antes: " + jugadorEnTurno.getId());
                 actualizarTurno();
                 System.out.println("[ManejadorTurnos] Jugador en turno ahora: " + jugadorEnTurno.getId());
                 break;
         }
     }
+
+    
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPuertoOrigen(int puertoOrigen) {
+        this.puertoOrigen = puertoOrigen;
+    }
+
+    public void setPuertoDestino(int puertoDestino) {
+        this.puertoDestino = puertoDestino;
+    }
+
 }

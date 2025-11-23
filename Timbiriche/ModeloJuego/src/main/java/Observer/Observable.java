@@ -15,7 +15,6 @@ public interface Observable {
     void agregarObservadorInicioJuego(ObservadorInicio ob);
     void notificarObservadorInicioJuego();
 
-    // Eventos
-    void agregarObservadorEventos(ObservadorEventos<?> ob);
-    void notificarEventoRecibido(Object evento);
+
+    
 }

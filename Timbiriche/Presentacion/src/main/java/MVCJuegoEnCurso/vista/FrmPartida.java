@@ -9,17 +9,20 @@ import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
+import objetosPresentables.JugadorPresentable;
 
 /**
  * Vista que engloba una partida en curso.
  * contiene a los jugadores y al tablero.
  * @author victoria
  */
-public class FrmPartida extends JFrame implements ObservadorInicioPartida {
+public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno {
 
     private PnlTablero tablero;
     private PnlJugadores jugadores;
+    private JugadorPresentable sesion;
     private final Color COLOR_FONDO = new Color(224, 233, 255);
 
     public FrmPartida(IModeloJugadoresLectura modeloJugadores, IModeloTableroLectura modeloTablero, ControladorPartida controlador) {
@@ -28,12 +31,19 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
         tablero = new PnlTablero(modeloTablero, controlador);
         jugadores = new PnlJugadores(modeloJugadores, controlador);
 
+        jugadores.agregarObservadorturno(this);
+        sesion = modeloJugadores.getJugadorSesion();
+        
         add(tablero, BorderLayout.CENTER);
         add(jugadores, BorderLayout.WEST);
         this.setBackground(COLOR_FONDO);
         this.pnlFooter.setBackground(COLOR_FONDO);
         this.setLocationRelativeTo(null);
         setSize(1050, 740);
+        
+        if (!sesion.isTurno()) {
+            tablero.setEnabled(false);
+        }
     }
 
     public ObservadorTablero getObservadorTablero() {
@@ -103,10 +113,19 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida {
        this.setVisible(true);
     }
 
+ 
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbandonarPartida;
     private javax.swing.JButton btnFinalizarPartida;
     private javax.swing.JPanel pnlFooter;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actualizar() {
+        if (!sesion.isTurno()) {
+            tablero.setEnabled(false);
+        }
+    }
 }

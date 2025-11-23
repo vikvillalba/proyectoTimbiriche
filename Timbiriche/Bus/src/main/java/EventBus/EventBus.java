@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.itson.componenteemisor.IEmisor;
-import org.itson.componentereceptor.IReceptor;
 
 import org.itson.dto.PaqueteDTO;
 
 /**
+ * Bus que recibe y canaliza mensajes recibidos por servicios.
  *
  * @author Jack Murrieta
  */
@@ -21,34 +20,32 @@ public class EventBus {
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
 
-    private final Map<String, Set<IReceptor>> receptoresLocalesPorEvento;
-
-    public EventBus(IEmisor emisor) {
+    public EventBus() {
         this.servicios = new ConcurrentHashMap<>();
-        this.emisor = emisor;
 
-        this.receptoresLocalesPorEvento = new ConcurrentHashMap<>();
     }
 
-    public void suscribirReceptorLocal(String tipoEvento, IReceptor receptor) {
-        if (receptor != null) {
-            Set<IReceptor> lista = receptoresLocalesPorEvento.computeIfAbsent(tipoEvento, k -> ConcurrentHashMap.newKeySet());
-            lista.add(receptor);
-        }
+    public void setEmisor(IEmisor emisor) {
+        this.emisor = emisor;
     }
 
     public void publicarEvento(PaqueteDTO paquete) {
+        Servicio origen = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
+        normalizarPaquete(paquete, origen);
+        
         if (paquete.getTipoEvento().equalsIgnoreCase("INICIAR_CONEXION")) {
             Servicio nuevoServicio = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
-            registrarServicio(paquete.getTipoEvento(), nuevoServicio);
-            System.out.println("servicio conectao" + nuevoServicio.toString());
-        }
 
-        Set<IReceptor> listaLocal = receptoresLocalesPorEvento.get(paquete.getTipoEvento());
-        if (listaLocal != null) {
-            for (IReceptor receptor : listaLocal) {
-                receptor.recibirCambio(paquete);
+            List<String> eventos = (List<String>) paquete.getContenido();
+
+            if (eventos != null) {
+                for (String evento : eventos) {
+                    registrarServicio(evento, nuevoServicio);
+                }
             }
+
+            System.out.println("[EventBus] Servicio registrado: " + nuevoServicio);
+            return;
         }
 
         notificarServicios(paquete);
@@ -108,6 +105,19 @@ public class EventBus {
             }
         }
         lista.add(servicio);
+    }
+
+    private void normalizarPaquete(PaqueteDTO paquete, Servicio origen) {
+
+        // Si el host viene vacío o null, se lo ponemos
+        if (paquete.getHost() == null || paquete.getHost().isEmpty()) {
+            paquete.setHost(origen.getHost());
+        }
+
+        // Si el puertoOrigen viene en 0, se lo ponemos
+        if (paquete.getPuertoOrigen() == 0) {
+            paquete.setPuertoOrigen(origen.getPuerto());
+        }
     }
 
 }

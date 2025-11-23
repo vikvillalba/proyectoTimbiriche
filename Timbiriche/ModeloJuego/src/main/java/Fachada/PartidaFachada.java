@@ -78,5 +78,6 @@ public interface PartidaFachada extends Observable {
      */
     Punto getPuntoTablero(int x, int y);
 
-    public void setEmisor(IEmisor emisor);
+    Jugador getJugadorSesion();
+    
 }

@@ -35,11 +35,12 @@ import objetosPresentables.CuadroPresentable;
  *
  * @author victoria
  */
-public class ModeloPartida implements IModeloJugadoresLectura, 
-                                      IModeloPartidaEscritura, 
-                                      IModeloTableroLectura, 
-                                      ObservablePartida, 
-                                      ObservadorInicio {
+public class ModeloPartida implements IModeloJugadoresLectura,
+        IModeloPartidaEscritura,
+        IModeloTableroLectura,
+        ObservablePartida,
+        ObservadorInicio,
+        ObservadorTurnos {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -118,7 +119,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
 
     // traduce a entidad y llama al validar de fachada
     @Override
-    public boolean unirPuntos(PuntoPresentable[] puntos) throws JugadaException{
+    public boolean unirPuntos(PuntoPresentable[] puntos) throws JugadaException {
         boolean jugada;
         try {
             jugada = partida.validarPuntos(partida.getPuntoTablero(puntos[0].getX(), puntos[0].getY()), partida.getPuntoTablero(puntos[1].getX(), puntos[1].getY()));
@@ -221,7 +222,6 @@ public class ModeloPartida implements IModeloJugadoresLectura,
 //    public void actualizar(List<Jugador> jugadores) {
 //        notificarObservadorJugadores(jugadores);
 //    }
-
     @Override
     public void agregarObservadorTablero(ObservadorTablero ob) {
         this.observadorTablero = ob;
@@ -240,6 +240,23 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     @Override
     public void iniciarJuego() {
         observadorInicioJuego.mostrarJuego();
+    }
+
+    @Override
+    public void actualizar(List<Jugador> jugadores) {
+        observadorJugadores.actualizar(jugadoresEntidadAPresentable(jugadores));
+    }
+
+    @Override
+    public JugadorPresentable getJugadorSesion() {
+        Jugador sesion = partida.getJugadorSesion();
+        JugadorPresentable jugadorVista = new JugadorPresentable(sesion.getNombre(),
+                obtenerAvatar(sesion.getAvatar().toString()),
+                obtenerColor(sesion.getColor().toString()),
+                sesion.getScore(),
+                sesion.isTurno());
+
+        return jugadorVista;
     }
 
 }

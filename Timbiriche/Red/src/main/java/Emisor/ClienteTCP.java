@@ -29,12 +29,10 @@ public class ClienteTCP implements ObservadorEnvios {
 
             JsonObject obj = JsonParser.parseString(paqueteSerializado).getAsJsonObject();
 
-            obj.addProperty("host", this.host);
-            obj.addProperty("puertoDestino", this.puerto);
+            String hostDestino = obj.get("host").getAsString();
+            int puertoDestino = obj.get("puertoDestino").getAsInt();
 
-            String paqueteConHost = obj.toString();
-
-            enviarPaquete(paqueteConHost, host, puerto);
+            enviarPaquete(obj.toString(), hostDestino, puertoDestino);
 
         } catch (Exception e) {
             System.err.println("Error en ClienteTCP.actualizar(): " + e.getMessage());

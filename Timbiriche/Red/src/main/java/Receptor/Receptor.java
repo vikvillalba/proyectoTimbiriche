@@ -17,11 +17,18 @@ public class Receptor implements ObservadorRecibos {
     private ColaRecibos cola;
     private IReceptor receptor;
     
-    public Receptor(ColaRecibos cola, IReceptor receptor) {
+    public Receptor() {
+    }
+
+    public void setCola(ColaRecibos cola) {
         this.cola = cola;
+    }
+
+    public void setReceptor(IReceptor receptor) {
         this.receptor = receptor;
     }
 
+    
     @Override
     public void actualizar() {
         PaqueteDTO paquete = cola.dequeue();

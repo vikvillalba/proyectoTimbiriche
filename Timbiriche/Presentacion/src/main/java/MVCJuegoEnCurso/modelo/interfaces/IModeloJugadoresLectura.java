@@ -17,4 +17,6 @@ public interface IModeloJugadoresLectura {
      * @return lista de jugadores.
      */
     List<JugadorPresentable> getJugadores();
+    
+    JugadorPresentable getJugadorSesion();
 }
