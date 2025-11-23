@@ -5,7 +5,6 @@ import Emisor.ColaEnvios;
 import Emisor.Emisor;
 import Entidades.Jugador;
 import Entidades.TipoEvento;
-import EventBus.EventBus;
 import Fachada.Partida;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
@@ -14,20 +13,18 @@ import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.vista.FrmPartida;
 import Mapper.MapperJugadores;
-import PublicadorEventos.PublicadorEventos;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
-import Turnos.ManejadorTurnos;
 import configuraciones.Configuraciones;
 import java.util.Arrays;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
-import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 
 /**
+ * Ensamblador general para iniciar partidas del juego.
  *
  * @author Maryr
  */
@@ -37,15 +34,10 @@ public class EnsambladorGeneral {
 
     // Config
     private String host;
-    private int puertoEntrada; //donde se conectan los clientes para mandar eventos
-    private int puertoBus; // donde el bus envia los eventos
+    private int puertoEntrada;
     private int puertoServidor;
-    private int puertoTurnos;
 
     private MapperJugadores mapper;
-
-    private static EventBus eventBus;
-    private static IEmisor emisorBus;
 
     private final int NUMERO_JUGADORES = 4;
 
@@ -54,9 +46,7 @@ public class EnsambladorGeneral {
 
         this.host = config.getString("host");
         this.puertoEntrada = config.getInt("puerto.entrada");
-        this.puertoBus = config.getInt("puerto.bus");
         this.puertoServidor = config.getInt("puerto.servidor");
-        this.puertoTurnos = config.getInt("puerto.turnos");
     }
 
     public static EnsambladorGeneral getInstancia(String configName) {
@@ -67,17 +57,15 @@ public class EnsambladorGeneral {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     /**
-     * Método que inicializa una nueva partida con configuraciones brindadas por
+     * Metodo que inicializa una nueva partida con configuraciones brindadas por
      * el usuario.
      */
     public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
         if (jugadores.size() > NUMERO_JUGADORES) {
-            throw new IllegalArgumentException("Se ha alcanzado el límite de jugadores");
-
+            throw new IllegalArgumentException("Se ha alcanzado el limite de jugadores");
         }
 
         List<JugadorDTO> jugadoresdto = mapper.toListaDTO(jugadores);
@@ -86,7 +74,7 @@ public class EnsambladorGeneral {
         }
 
         Partida partida = new Partida(jugadores, alto, ancho);
-        partida.setHost(host);     // host del ensamblador
+        partida.setHost(host);
         partida.setPuertoOrigen(puertoServidor);
         partida.setPuertoDestino(puertoEntrada);
 
@@ -108,9 +96,9 @@ public class EnsambladorGeneral {
 
         List<String> eventos = Arrays.asList(
                 "JUGADA_REALIZADA",
-                "TURNO_ACTUALIZADO", 
+                "TURNO_ACTUALIZADO",
                 "INICIO_PARTIDA",
-                "NUEVA_LINEA", 
+                "NUEVA_LINEA",
                 "UNIRSE_PARTIDA",
                 "ABANDONAR_PARTIDA",
                 "CONFIGURAR_PARTIDA",
@@ -149,62 +137,5 @@ public class EnsambladorGeneral {
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
         partida.notificarObservadorInicioJuego();
-    }
-
-    public void iniciarBus() {
-        eventBus = new EventBus();
-        // emisor del bus
-        ColaEnvios colaEnviosBus = new ColaEnvios();
-        ClienteTCP clienteTCPBus = new ClienteTCP(colaEnviosBus, puertoBus, host);
-        colaEnviosBus.agregarObservador(clienteTCPBus);
-        emisorBus = new Emisor(colaEnviosBus);
-        eventBus.setEmisor(emisorBus);
-
-        // receptor
-        ColaRecibos colaRecibosBus = new ColaRecibos();
-        ServidorTCP servidorTCPBus = new ServidorTCP(colaRecibosBus, puertoEntrada);
-        IReceptor publicador = new PublicadorEventos(puertoBus, host, eventBus);
-        Receptor receptorBus = new Receptor();
-        receptorBus.setCola(colaRecibosBus);
-        receptorBus.setReceptor(publicador);
-        colaRecibosBus.agregarObservador(receptorBus);
-        new Thread(() -> servidorTCPBus.iniciar()).start();
-        System.out.println("EventBus levantao");
-    }
-
-    public void iniciarManejadorTurnos() {
-        ManejadorTurnos manejador = new ManejadorTurnos();
-        manejador.setHost(host);
-        manejador.setPuertoOrigen(puertoTurnos);
-        manejador.setPuertoDestino(puertoEntrada);
-
-        ColaRecibos colaRecibosTurnero = new ColaRecibos();
-        ServidorTCP servidorTurnero = new ServidorTCP(colaRecibosTurnero, puertoTurnos);
-        System.out.println("[Turnero] Servidor escuchando en puerto " + puertoTurnos);
-
-        ColaEnvios colaEnviosTurnos = new ColaEnvios();
-        IEmisor emisor = new Emisor(colaEnviosTurnos);
-        ClienteTCP clienteTurnos = new ClienteTCP(colaEnviosTurnos, puertoEntrada, host);
-        colaEnviosTurnos.agregarObservador(clienteTurnos);
-        manejador.setEmisor(emisor);
-
-        Receptor receptorTurnero = new Receptor();
-        receptorTurnero.setCola(colaRecibosTurnero);
-        receptorTurnero.setReceptor(manejador);
-
-        colaRecibosTurnero.agregarObservador(receptorTurnero);
-        new Thread(() -> servidorTurnero.iniciar()).start();
-
-        // le indica al bus a que eventos esta suscrito
-        List<String> eventos = Arrays.asList(
-                "SOLICITAR_TURNOS",
-                "ACTUALIZAR_TURNO"
-        );
-
-        PaqueteDTO paquete = new PaqueteDTO(eventos, "INICIAR_CONEXION");
-        paquete.setHost(host);
-        paquete.setPuertoOrigen(puertoTurnos);
-        paquete.setPuertoDestino(puertoEntrada);
-        emisor.enviarCambio(paquete);
     }
 }

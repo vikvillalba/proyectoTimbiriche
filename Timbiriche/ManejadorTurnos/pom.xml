@@ -32,6 +32,6 @@
     </dependencies>
     <properties>
         <maven.compiler.release>24</maven.compiler.release>
-        <exec.mainClass>org.itson.manejadorturnos.ManejadorTurnos</exec.mainClass>
+        <exec.mainClass>ensamblador.EnsambladorTurnos</exec.mainClass>
     </properties>
 </project>
