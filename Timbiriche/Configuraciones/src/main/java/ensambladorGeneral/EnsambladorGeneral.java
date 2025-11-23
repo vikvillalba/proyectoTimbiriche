@@ -142,27 +142,13 @@ public class EnsambladorGeneral {
         ControladorPartida controlador = new ControladorPartida(impe);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         partida.agregarObservadorInicioJuego(modelo);
+        partida.agregarObservadorJugadores(modelo);
+        partida.agregarObservadorEventos(modelo);
 
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
         partida.notificarObservadorInicioJuego();
-
-//        //Sirve para registrar la lista de jugadores en el turnero(es por mientras)
-//        new Thread(() -> {
-//            try {
-//                //Espera 8 segundos
-//                Thread.sleep(8000);
-//                PaqueteDTO paquete1 = new PaqueteDTO(jugadoresdto, "SOLICITAR_TURNOS");
-//                paquete1.setHost(host);
-//                paquete1.setPuertoOrigen(puertoServidor);
-//                paquete1.setPuertoDestino(puertoEntrada);
-//                emisor.enviarCambio(paquete1);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                System.err.println("El hilo fue interrumpido.");
-//            }
-//        }).start();
     }
 
     public void iniciarBus() {

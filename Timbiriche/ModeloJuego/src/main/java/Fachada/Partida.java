@@ -100,7 +100,6 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         paquete.setHost(this.host);
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(puertoDestino);
-        System.out.println(paquete.getHost() + paquete.getPuertoOrigen());
         emisor.enviarCambio(paquete);
         return tablero.unirPuntos(origen, destino, jugadorEnTurno);
 

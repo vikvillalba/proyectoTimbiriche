@@ -41,7 +41,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservablePartida,
         ObservadorInicio,
         ObservadorTurnos, 
-        Observer.ObservadorJugadores{
+        Observer.ObservadorJugadores,
+        Observer.ObservadorEventos{
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -258,6 +259,11 @@ public class ModeloPartida implements IModeloJugadoresLectura,
                 sesion.isTurno());
 
         return jugadorVista;
+    }
+
+    @Override
+    public void actualizar(Object cambio) {
+        System.out.println("[ModeloPartida] i dont get it:" + cambio.toString());
     }
 
 }
