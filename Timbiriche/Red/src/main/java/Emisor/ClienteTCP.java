@@ -31,7 +31,7 @@ public class ClienteTCP implements ObservadorEnvios {
 
             String hostDestino = obj.get("host").getAsString();
             int puertoDestino = obj.get("puertoDestino").getAsInt();
-
+            System.out.println("[ClienteTCP] paquete: " + obj.toString() + " " + hostDestino + puertoDestino);
             enviarPaquete(obj.toString(), hostDestino, puertoDestino);
 
         } catch (Exception e) {
@@ -51,6 +51,9 @@ public class ClienteTCP implements ObservadorEnvios {
                 new OutputStreamWriter(socket.getOutputStream()), true)) {
 
             out.println(paquete);
+            if (out.checkError()) {
+                System.err.println("Error al enviar datos (PrintWriter)");
+            }
 
         } catch (IOException e) {
             System.err.println("Error enviando paquete por TCP: " + e.getMessage());

@@ -32,6 +32,7 @@ public class ColaRecibos implements ObservableRecibos {
     @Override
     public void notificar() {
         for (ObservadorRecibos ob : observadores) {
+            System.out.println("[ColaRecibos] aver ya basta: " + ob.toString());
             ob.actualizar();
         }
     }

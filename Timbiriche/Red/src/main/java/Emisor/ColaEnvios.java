@@ -32,6 +32,7 @@ public class ColaEnvios implements ObservableEnvios {
     }
 
     public void queue(PaqueteDTO paquete) {
+        System.out.println("[ColaEnvios] cambio recibidisimo:" + paquete.getContenido().toString());
         cola.offer(paquete);
         notificar();
     }

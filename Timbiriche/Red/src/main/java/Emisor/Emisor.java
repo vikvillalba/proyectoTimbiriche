@@ -20,6 +20,7 @@ public class Emisor implements IEmisor{
         if (paquete == null) {
             throw new IllegalArgumentException("El paquete no puede ser null");
         }
+        System.out.println("[Emisor] cambio recibio:" + paquete.getContenido().toString());
         cola.queue(paquete); 
     }
 }

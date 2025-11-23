@@ -104,10 +104,18 @@ public class EnsambladorGeneral {
         Receptor receptorPartida = new Receptor();
         receptorPartida.setCola(colaRecibos);
         receptorPartida.setReceptor(partida);
+        colaRecibos.agregarObservador(receptorPartida);
 
         List<String> eventos = Arrays.asList(
                 "JUGADA_REALIZADA",
-                "INICIO_PARTIDA"
+                "TURNO_ACTUALIZADO", 
+                "INICIO_PARTIDA",
+                "NUEVA_LINEA", 
+                "UNIRSE_PARTIDA",
+                "ABANDONAR_PARTIDA",
+                "CONFIGURAR_PARTIDA",
+                "SOLICITAR_FINALIZAR_PARTIDA",
+                "ACTUALIZAR_PUNTOS"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -134,7 +142,7 @@ public class EnsambladorGeneral {
         ControladorPartida controlador = new ControladorPartida(impe);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         partida.agregarObservadorInicioJuego(modelo);
-       
+
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);

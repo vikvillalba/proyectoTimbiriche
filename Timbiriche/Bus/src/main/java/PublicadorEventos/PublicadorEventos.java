@@ -22,6 +22,7 @@ public class PublicadorEventos implements IReceptor {
 
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
+        System.out.println("[PublicadorEventos] Evento recibido:" + paquete.getTipoEvento());
         eventBus.publicarEvento(paquete);
     }
 
