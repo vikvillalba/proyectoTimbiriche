@@ -24,7 +24,8 @@ import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
 
 /**
- * Clase que representa una partida de juego. Engloba a todas las clases necesarias para iniciar una partida.
+ * Clase que representa una partida de juego. Engloba a todas las clases
+ * necesarias para iniciar una partida.
  *
  * @author victoria
  */
@@ -99,8 +100,22 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(puertoDestino);
         emisor.enviarCambio(paquete);
-        return tablero.unirPuntos(origen, destino, jugadorEnTurno);
-
+        boolean cuadroCompletado = tablero.unirPuntos(origen, destino, jugadorEnTurno);
+        if (cuadroCompletado) {
+            notificarObservadorJugadores();
+            List<JugadorDTO> jugadoresDTO = new ArrayList<>();
+            for (Jugador j : jugadores) {
+                JugadorDTO dto = new JugadorDTO(j.getNombre(), j.isTurno());
+                dto.setScore(j.getScore());
+                jugadoresDTO.add(dto);
+            }
+            PaqueteDTO puntajeActualizado = new PaqueteDTO(jugadoresDTO, TipoEvento.ACTUALIZAR_PUNTOS.toString());
+            puntajeActualizado.setHost(this.host);
+            puntajeActualizado.setPuertoOrigen(this.puertoOrigen);
+            puntajeActualizado.setPuertoDestino(puertoDestino);
+            emisor.enviarCambio(puntajeActualizado);
+        }
+        return cuadroCompletado;
     }
 
     @Override
@@ -296,7 +311,24 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 break;
 
             case ACTUALIZAR_PUNTOS:
-                notificarEventoRecibido("Se actualizaron los puntos");
+                List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
+                System.out.println("[Partida] Puntos actualizados question mark");
+
+                for (JugadorDTO dto : jugadoresDTO) {
+                    for (Jugador j : jugadores) {
+                        if (j.getNombre().equals(dto.getId())) {
+                            j.setScore(dto.getScore());
+                            System.out.println("[Partida] Score actualizado para " + j.getNombre() + ": " + dto.getScore());
+                        }
+                    }
+                }
+
+                // Notificar a los observadores para actualizar la vista
+                for (ObservadorJugadores ob : observadoresJugadores) {
+                    ob.actualizar(jugadores);
+                }
+
+                notificarEventoRecibido("Puntos actualizados");
                 break;
 
             default:
@@ -401,14 +433,19 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
             List<?> lista = (List<?>) contenido;
 
             for (Object item : lista) {
+                JugadorDTO dto = null;
                 if (item instanceof JugadorDTO) {
-                    resultado.add((JugadorDTO) item);
+                    dto = (JugadorDTO) item;
                 } else if (item instanceof Map) {
                     Map<?, ?> map = (Map<?, ?>) item;
                     String id = (String) map.get("id");
                     boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
-                    resultado.add(new JugadorDTO(id, turno));
+                    dto = new JugadorDTO(id, turno);
+                    if (map.containsKey("score")) {
+                        dto.setScore(((Number) map.get("score")).intValue());
+                    }
                 }
+                resultado.add(dto);
             }
         }
 

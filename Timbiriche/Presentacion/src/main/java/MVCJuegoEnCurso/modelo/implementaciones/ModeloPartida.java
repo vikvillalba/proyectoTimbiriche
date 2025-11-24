@@ -40,9 +40,9 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         IModeloTableroLectura,
         ObservablePartida,
         ObservadorInicio,
-        ObservadorTurnos, 
+        ObservadorTurnos,
         Observer.ObservadorJugadores,
-        Observer.ObservadorEventos{
+        Observer.ObservadorEventos {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -128,9 +128,10 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         } catch (PartidaExcepcion ex) {
             throw new JugadaException(ex.getMessage());
         }
+        
+        notificarObservadorTablero();
 
         if (jugada) {
-            notificarObservadorTablero();
             return true;
         }
 

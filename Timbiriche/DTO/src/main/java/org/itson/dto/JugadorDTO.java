@@ -5,8 +5,10 @@ package org.itson.dto;
  * @author erika
  */
 public class JugadorDTO {
+
     private String id;
     private boolean turno;
+    private int score;
 
     public JugadorDTO() {
     }
@@ -19,7 +21,6 @@ public class JugadorDTO {
     public JugadorDTO(String id) {
         this.id = id;
     }
-    
 
     public String getId() {
         return id;
@@ -36,6 +37,13 @@ public class JugadorDTO {
     public void setTurno(boolean turno) {
         this.turno = turno;
     }
-    
-    
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
 }
