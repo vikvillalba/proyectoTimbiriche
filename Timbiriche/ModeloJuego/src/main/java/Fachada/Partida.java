@@ -12,11 +12,10 @@ import Observer.ObservableEventos;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import excepciones.PartidaExcepcion;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
@@ -25,8 +24,7 @@ import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
 
 /**
- * Clase que representa una partida de juego. Engloba a todas las clases
- * necesarias para iniciar una partida.
+ * Clase que representa una partida de juego. Engloba a todas las clases necesarias para iniciar una partida.
  *
  * @author victoria
  */
@@ -185,52 +183,54 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
             notificarEventoRecibido("ERROR: Tipo de evento desconocido: " + paquete.getTipoEvento());
             return;
         }
-        Gson gson = new Gson();
+
         switch (tipo) {
 
             case NUEVA_LINEA: {
-                // Se espera un PaqueteDTO<Punto[]>
-                Punto[] puntos;
+                // Convertir contenido a PuntoDTO[]
+                PuntoDTO[] puntosDTO = convertirAPuntosDTO(paquete.getContenido());
 
-                try {
-                    puntos = (Punto[]) paquete.getContenido();
-                } catch (ClassCastException e) {
-                    notificarEventoRecibido("ERROR: contenido no es Punto[]");
+                if (puntosDTO == null || puntosDTO.length != 2) {
+                    notificarEventoRecibido("ERROR: PuntoDTO[] invalido en NUEVA_LINEA");
                     return;
                 }
 
-                if (puntos == null || puntos.length != 2) {
-                    notificarEventoRecibido("ERROR: Punto[] inválido en NUEVA_LINEA");
+                // Convertir PuntoDTO a Punto del tablero local
+                Punto origen = tablero.getPunto(puntosDTO[0].getX(), puntosDTO[0].getY());
+                Punto destino = tablero.getPunto(puntosDTO[1].getX(), puntosDTO[1].getY());
+
+                if (origen == null || destino == null) {
+                    notificarEventoRecibido("ERROR: Puntos no encontrados en tablero local");
                     return;
                 }
 
-                Punto origen = puntos[0];
-                Punto destino = puntos[1];
-
-                try {
-                    boolean hizoCuadro = validarPuntos(origen, destino);
-
-                    notificarEventoRecibido("Línea agregada: " + origen + " - " + destino);
-
-                    if (!hizoCuadro) {
-                        actualizarTurno();
+                // Verificar si la linea ya existe (evita duplicados)
+                for (Linea linea : tablero.getLineasExistentes()) {
+                    if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino))
+                            || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
+                        System.out.println("[Partida] Linea ya existe, ignorando evento duplicado");
+                        return;
                     }
-                    notificarObservadorJugadores();
+                }
 
-                } catch (PartidaExcepcion e) {
-                    notificarEventoRecibido(e);
+                // Actualizar tablero local
+                boolean hizoCuadro = tablero.unirPuntos(origen, destino, jugadorEnTurno);
+                notificarEventoRecibido("Linea agregada: (" + origen.getX() + "," + origen.getY()
+                        + ") - (" + destino.getX() + "," + destino.getY() + ")");
+
+                // Notificar a los observadores para actualizar la vista
+                for (ObservadorEventos ob : observadoresEventos) {
+                    ob.actualizar(tablero);
                 }
 
                 break;
             }
 
-            case TURNO_ACTUALIZADO:
-                JugadorDTO jugadorTurnoDTO = gson.fromJson(
-                        gson.toJson(paquete.getContenido()),
-                        JugadorDTO.class
-                );
+            case TURNO_ACTUALIZADO: {
+                // Convertir contenido a JugadorDTO
+                JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
 
-                System.out.println("[Partida] Jugador en turno según DTO: " + jugadorTurnoDTO.getId());
+                System.out.println("[Partida] Jugador en turno segun DTO: " + jugadorTurnoDTO.getId());
 
                 boolean turnoCambio = false;
                 for (Jugador j : jugadores) {
@@ -253,20 +253,18 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                     notificarEventoRecibido("Turno actualizado: " + jugadorTurnoDTO.getId());
                 }
                 break;
+            }
 
             case SOLICITAR_INICIAR_PARTIDA:
 
-            case INICIO_PARTIDA:
-                List<JugadorDTO> jugadoresDTO = gson.fromJson(
-                        gson.toJson(paquete.getContenido()),
-                        new TypeToken<List<JugadorDTO>>() {
-                        }.getType()
-                );
+            case INICIO_PARTIDA: {
+                // Convertir contenido a List<JugadorDTO>
+                List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
                 for (JugadorDTO dto : jugadoresDTO) {
                     for (Jugador j : jugadores) {
                         if (j.getNombre().equals(dto.getId())) {
-                            if (dto.isTurno() == true) {
+                            if (dto.isTurno()) {
                                 j.setTurno(true);
                                 this.jugadorEnTurno = j;
                             } else {
@@ -279,13 +277,14 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 notificarObservadorJugadores();
                 notificarEventoRecibido("Partida iniciada");
                 break;
+            }
 
             case UNIRSE_PARTIDA:
-                notificarEventoRecibido("Un jugador se unió a la partida");
+                notificarEventoRecibido("Un jugador se unio a la partida");
                 break;
 
             case ABANDONAR_PARTIDA:
-                notificarEventoRecibido("Un jugador abandonó la partida");
+                notificarEventoRecibido("Un jugador abandono la partida");
                 break;
 
             case CONFIGURAR_PARTIDA:
@@ -293,7 +292,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 break;
 
             case SOLICITAR_FINALIZAR_PARTIDA:
-                notificarEventoRecibido("Se solicitó finalizar la partida");
+                notificarEventoRecibido("Se solicito finalizar la partida");
                 break;
 
             case ACTUALIZAR_PUNTOS:
@@ -341,6 +340,79 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
 
     public void setJugadorSesion(Jugador jugadorSesion) {
         this.jugadorSesion = jugadorSesion;
+    }
+
+    //metodos mapper
+    /**
+     * Convierte el contenido del paquete a PuntoDTO[].
+     *
+     */
+    private PuntoDTO[] convertirAPuntosDTO(Object contenido) {
+        if (contenido instanceof PuntoDTO[]) {
+            return (PuntoDTO[]) contenido;
+        }
+
+        if (contenido instanceof List) {
+            List<?> lista = (List<?>) contenido;
+            PuntoDTO[] puntos = new PuntoDTO[lista.size()];
+
+            for (int i = 0; i < lista.size(); i++) {
+                Object item = lista.get(i);
+                if (item instanceof Map) {
+                    Map<?, ?> map = (Map<?, ?>) item;
+                    int x = ((Number) map.get("x")).intValue();
+                    int y = ((Number) map.get("y")).intValue();
+                    puntos[i] = new PuntoDTO(x, y);
+                }
+            }
+            return puntos;
+        }
+
+        return null;
+    }
+
+    /**
+     * Convierte el contenido del paquete a JugadorDTO.
+     *
+     */
+    private JugadorDTO convertirAJugadorDTO(Object contenido) {
+        if (contenido instanceof JugadorDTO) {
+            return (JugadorDTO) contenido;
+        }
+
+        if (contenido instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) contenido;
+            String id = (String) map.get("id");
+            boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
+            return new JugadorDTO(id, turno);
+        }
+
+        return null;
+    }
+
+    /**
+     * Convierte el contenido del paquete a List de JugadorDTO.
+     *
+     */
+    private List<JugadorDTO> convertirAListaJugadoresDTO(Object contenido) {
+        List<JugadorDTO> resultado = new ArrayList<>();
+
+        if (contenido instanceof List) {
+            List<?> lista = (List<?>) contenido;
+
+            for (Object item : lista) {
+                if (item instanceof JugadorDTO) {
+                    resultado.add((JugadorDTO) item);
+                } else if (item instanceof Map) {
+                    Map<?, ?> map = (Map<?, ?>) item;
+                    String id = (String) map.get("id");
+                    boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
+                    resultado.add(new JugadorDTO(id, turno));
+                }
+            }
+        }
+
+        return resultado;
     }
 
 }

@@ -15,7 +15,6 @@ Fachada\PartidaFachada.class
 Entidades\Jugador.class
 Entidades\AvatarEnum.class
 Observer\ObservadorJugadores.class
-Fachada\Partida$2.class
 Fachada\Partida$1.class
 Entidades\ColorEnum.class
 Fachada\Partida.class

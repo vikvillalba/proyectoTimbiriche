@@ -263,7 +263,9 @@ public class ModeloPartida implements IModeloJugadoresLectura,
 
     @Override
     public void actualizar(Object cambio) {
-        System.out.println("[ModeloPartida] i dont get it:" + cambio.toString());
+        System.out.println("[ModeloPartida] Evento recibido: " + cambio.toString());
+        // notificar a vista CAMBIO TABLEROO
+        notificarObservadorTablero();
     }
 
 }

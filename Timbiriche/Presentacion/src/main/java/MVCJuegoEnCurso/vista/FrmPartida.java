@@ -53,7 +53,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
         //jesus en moto
         if (estaEnTurno) {
-            System.out.println("[" + sesion.getNombre() + "] Es tu turno!");
+            System.out.println("[" + sesion.getNombre() + "] Es tu turno");
         } else {
             System.out.println("[" + sesion.getNombre() + "] Esperando turno de: " +
                              (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
