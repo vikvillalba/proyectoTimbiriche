@@ -15,5 +15,5 @@ public interface ObservadorTurnos {
      *
      * @param jugadores lista de jugadores con el jugador en turno actualizado.
      */
-    void actualizar(List<Jugador> jugadores);
+//    void actualizar(List<Jugador> jugadores);
 }
