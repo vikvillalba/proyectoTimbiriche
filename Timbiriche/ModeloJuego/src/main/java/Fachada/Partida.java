@@ -24,7 +24,8 @@ import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
 
 /**
- * Clase que representa una partida de juego. Engloba a todas las clases necesarias para iniciar una partida.
+ * Clase que representa una partida de juego. Engloba a todas las clases
+ * necesarias para iniciar una partida.
  *
  * @author victoria
  */
@@ -44,8 +45,6 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
-//    private ManejadorTurnos turnos;
-//    private ObservadorTurnos observadorTurnos;
 
     /**
      * Constructor de partida.
@@ -63,10 +62,6 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         this.tablero = new Tablero(alto, ancho);
         this.mapperJugadores = new MapperJugadores();
         this.jugadorEnTurno = jugadores.get(0);
-
-//        this.turnos = new ManejadorTurnos(this.jugadores); //jugadores con turnos asignados
-        // Registrar la partida como observador de turnos (para notificar al modelo cuando se avance de turno)
-//        this.turnos.agregarObservadorTurnos(this);
     }
 
     @Override
@@ -80,9 +75,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
             // validar que la linea no exista 
             if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino)) || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
                 throw new PartidaExcepcion("Los puntos seleccionados forman una línea que ya existe.");
-
             }
-
         }
         // validar que el punto origen y destino si sean adyacentes (q no sean diagonales o no tengan nada q ver)
         if (!(Objects.equals(origen.getArriba(), destino)
@@ -99,8 +92,22 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(puertoDestino);
         emisor.enviarCambio(paquete);
-        return tablero.unirPuntos(origen, destino, jugadorEnTurno);
-
+        boolean cuadroCompletado = tablero.unirPuntos(origen, destino, jugadorEnTurno);
+        if (cuadroCompletado) {
+            notificarObservadorJugadores();
+            List<JugadorDTO> jugadoresDTO = new ArrayList<>();
+            for (Jugador j : jugadores) {
+                JugadorDTO dto = new JugadorDTO(j.getNombre(), j.isTurno());
+                dto.setScore(j.getScore());
+                jugadoresDTO.add(dto);
+            }
+            PaqueteDTO puntajeActualizado = new PaqueteDTO(jugadoresDTO, TipoEvento.ACTUALIZAR_PUNTOS.toString());
+            puntajeActualizado.setHost(this.host);
+            puntajeActualizado.setPuertoOrigen(this.puertoOrigen);
+            puntajeActualizado.setPuertoDestino(puertoDestino);
+            emisor.enviarCambio(puntajeActualizado);
+        }
+        return cuadroCompletado;
     }
 
     @Override
@@ -160,18 +167,112 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(puertoDestino);
         emisor.enviarCambio(paquete);
-//        turnos.actualizarTurno();
-//        notificarObservadorTurnos();
     }
 
-//    public void notificarObservadorTurnos() {
-//        if (observadorTurnos != null) {
-//            observadorTurnos.actualizar(jugadores);
-//        }
-//    }
-//    public void agregarObservadorTurnos(ObservadorTurnos ob) {
-//        this.observadorTurnos = ob;
-//    }
+    @Override
+    public void NuevaLinea(PaqueteDTO paquete) {
+        // Convertir contenido a PuntoDTO[]
+        PuntoDTO[] puntosDTO = convertirAPuntosDTO(paquete.getContenido());
+        if (puntosDTO == null || puntosDTO.length != 2) {
+            notificarEventoRecibido("ERROR: PuntoDTO[] invalido en NUEVA_LINEA");
+            return;
+        }
+        // Convertir PuntoDTO a Punto del tablero local
+        Punto origen = tablero.getPunto(puntosDTO[0].getX(), puntosDTO[0].getY());
+        Punto destino = tablero.getPunto(puntosDTO[1].getX(), puntosDTO[1].getY());
+        if (origen == null || destino == null) {
+            notificarEventoRecibido("ERROR: Puntos no encontrados en tablero local");
+            return;
+        }
+        // Verificar si la linea ya existe (evita duplicados)
+        for (Linea linea : tablero.getLineasExistentes()) {
+            if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino))
+                    || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
+                System.out.println("[Partida] Linea ya existe, ignorando evento duplicado");
+                return;
+            }
+        }
+        // Actualizar tablero local
+        boolean hizoCuadro = tablero.unirPuntos(origen, destino, jugadorEnTurno);
+        notificarEventoRecibido("Linea agregada: (" + origen.getX() + "," + origen.getY()
+                + ") - (" + destino.getX() + "," + destino.getY() + ")");
+        // Notificar a los observadores para actualizar la vista
+        for (ObservadorEventos ob : observadoresEventos) {
+            ob.actualizar(tablero);
+        }
+    }
+
+    @Override
+    public void TurnoActualizado(PaqueteDTO paquete) {
+        // Convertir contenido a JugadorDTO
+        JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
+
+        System.out.println("[Partida] Jugador en turno segun DTO: " + jugadorTurnoDTO.getId());
+
+        boolean turnoCambio = false;
+        for (Jugador j : jugadores) {
+            if (j.getNombre().equals(jugadorTurnoDTO.getId())) {
+                if (!j.isTurno()) {
+                    j.setTurno(true);
+                    this.jugadorEnTurno = j;
+                    turnoCambio = true;
+                    System.out.println("[Partida] Turno asignado a: " + j.getNombre());
+                }
+            } else {
+                j.setTurno(false);
+            }
+        }
+
+        if (turnoCambio) {
+            for (ObservadorJugadores ob : observadoresJugadores) {
+                ob.actualizar(jugadores);
+            }
+            notificarEventoRecibido("Turno actualizado: " + jugadorTurnoDTO.getId());
+        }
+    }
+
+    @Override
+    public void InicioPartida(PaqueteDTO paquete) {
+        // Convertir contenido a List<JugadorDTO>
+        List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
+
+        for (JugadorDTO dto : jugadoresDTO) {
+            for (Jugador j : jugadores) {
+                if (j.getNombre().equals(dto.getId())) {
+                    if (dto.isTurno()) {
+                        j.setTurno(true);
+                        this.jugadorEnTurno = j;
+                    } else {
+                        j.setTurno(false);
+                    }
+                }
+            }
+        }
+        notificarObservadorInicioJuego();
+        notificarObservadorJugadores();
+        notificarEventoRecibido("Partida iniciada");
+    }
+
+    @Override
+    public void ActualizarPuntos(PaqueteDTO paquete) {
+        List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
+        System.out.println("[Partida] Puntos actualizados question mark");
+
+        for (JugadorDTO dto : jugadoresDTO) {
+            for (Jugador j : jugadores) {
+                if (j.getNombre().equals(dto.getId())) {
+                    j.setScore(dto.getScore());
+                    System.out.println("[Partida] Score actualizado para " + j.getNombre() + ": " + dto.getScore());
+                }
+            }
+        }
+        // Notificar a los observadores para actualizar la vista
+        for (ObservadorJugadores ob : observadoresJugadores) {
+            ob.actualizar(jugadores);
+        }
+        notificarEventoRecibido("Puntos actualizados");
+    }
+
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
         System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
@@ -185,97 +286,20 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         }
 
         switch (tipo) {
-
             case NUEVA_LINEA: {
-                // Convertir contenido a PuntoDTO[]
-                PuntoDTO[] puntosDTO = convertirAPuntosDTO(paquete.getContenido());
-
-                if (puntosDTO == null || puntosDTO.length != 2) {
-                    notificarEventoRecibido("ERROR: PuntoDTO[] invalido en NUEVA_LINEA");
-                    return;
-                }
-
-                // Convertir PuntoDTO a Punto del tablero local
-                Punto origen = tablero.getPunto(puntosDTO[0].getX(), puntosDTO[0].getY());
-                Punto destino = tablero.getPunto(puntosDTO[1].getX(), puntosDTO[1].getY());
-
-                if (origen == null || destino == null) {
-                    notificarEventoRecibido("ERROR: Puntos no encontrados en tablero local");
-                    return;
-                }
-
-                // Verificar si la linea ya existe (evita duplicados)
-                for (Linea linea : tablero.getLineasExistentes()) {
-                    if ((linea.getOrigen().equals(origen) && linea.getDestino().equals(destino))
-                            || (linea.getOrigen().equals(destino) && linea.getDestino().equals(origen))) {
-                        System.out.println("[Partida] Linea ya existe, ignorando evento duplicado");
-                        return;
-                    }
-                }
-
-                // Actualizar tablero local
-                boolean hizoCuadro = tablero.unirPuntos(origen, destino, jugadorEnTurno);
-                notificarEventoRecibido("Linea agregada: (" + origen.getX() + "," + origen.getY()
-                        + ") - (" + destino.getX() + "," + destino.getY() + ")");
-
-                // Notificar a los observadores para actualizar la vista
-                for (ObservadorEventos ob : observadoresEventos) {
-                    ob.actualizar(tablero);
-                }
-
+                NuevaLinea(paquete);
                 break;
             }
 
             case TURNO_ACTUALIZADO: {
-                // Convertir contenido a JugadorDTO
-                JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
-
-                System.out.println("[Partida] Jugador en turno segun DTO: " + jugadorTurnoDTO.getId());
-
-                boolean turnoCambio = false;
-                for (Jugador j : jugadores) {
-                    if (j.getNombre().equals(jugadorTurnoDTO.getId())) {
-                        if (!j.isTurno()) {
-                            j.setTurno(true);
-                            this.jugadorEnTurno = j;
-                            turnoCambio = true;
-                            System.out.println("[Partida] Turno asignado a: " + j.getNombre());
-                        }
-                    } else {
-                        j.setTurno(false);
-                    }
-                }
-
-                if (turnoCambio) {
-                    for (ObservadorJugadores ob : observadoresJugadores) {
-                        ob.actualizar(jugadores);
-                    }
-                    notificarEventoRecibido("Turno actualizado: " + jugadorTurnoDTO.getId());
-                }
+                TurnoActualizado(paquete);
                 break;
             }
 
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                // Convertir contenido a List<JugadorDTO>
-                List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
-
-                for (JugadorDTO dto : jugadoresDTO) {
-                    for (Jugador j : jugadores) {
-                        if (j.getNombre().equals(dto.getId())) {
-                            if (dto.isTurno()) {
-                                j.setTurno(true);
-                                this.jugadorEnTurno = j;
-                            } else {
-                                j.setTurno(false);
-                            }
-                        }
-                    }
-                }
-                notificarObservadorInicioJuego();
-                notificarObservadorJugadores();
-                notificarEventoRecibido("Partida iniciada");
+                InicioPartida(paquete);
                 break;
             }
 
@@ -296,7 +320,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 break;
 
             case ACTUALIZAR_PUNTOS:
-                notificarEventoRecibido("Se actualizaron los puntos");
+                ActualizarPuntos(paquete);
                 break;
 
             default:
@@ -338,6 +362,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         return jugadorSesion;
     }
 
+    @Override
     public void setJugadorSesion(Jugador jugadorSesion) {
         this.jugadorSesion = jugadorSesion;
     }
@@ -401,14 +426,19 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
             List<?> lista = (List<?>) contenido;
 
             for (Object item : lista) {
+                JugadorDTO dto = null;
                 if (item instanceof JugadorDTO) {
-                    resultado.add((JugadorDTO) item);
+                    dto = (JugadorDTO) item;
                 } else if (item instanceof Map) {
                     Map<?, ?> map = (Map<?, ?>) item;
                     String id = (String) map.get("id");
                     boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
-                    resultado.add(new JugadorDTO(id, turno));
+                    dto = new JugadorDTO(id, turno);
+                    if (map.containsKey("score")) {
+                        dto.setScore(((Number) map.get("score")).intValue());
+                    }
                 }
+                resultado.add(dto);
             }
         }
 

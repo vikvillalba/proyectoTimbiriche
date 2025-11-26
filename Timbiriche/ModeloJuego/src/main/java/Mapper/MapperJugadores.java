@@ -14,6 +14,12 @@ import org.itson.dto.JugadorDTO;
  * @author pablo
  */
 public class MapperJugadores {  
+    
+    /**
+     * Convierte de Jugadores entidad a Jugadores DTO. 
+     * @param jugador
+     * @return 
+     */
     public JugadorDTO toDTO(Jugador jugador){
         JugadorDTO jugadordto = new JugadorDTO();
         jugadordto.setId(jugador.getNombre());
@@ -25,17 +31,11 @@ public class MapperJugadores {
         return jugadordto;
     }
     
-    public Jugador toEntidad(JugadorDTO jugadordto){
-        Jugador jugador = new Jugador();
-        jugador.setNombre(jugadordto.getId());
-        if (jugadordto.isTurno()!=true) {
-            jugador.setTurno(false);
-        }else{
-            jugador.setTurno(true);
-        }
-        return jugador;
-    }
-    
+    /**
+     * Convierte de una lista Jugadores entidad a una lista de Jugadores DTO. 
+     * @param jugadores
+     * @return 
+     */
     public List<JugadorDTO> toListaDTO(List<Jugador> jugadores){
         List<JugadorDTO> jugadoresDTO = new ArrayList<>();
         for (Jugador jugador : jugadores) {

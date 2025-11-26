@@ -14,7 +14,4 @@ public interface Observable {
     // Inicio de partida
     void agregarObservadorInicioJuego(ObservadorInicio ob);
     void notificarObservadorInicioJuego();
-
-
-    
 }

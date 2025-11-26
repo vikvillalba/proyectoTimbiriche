@@ -40,9 +40,9 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         IModeloTableroLectura,
         ObservablePartida,
         ObservadorInicio,
-        ObservadorTurnos, 
+        ObservadorTurnos,
         Observer.ObservadorJugadores,
-        Observer.ObservadorEventos{
+        Observer.ObservadorEventos {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -128,9 +128,10 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         } catch (PartidaExcepcion ex) {
             throw new JugadaException(ex.getMessage());
         }
+        
+        notificarObservadorTablero();
 
         if (jugada) {
-            notificarObservadorTablero();
             return true;
         }
 
@@ -217,13 +218,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         List<JugadorPresentable> jugadoresVista = jugadoresEntidadAPresentable(jugadores);
         observadorJugadores.actualizar(jugadoresVista);
     }
-
-    // observa a la partida y cuando se actualizan los turnos notifica 
-    // al observador de los jugadores (metodo d arriba)
-//    @Override
-//    public void actualizar(List<Jugador> jugadores) {
-//        notificarObservadorJugadores(jugadores);
-//    }
+    
     @Override
     public void agregarObservadorTablero(ObservadorTablero ob) {
         this.observadorTablero = ob;

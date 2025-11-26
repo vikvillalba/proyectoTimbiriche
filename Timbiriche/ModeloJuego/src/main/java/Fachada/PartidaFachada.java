@@ -8,6 +8,7 @@ import java.util.List;
 import Observer.Observable;
 import excepciones.PartidaExcepcion;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.dto.PaqueteDTO;
 
 /**
  * Interfaz fachada para acceder a los métodos de la partida.
@@ -70,7 +71,7 @@ public interface PartidaFachada extends Observable {
      * llama al manejador de turnos para que continúe con el jugador que sigue.
      */
     void actualizarTurno();
-
+    
     /** Obtiene un punto del tablero.
      * @param x posicion x en la matriz del tablero
      * @param y posicion y en la matriz del tablero
@@ -78,6 +79,43 @@ public interface PartidaFachada extends Observable {
      */
     Punto getPuntoTablero(int x, int y);
 
+    /**
+     * Obtiene al jugador que está actualmente jugando en la pantalla.
+     * @return 
+     */
     Jugador getJugadorSesion();
     
+    /**
+     * Establece al jugador que está actualmente jugando en la pantalla. 
+     * @param jugadorSesion
+     */
+    void setJugadorSesion(Jugador jugadorSesion);
+     
+    /**
+     * Recibe el evento de NuevaLinea con los puntos.
+     * Crea una línea para dibujarse en el tablero.
+     * @param paquete
+     */
+    void NuevaLinea(PaqueteDTO paquete);
+    
+    /**
+     * Recibe el evento de TurnoActualizado con el jugador en turno.
+     * Actualiza el jugador en turno en la lista de jugadores.
+     * @param paquete
+     */
+    void TurnoActualizado(PaqueteDTO paquete);
+    
+    /**
+     * Recibe el evento de InicioPartida con la lista de jugadores conectados.
+     * Establece la lista actual de jugadores.
+     * @param paquete
+     */
+    void InicioPartida(PaqueteDTO paquete);
+    
+    /**
+     * Recibe el evento de ActualizarPuntos con la lista de jugadores conectados.
+     * Establece el score actual te los jugadore en tiempo real.
+     * @param paquete
+     */
+    void ActualizarPuntos(PaqueteDTO paquete);
 }
