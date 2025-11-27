@@ -7,7 +7,6 @@ import Entidades.Punto;
 import java.util.List;
 import Observer.Observable;
 import excepciones.PartidaExcepcion;
-import org.itson.componenteemisor.IEmisor;
 import org.itson.dto.PaqueteDTO;
 
 /**
@@ -96,26 +95,25 @@ public interface PartidaFachada extends Observable {
      * Crea una línea para dibujarse en el tablero.
      * @param paquete
      */
-    void NuevaLinea(PaqueteDTO paquete);
+    void nuevaLinea(PaqueteDTO paquete);
     
     /**
      * Recibe el evento de TurnoActualizado con el jugador en turno.
      * Actualiza el jugador en turno en la lista de jugadores.
      * @param paquete
      */
-    void TurnoActualizado(PaqueteDTO paquete);
+    void turnoActualizado(PaqueteDTO paquete);
     
     /**
      * Recibe el evento de InicioPartida con la lista de jugadores conectados.
      * Establece la lista actual de jugadores.
-     * @param paquete
      */
-    void InicioPartida(PaqueteDTO paquete);
+    void inicioPartida();
     
     /**
      * Recibe el evento de ActualizarPuntos con la lista de jugadores conectados.
      * Establece el score actual te los jugadore en tiempo real.
      * @param paquete
      */
-    void ActualizarPuntos(PaqueteDTO paquete);
+    void actualizarPuntos(PaqueteDTO paquete);
 }

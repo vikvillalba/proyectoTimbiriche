@@ -170,7 +170,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
     }
 
     @Override
-    public void NuevaLinea(PaqueteDTO paquete) {
+    public void nuevaLinea(PaqueteDTO paquete) {
         // Convertir contenido a PuntoDTO[]
         PuntoDTO[] puntosDTO = convertirAPuntosDTO(paquete.getContenido());
         if (puntosDTO == null || puntosDTO.length != 2) {
@@ -203,7 +203,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
     }
 
     @Override
-    public void TurnoActualizado(PaqueteDTO paquete) {
+    public void turnoActualizado(PaqueteDTO paquete) {
         // Convertir contenido a JugadorDTO
         JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
 
@@ -232,8 +232,15 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
     }
 
     @Override
-    public void InicioPartida(PaqueteDTO paquete) {
-        // Convertir contenido a List<JugadorDTO>
+    public void inicioPartida() {
+      
+        notificarObservadorInicioJuego();
+        notificarObservadorJugadores();
+        notificarEventoRecibido("Partida iniciada");
+    }
+
+    private void obtenerJugadorTurno(PaqueteDTO paquete) {
+          // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
         for (JugadorDTO dto : jugadoresDTO) {
@@ -248,13 +255,10 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 }
             }
         }
-        notificarObservadorInicioJuego();
-        notificarObservadorJugadores();
-        notificarEventoRecibido("Partida iniciada");
     }
 
     @Override
-    public void ActualizarPuntos(PaqueteDTO paquete) {
+    public void actualizarPuntos(PaqueteDTO paquete) {
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
         System.out.println("[Partida] Puntos actualizados question mark");
 
@@ -287,19 +291,21 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
 
         switch (tipo) {
             case NUEVA_LINEA: {
-                NuevaLinea(paquete);
+                nuevaLinea(paquete);
                 break;
             }
 
             case TURNO_ACTUALIZADO: {
-                TurnoActualizado(paquete);
+                turnoActualizado(paquete);
                 break;
             }
 
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                InicioPartida(paquete);
+                
+                inicioPartida();
+                obtenerJugadorTurno(paquete);
                 break;
             }
 
@@ -320,7 +326,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 break;
 
             case ACTUALIZAR_PUNTOS:
-                ActualizarPuntos(paquete);
+                actualizarPuntos(paquete);
                 break;
 
             default:
