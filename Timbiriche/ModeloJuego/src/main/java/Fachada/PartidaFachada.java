@@ -108,9 +108,9 @@ public interface PartidaFachada extends Observable {
     /**
      * Recibe el evento de InicioPartida con la lista de jugadores conectados.
      * Establece la lista actual de jugadores.
-     * 
+     * @param paquete
      */
-    void InicioPartida();
+    void InicioPartida(PaqueteDTO paquete);
     
     /**
      * Recibe el evento de ActualizarPuntos con la lista de jugadores conectados.
