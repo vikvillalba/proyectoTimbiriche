@@ -61,7 +61,6 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         this.jugadores = jugadores;
         this.tablero = new Tablero(alto, ancho);
         this.mapperJugadores = new MapperJugadores();
-        this.jugadorEnTurno = jugadores.get(0);
     }
 
     @Override
@@ -232,7 +231,14 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
     }
 
     @Override
-    public void InicioPartida(PaqueteDTO paquete) {
+    public void InicioPartida() {
+
+        notificarObservadorInicioJuego();
+        notificarObservadorJugadores();
+        notificarEventoRecibido("Partida iniciada");
+    }
+
+    private void obtenerJugadorTurno(PaqueteDTO paquete) {
         // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
@@ -248,9 +254,6 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
                 }
             }
         }
-        notificarObservadorInicioJuego();
-        notificarObservadorJugadores();
-        notificarEventoRecibido("Partida iniciada");
     }
 
     @Override
@@ -299,7 +302,8 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                InicioPartida(paquete);
+                InicioPartida();
+                obtenerJugadorTurno(paquete);
                 break;
             }
 
