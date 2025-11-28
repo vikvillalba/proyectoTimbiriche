@@ -1,7 +1,7 @@
 Entidades/Tablero.class
 Fachada/Partida.class
 Entidades/ManejadorTurnos.class
-Fachada/Partida$1.class
+Fachada/PartidaComunicacion$1.class
 Observer/ObservadorJugadores.class
 Entidades/Jugador.class
 Observer/ObservadorEventos.class
@@ -12,6 +12,7 @@ Observer/ObservadorInicio.class
 Entidades/Cuadro.class
 org/itson/modelojuego/InicioJuego.class
 Entidades/TipoEvento.class
+Fachada/PartidaComunicacion.class
 Observer/ObservadorTurnos.class
 Entidades/Punto.class
 Entidades/ColorEnum.class

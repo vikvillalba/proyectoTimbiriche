@@ -8,6 +8,7 @@
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Entidades/Tablero.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Entidades/TipoEvento.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Fachada/Partida.java
+/Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Fachada/PartidaComunicacion.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Fachada/PartidaFachada.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Mapper/MapperJugadores.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/ModeloJuego/src/main/java/Observer/Observable.java

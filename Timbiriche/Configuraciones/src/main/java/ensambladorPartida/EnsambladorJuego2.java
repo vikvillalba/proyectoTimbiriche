@@ -1,6 +1,6 @@
 package ensambladorPartida;
 
-import ensambladorGeneral.EnsambladorGeneral;
+import ensambladorGeneral.EnsambladorPartida;
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
@@ -54,7 +54,7 @@ public class EnsambladorJuego2 {
         int ancho = 10;
 
         // Jugador 2 es la sesion de esta ventana
-        EnsambladorGeneral
+        EnsambladorPartida
                 .getInstancia("config_partida2.properties")
                 .iniciarPartida(jugadores, alto, ancho, jugador2);
     }

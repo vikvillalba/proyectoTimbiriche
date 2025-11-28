@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.itson.componenteemisor.IEmisor;
-import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
@@ -29,7 +28,7 @@ import org.itson.dto.PuntoDTO;
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
+public class Partida implements PartidaFachada, ObservableEventos {
 
     private Tablero tablero;
 
@@ -239,7 +238,7 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         notificarEventoRecibido("Partida iniciada");
     }
 
-    private void obtenerJugadorTurno(PaqueteDTO paquete) {
+    public void obtenerJugadorTurno(PaqueteDTO paquete) {
           // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
@@ -277,66 +276,12 @@ public class Partida implements PartidaFachada, IReceptor, ObservableEventos {
         notificarEventoRecibido("Puntos actualizados");
     }
 
-    @Override
-    public void recibirCambio(PaqueteDTO paquete) {
-        System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
-        TipoEvento tipo;
-
-        try {
-            tipo = TipoEvento.valueOf(paquete.getTipoEvento());
-        } catch (IllegalArgumentException e) {
-            notificarEventoRecibido("ERROR: Tipo de evento desconocido: " + paquete.getTipoEvento());
-            return;
-        }
-
-        switch (tipo) {
-            case NUEVA_LINEA: {
-                nuevaLinea(paquete);
-                break;
-            }
-
-            case TURNO_ACTUALIZADO: {
-                turnoActualizado(paquete);
-                break;
-            }
-
-            case SOLICITAR_INICIAR_PARTIDA:
-
-            case INICIO_PARTIDA: {
-                
-                inicioPartida();
-                obtenerJugadorTurno(paquete);
-                break;
-            }
-
-            case UNIRSE_PARTIDA:
-                notificarEventoRecibido("Un jugador se unio a la partida");
-                break;
-
-            case ABANDONAR_PARTIDA:
-                notificarEventoRecibido("Un jugador abandono la partida");
-                break;
-
-            case CONFIGURAR_PARTIDA:
-                notificarEventoRecibido("Partida configurada");
-                break;
-
-            case SOLICITAR_FINALIZAR_PARTIDA:
-                notificarEventoRecibido("Se solicito finalizar la partida");
-                break;
-
-            case ACTUALIZAR_PUNTOS:
-                actualizarPuntos(paquete);
-                break;
-
-            default:
-                notificarEventoRecibido("Evento no manejado: " + tipo);
-        }
-    }
-
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
+
+   
+
 
     @Override
     public void notificarEventoRecibido(Object evento) {
