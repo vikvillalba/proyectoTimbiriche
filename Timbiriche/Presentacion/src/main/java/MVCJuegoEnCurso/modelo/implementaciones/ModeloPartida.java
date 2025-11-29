@@ -5,6 +5,7 @@ import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
 import Fachada.PartidaFachada;
+import MVCConfiguracion.observer.ObservableInicioPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
@@ -30,6 +31,7 @@ import excepciones.JugadaException;
 import excepciones.PartidaExcepcion;
 import java.util.stream.Collectors;
 import objetosPresentables.CuadroPresentable;
+import objetosPresentables.JugadorConfig;
 
 /**
  *
@@ -42,7 +44,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservadorInicio,
         ObservadorTurnos,
         Observer.ObservadorJugadores,
-        Observer.ObservadorEventos {
+        Observer.ObservadorEventos,
+        ObservableInicioPartida{
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
@@ -261,6 +264,16 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         System.out.println("[ModeloPartida] Evento recibido: " + cambio.toString());
         // notificar a vista CAMBIO TABLEROO
         notificarObservadorTablero();
+    }
+
+    @Override
+    public void agregarObservadorInicioPartida(ObservableInicioPartida ob) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void notificarInicio(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

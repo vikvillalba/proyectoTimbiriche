@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.itson.componenteemisor.IEmisor;
 
 import org.itson.dto.PaqueteDTO;
+import org.itson.dto.TableroDTO;
 
 /**
  * Bus que recibe y canaliza mensajes recibidos por servicios.
@@ -19,6 +20,7 @@ public class EventBus {
 
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
+    private TableroDTO configuraciones;
 
     public EventBus() {
         this.servicios = new ConcurrentHashMap<>();

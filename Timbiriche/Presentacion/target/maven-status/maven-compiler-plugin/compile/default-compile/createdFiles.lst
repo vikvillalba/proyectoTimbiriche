@@ -7,7 +7,9 @@ MVCJuegoEnCurso/vista/PnlPunto.class
 MVCJuegoEnCurso/observer/ObservablePartida.class
 MVCJuegoEnCurso/vista/PnlTablero.class
 excepciones/JugadaException.class
+MVCConfiguracion/vista/FrmSalaEspera.class
 org/itson/presentacion/Presentacion.class
+objetosPresentables/JugadorConfig.class
 MVCJuegoEnCurso/vista/FrmPartida.class
 objetosPresentables/LineaPresentable.class
 MVCJuegoEnCurso/vista/PnlJugadores.class
@@ -20,7 +22,9 @@ objetosPresentables/CuadroPresentable.class
 MVCJuegoEnCurso/modelo/implementaciones/ModeloPartida.class
 objetosPresentables/JugadorPresentable.class
 MVCJuegoEnCurso/controlador/ControladorPartida.class
+objetosPresentables/TableroConfig.class
 configuracionesPartida/ConfiguracionesPartida.class
+objetosPresentables/PartidaPresentable.class
 MVCJuegoEnCurso/observer/ObservadorJugadores.class
 MVCJuegoEnCurso/vista/PnlTablero$1.class
 objetosPresentables/PuntoPresentable.class
