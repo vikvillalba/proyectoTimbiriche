@@ -1,5 +1,6 @@
 package Fachada;
 
+import ConfiguracionesFachada.ConfiguracionesPartida;
 import Entidades.TipoEvento;
 import static Entidades.TipoEvento.ABANDONAR_PARTIDA;
 import static Entidades.TipoEvento.ACTUALIZAR_PUNTOS;
@@ -19,9 +20,14 @@ import org.itson.dto.PaqueteDTO;
  */
 public class PartidaComunicacion implements IReceptor{
     private Partida partida;
+    private ConfiguracionesPartida configuraciones;
 
     public void setPartida(Partida partida) {
         this.partida = partida;
+    }
+
+    public void setConfiguraciones(ConfiguracionesPartida configuraciones) {
+        this.configuraciones = configuraciones;
     }
 
 

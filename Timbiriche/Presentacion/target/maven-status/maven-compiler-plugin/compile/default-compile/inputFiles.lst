@@ -1,3 +1,4 @@
+/Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/MVCConfiguracion/vista/FrmSalaEspera.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/MVCJuegoEnCurso/controlador/ControladorPartida.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/MVCJuegoEnCurso/modelo/implementaciones/ModeloPartida.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/MVCJuegoEnCurso/modelo/interfaces/IModeloJugadoresLectura.java
@@ -17,9 +18,12 @@
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/configuracionesPartida/ConfiguracionesPartida.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/excepciones/JugadaException.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/CuadroPresentable.java
+/Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/JugadorConfig.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/JugadorPresentable.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/LineaPresentable.java
+/Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/PartidaPresentable.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/PuntoPresentable.java
+/Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/TableroConfig.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/objetosPresentables/TableroPresentable.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/org/itson/presentacion/FrmMenuInicio.java
 /Users/victoria/Documents/GitHub/proyectoTimbiriche/Timbiriche/Presentacion/src/main/java/org/itson/presentacion/Presentacion.java
