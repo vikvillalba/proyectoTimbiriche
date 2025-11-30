@@ -1,27 +1,39 @@
 package MVCConfiguracion.modelo;
 
 import ConfiguracionesFachada.ConfiguracionesFachada;
+import ConfiguracionesFachada.Observer.ObservadorEventos;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
 import java.awt.Color;
 import java.awt.Image;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import objetosPresentables.JugadorConfig;
 import objetosPresentables.PartidaPresentable;
+import objetosPresentables.TableroConfig;
+import org.itson.dto.JugadorDTO;
+import org.itson.dto.PartidaDTO;
+import org.itson.dto.TableroDTO;
 
 /**
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, ObservadorEventos<Object> {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
+    private ObservadorEventoInicio observadorInicio;
     private ConfiguracionesFachada configuracionesPartida;
+    private JugadorDTO sesion;
+
+    private PartidaDTO configuraciones;
+
+    private boolean vista = false;
 
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
@@ -31,7 +43,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     static {
-        // Mapa con los nombres que se usan
+        // Mapa con los colores que se usan
         COLORES.put("rojo_pastel", new Color(220, 20, 60));
         COLORES.put("azul_pastel", new Color(135, 206, 235));
         COLORES.put("verde_pastel", new Color(143, 188, 139));
@@ -53,8 +65,8 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         AVATARES.put("tiburon_still_blue", cargarAvatar("tiburonStillBlue.png"));
         AVATARES.put("tiburon_still_gray", cargarAvatar("tiburonStillGray.png"));
     }
-    
-        private static Image cargarAvatar(String nombreArchivo) {
+
+    private static Image cargarAvatar(String nombreArchivo) {
         URL url = ModeloArranque.class.getResource("/avatares/" + nombreArchivo);
         if (url != null) {
             return new ImageIcon(url).getImage();
@@ -62,6 +74,50 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
             System.out.println("No se encontró la imagen: " + nombreArchivo);
             return null;
         }
+    }
+
+    private Image obtenerAvatar(String avatarEnum) {
+        return AVATARES.get(avatarEnum.toLowerCase());
+    }
+
+    private Color obtenerColor(String colorEnum) {
+        return COLORES.get(colorEnum.toLowerCase());
+    }
+
+    @Override
+    public PartidaPresentable getConfiguracionesPartida() {
+        List<JugadorDTO> jugadoresDTO = configuraciones.getJugadores();
+        TableroDTO tableroDTO = configuraciones.getTablero();
+
+        // pasar a objetos presentables
+        List<JugadorConfig> jugadores = new ArrayList<>();
+
+        for (JugadorDTO dto : jugadoresDTO) {
+            JugadorConfig jugador = new JugadorConfig(dto.getId(),
+                    obtenerAvatar(dto.getAvatar()),
+                    obtenerColor(dto.getColor()),
+                    dto.isListo()
+            );
+            jugadores.add(jugador);
+        }
+
+        TableroConfig tablero = new TableroConfig(tableroDTO.getAlto(), tableroDTO.getAncho());
+
+        PartidaPresentable partida = new PartidaPresentable(jugadores, tablero);
+        notificarConfiguraciones(partida);
+        vista = true;
+        return partida;
+
+    }
+
+    @Override
+    public JugadorConfig getSesion() {
+        JugadorConfig jugador = new JugadorConfig(sesion.getId(),
+                obtenerAvatar(sesion.getAvatar()),
+                obtenerColor(sesion.getColor()),
+                sesion.isListo()
+        );
+        return jugador;
     }
 
     @Override
@@ -80,18 +136,13 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     @Override
-    public PartidaPresentable getConfiguracionesPartida() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public void agregarObservadorConfiguraciones(ObservadorConfiguraciones ob) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.observadorConfiguraciones = ob;
     }
 
     @Override
     public void agregarObservadorEventoInicio(ObservadorEventoInicio ob) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.observadorInicio = ob;
     }
 
     @Override
@@ -101,7 +152,30 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void notificarConfiguraciones(PartidaPresentable partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        observadorConfiguraciones.actualizar(partida);
+    }
+
+    @Override
+    public boolean isVista() {
+        return vista;
+    }
+
+    @Override
+    public void actualizar(Object cambio) {
+        if (cambio instanceof PartidaDTO) {
+            this.configuraciones = (PartidaDTO) cambio;
+        }
+        
+        notificarConfiguraciones(getConfiguracionesPartida());
+    }
+
+    @Override
+    public void solicitarConfiguraciones() {
+        configuracionesPartida.solicitarConfiguraciones();
+    }
+
+    public void setSesion(JugadorDTO sesion) {
+        this.sesion = sesion;
     }
 
 }

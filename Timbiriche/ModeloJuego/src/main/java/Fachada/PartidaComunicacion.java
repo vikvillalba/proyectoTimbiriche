@@ -33,7 +33,7 @@ public class PartidaComunicacion implements IReceptor{
 
   @Override
     public void recibirCambio(PaqueteDTO paquete) {
-        System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
+        System.out.println("[ModeloJuego] evento recibido: " + paquete.getTipoEvento());
         TipoEvento tipo;
 
         try {
@@ -54,6 +54,10 @@ public class PartidaComunicacion implements IReceptor{
                 break;
             }
 
+            case OBTENER_CONFIGURACIONES_PARTIDA:{
+                configuraciones.configuracionesRecibidas(paquete);
+                break;
+            }
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {

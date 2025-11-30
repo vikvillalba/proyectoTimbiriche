@@ -1,6 +1,7 @@
 package MVCConfiguracion.vista;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import objetosPresentables.JugadorConfig;
@@ -16,6 +17,8 @@ public class PnlJugador extends javax.swing.JPanel {
     public PnlJugador(JugadorConfig jugador) {
         this.jugador = jugador;
         initComponents();
+        this.setSize(250, 261);
+        setMaximumSize(new Dimension(250, 261));
         cargarDatos();
     }
 
@@ -28,7 +31,7 @@ public class PnlJugador extends javax.swing.JPanel {
 
         if (jugador.isListo()) {
             this.lblStatus.setText("Listo");
-            this.lblStatus.setForeground(Color.GREEN);
+            this.lblStatus.setForeground(new Color(51,204,0));
         } else {
             this.lblStatus.setText("Esperando");
             this.lblStatus.setForeground(Color.GRAY);
@@ -51,9 +54,11 @@ public class PnlJugador extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(224, 233, 255));
 
+        lblAvatar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblAvatar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/avatares/tiburonBallena.png"))); // NOI18N
 
         lblNombre.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNombre.setText("NombreJugador");
 
         color.setBackground(new java.awt.Color(153, 153, 255));
@@ -62,7 +67,7 @@ public class PnlJugador extends javax.swing.JPanel {
         color.setLayout(colorLayout);
         colorLayout.setHorizontalGroup(
             colorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 108, Short.MAX_VALUE)
         );
         colorLayout.setVerticalGroup(
             colorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -71,39 +76,33 @@ public class PnlJugador extends javax.swing.JPanel {
 
         lblStatus.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(51, 204, 0));
+        lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblStatus.setText("Listo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+            .addComponent(lblAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(color, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(46, 46, 46))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAvatar)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lblStatus)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(lblAvatar)
                 .addGap(18, 18, 18)
+                .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNombre)
                 .addGap(18, 18, 18)
                 .addComponent(color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(lblStatus)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
     }// </editor-fold>//GEN-END:initComponents
 

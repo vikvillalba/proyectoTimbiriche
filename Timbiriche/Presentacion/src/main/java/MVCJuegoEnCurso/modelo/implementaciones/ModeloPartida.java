@@ -45,7 +45,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservadorTurnos,
         Observer.ObservadorJugadores,
         Observer.ObservadorEventos,
-        ObservableInicioPartida{
+        ObservableInicioPartida
+        {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;

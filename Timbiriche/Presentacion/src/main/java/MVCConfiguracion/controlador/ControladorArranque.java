@@ -6,6 +6,7 @@ import MVCJuegoEnCurso.controlador.ControladorPartida;
 import java.util.List;
 import objetosPresentables.JugadorConfig;
 import objetosPresentables.PartidaPresentable;
+import org.itson.dto.JugadorDTO;
 
 /**
  *
@@ -13,10 +14,10 @@ import objetosPresentables.PartidaPresentable;
  */
 public class ControladorArranque implements ObservadorEventoInicio{
     private ControladorPartida controladorPartida;
-    private JugadorConfig sesion;
+    private JugadorDTO sesion;
     private IModeloArranqueEscritura modelo;
 
-    public ControladorArranque(ControladorPartida controladorPartida, JugadorConfig sesion, IModeloArranqueEscritura modelo) {
+    public ControladorArranque(ControladorPartida controladorPartida, JugadorDTO sesion, IModeloArranqueEscritura modelo) {
         this.controladorPartida = controladorPartida;
         this.sesion = sesion;
         this.modelo = modelo;
@@ -31,6 +32,10 @@ public class ControladorArranque implements ObservadorEventoInicio{
     }
     
     public void confirmarInicioJuego(JugadorConfig jugador){
+    }
+    
+    public void obtenerConfiguraciones(){
+        modelo.solicitarConfiguraciones();
     }
 
     @Override

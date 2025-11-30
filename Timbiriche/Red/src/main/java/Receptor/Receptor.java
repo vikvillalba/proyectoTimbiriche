@@ -37,7 +37,6 @@ public class Receptor implements ObservadorRecibos {
             System.out.println("No hay paquetes en cola al recibir la notificación.");
             return;
         }
-        System.out.println("jesus en moto");
         if (receptor != null) {
             receptor.recibirCambio(paquete);
         }

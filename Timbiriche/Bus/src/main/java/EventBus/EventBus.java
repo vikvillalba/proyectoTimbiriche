@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.itson.componenteemisor.IEmisor;
 
 import org.itson.dto.PaqueteDTO;
-import org.itson.dto.TableroDTO;
 
 /**
  * Bus que recibe y canaliza mensajes recibidos por servicios.
@@ -20,7 +19,7 @@ public class EventBus {
 
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
-    private TableroDTO configuraciones;
+    private PaqueteDTO configuraciones; // adentro del paquete viene una partidaDTO
 
     public EventBus() {
         this.servicios = new ConcurrentHashMap<>();
@@ -34,7 +33,7 @@ public class EventBus {
     public void publicarEvento(PaqueteDTO paquete) {
         Servicio origen = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
         normalizarPaquete(paquete, origen);
-        
+
         if (paquete.getTipoEvento().equalsIgnoreCase("INICIAR_CONEXION")) {
             Servicio nuevoServicio = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
 
@@ -47,6 +46,13 @@ public class EventBus {
             }
 
             System.out.println("[EventBus] Servicio registrado: " + nuevoServicio);
+            return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
+            paquete.setContenido(configuraciones.getContenido());
+            System.out.println(configuraciones.getContenido().getClass());
+            notificarServicios(paquete);
             return;
         }
 
@@ -73,21 +79,38 @@ public class EventBus {
 
     //notificar servicios por red
     public void notificarServicios(PaqueteDTO paquete) {
-        //  Obtener suscriptores del tipo de evento del paquete
         List<Servicio> lista = servicios.get(paquete.getTipoEvento());
 
-        if (lista != null) {
+        if (lista == null) {
+            return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
 
             for (Servicio servicio : lista) {
-                if (Objects.equals(servicio.getHost(), paquete.getHost())
+                if (servicio.getHost().equals(paquete.getHost())
                         && servicio.getPuerto() == paquete.getPuertoOrigen()) {
-                    continue;
-                }
 
-                paquete.setHost(servicio.getHost());
-                paquete.setPuertoDestino(servicio.getPuerto());
-                emisor.enviarCambio(paquete);
+                    paquete.setHost(servicio.getHost());
+                    paquete.setPuertoDestino(servicio.getPuerto());
+                    emisor.enviarCambio(paquete);
+                    return;
+                }
             }
+
+            return;
+        }
+
+        for (Servicio servicio : lista) {
+
+            if (servicio.getHost().equals(paquete.getHost())
+                    && servicio.getPuerto() == paquete.getPuertoOrigen()) {
+                continue;
+            }
+
+            paquete.setHost(servicio.getHost());
+            paquete.setPuertoDestino(servicio.getPuerto());
+            emisor.enviarCambio(paquete);
         }
     }
 
@@ -120,6 +143,10 @@ public class EventBus {
         if (paquete.getPuertoOrigen() == 0) {
             paquete.setPuertoOrigen(origen.getPuerto());
         }
+    }
+
+    public void setConfiguraciones(PaqueteDTO configuraciones) {
+        this.configuraciones = configuraciones;
     }
 
 }

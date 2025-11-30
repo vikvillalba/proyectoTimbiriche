@@ -9,7 +9,6 @@ public class PaqueteDTO<T> {
     private T contenido;
     private String tipoEvento;
     private String host;
-    //no se si se ocupa chat
     private int puertoOrigen;
     private int puertoDestino;
 

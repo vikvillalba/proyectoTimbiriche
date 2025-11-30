@@ -9,6 +9,9 @@ public class JugadorDTO {
     private String id;
     private boolean turno;
     private int score;
+    private boolean listo;
+    private String avatar;
+    private String color;
 
     public JugadorDTO() {
     }
@@ -46,4 +49,30 @@ public class JugadorDTO {
         this.score = score;
     }
 
+    public boolean isListo() {
+        return listo;
+    }
+
+    public void setListo(boolean listo) {
+        this.listo = listo;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    
+    
 }

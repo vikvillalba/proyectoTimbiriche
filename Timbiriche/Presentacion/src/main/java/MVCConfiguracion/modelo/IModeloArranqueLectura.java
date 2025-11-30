@@ -1,11 +1,13 @@
 package MVCConfiguracion.modelo;
 
-import objetosPresentables.PartidaPresentable;
+import objetosPresentables.JugadorConfig;
+
 
 /**
  *
  * @author victoria
  */
 public interface IModeloArranqueLectura {
-    public PartidaPresentable getConfiguracionesPartida();
+    public boolean isVista();
+    public JugadorConfig getSesion();
 }

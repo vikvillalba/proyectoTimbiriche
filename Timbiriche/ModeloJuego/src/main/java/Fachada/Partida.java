@@ -45,24 +45,22 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private int puertoOrigen;
     private int puertoDestino;
 
-    /**
-     * Constructor de partida.
-     *
-     * @param jugadores jugadores que estarán en la partida
-     * @param alto alto del tablero
-     * @param ancho ancho del tablero
-     *
-     * inicializa un tablero
-     *
-     */
-    public Partida(List<Jugador> jugadores, int alto, int ancho) {
-        // tablero mock
-        this.jugadores = jugadores;
-        this.tablero = new Tablero(alto, ancho);
+
+
+    public Partida() {
         this.mapperJugadores = new MapperJugadores();
-        this.jugadorEnTurno = jugadores.get(0);
     }
 
+    public void setJugadores(List<Jugador> jugadores) {
+        this.jugadores = jugadores;
+    }
+
+    public void setTablero(int alto, int ancho){
+         this.tablero = new Tablero(alto, ancho);
+    }
+    
+    
+    
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
         return new Punto[]{origen, destino};
@@ -396,4 +394,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
         return resultado;
     }
 
+
+    
+    
 }

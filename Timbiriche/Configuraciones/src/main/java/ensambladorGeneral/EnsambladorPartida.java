@@ -18,6 +18,10 @@ import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
 import configuraciones.Configuraciones;
+import ConfiguracionesFachada.ConfiguracionesPartida;
+import MVCConfiguracion.controlador.ControladorArranque;
+import MVCConfiguracion.modelo.ModeloArranque;
+import MVCConfiguracion.vista.FrmSalaEspera;
 import java.util.Arrays;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
@@ -37,10 +41,24 @@ public class EnsambladorPartida {
     private String host;
     private int puertoEntrada;
     private int puertoServidor;
-
     private MapperJugadores mapper;
 
     private final int NUMERO_JUGADORES = 4;
+
+    //componentes de la partida
+    private PartidaComunicacion partidaComunicacion;
+    private ConfiguracionesPartida configuraciones;
+    private Partida partida;
+    private ColaEnvios colaEnvios;
+    private IEmisor emisor;
+    private ClienteTCP clientePartida;
+    private ColaRecibos colaRecibos;
+    ServidorTCP servidorPartida;
+    Receptor receptorPartida;
+
+    // componentes del mvc
+    private ModeloPartida modelo;
+    private ControladorPartida controlador;
 
     private EnsambladorPartida(Configuraciones config) {
         this.mapper = new MapperJugadores();
@@ -60,40 +78,32 @@ public class EnsambladorPartida {
         }
     }
 
-    /**
-     * Metodo que inicializa una nueva partida con configuraciones brindadas por
-     * el usuario.
-     */
-    public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
-        
-        PartidaComunicacion partidaComunicacion = new PartidaComunicacion();
-        if (jugadores.size() > NUMERO_JUGADORES) {
-            throw new IllegalArgumentException("Se ha alcanzado el limite de jugadores");
-        }
+    public void configurarPartida(JugadorDTO sesion) {
+        partidaComunicacion = new PartidaComunicacion();
+        configuraciones = new ConfiguracionesPartida();
+        partida = new Partida();
 
-        List<JugadorDTO> jugadoresdto = mapper.toListaDTO(jugadores);
+        configuraciones.setHost(host);
+        configuraciones.setPuertoOrigen(puertoServidor);
+        configuraciones.setPuertoDestino(puertoEntrada);
 
-        Partida partida = new Partida(jugadores, alto, ancho);
-        partida.setHost(host);
-        partida.setPuertoOrigen(puertoServidor);
-        partida.setPuertoDestino(puertoEntrada);
+        partidaComunicacion.setConfiguraciones(configuraciones);
 
         // emisor del servicio
-        ColaEnvios colaEnvios = new ColaEnvios();
-        IEmisor emisor = new Emisor(colaEnvios);
-        ClienteTCP clientePartida = new ClienteTCP(colaEnvios, puertoEntrada, host);
+        colaEnvios = new ColaEnvios();
+        emisor = new Emisor(colaEnvios);
+        clientePartida = new ClienteTCP(colaEnvios, puertoEntrada, host);
         colaEnvios.agregarObservador(clientePartida);
 
         // receptor del servicio
-        ColaRecibos colaRecibos = new ColaRecibos();
-        ServidorTCP servidorPartida = new ServidorTCP(colaRecibos, puertoServidor);
-        partida.setEmisor(emisor);
+        colaRecibos = new ColaRecibos();
+        servidorPartida = new ServidorTCP(colaRecibos, puertoServidor);
+        configuraciones.setEmisor(emisor);
 
-        Receptor receptorPartida = new Receptor();
+        receptorPartida = new Receptor();
         receptorPartida.setCola(colaRecibos);
 
         receptorPartida.setReceptor(partidaComunicacion);
-        partidaComunicacion.setPartida(partida);
         colaRecibos.agregarObservador(receptorPartida);
 
         List<String> eventos = Arrays.asList(
@@ -105,31 +115,60 @@ public class EnsambladorPartida {
                 "ABANDONAR_PARTIDA",
                 "CONFIGURAR_PARTIDA",
                 "SOLICITAR_FINALIZAR_PARTIDA",
-                "ACTUALIZAR_PUNTOS"
+                "ACTUALIZAR_PUNTOS",
+                "OBTENER_CONFIGURACIONES_PARTIDA",
+                "CONFIRMAR_INICIO_PARTIDA",
+                "SOLICITAR_INICIAR_PARTIDA"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
         solicitarConexion.setHost(host);
         solicitarConexion.setPuertoOrigen(puertoServidor);
         solicitarConexion.setPuertoDestino(puertoEntrada);
-        emisor.enviarCambio(solicitarConexion);
-
-        PaqueteDTO solicitarTurnos = new PaqueteDTO(jugadoresdto, "SOLICITAR_TURNOS");
-        solicitarTurnos.setHost(host);
-        solicitarTurnos.setPuertoOrigen(puertoServidor);
-        solicitarTurnos.setPuertoDestino(puertoEntrada);
-        emisor.enviarCambio(solicitarTurnos);
 
         new Thread(() -> servidorPartida.iniciar()).start();
+        emisor.enviarCambio(solicitarConexion);
+        modelo = new ModeloPartida(partida);
 
-        //MVC de arranque
+        controlador = new ControladorPartida(modelo);
+
+        // MVC de configuraciones
+        ModeloArranque modeloConfig = new ModeloArranque(configuraciones);
+        modeloConfig.setSesion(sesion);
+        ControladorArranque controladorConfig = new ControladorArranque(controlador, sesion, modeloConfig);
+        FrmSalaEspera vista = new FrmSalaEspera(modeloConfig, controladorConfig);
+        configuraciones.agregarObservador(modeloConfig);
+        modeloConfig.agregarObservadorConfiguraciones(vista);
+        modeloConfig.agregarObservadorEventoInicio(controladorConfig);
+
+        controladorConfig.obtenerConfiguraciones();
+
+    }
+
+    /**
+     * Metodo que inicializa una nueva partida con configuraciones brindadas por
+     * el usuario.
+     */
+    public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
+
+        if (jugadores.size() > NUMERO_JUGADORES) {
+            throw new IllegalArgumentException("Se ha alcanzado el limite de jugadores");
+        }
+
+        List<JugadorDTO> jugadoresdto = mapper.toListaDTO(jugadores);
+
+        partida.setJugadores(jugadores);
+        partida.setTablero(alto, ancho);
         partida.setJugadorSesion(sesion);
-        ModeloPartida modelo = new ModeloPartida(partida);
+        partida.setHost(host);
+        partida.setPuertoOrigen(puertoServidor);
+        partida.setPuertoDestino(puertoEntrada);
+
+        partidaComunicacion.setPartida(partida);
+        partida.setEmisor(emisor);
+
         IModeloJugadoresLectura imjl = modelo;
         IModeloTableroLectura imtl = modelo;
-        IModeloPartidaEscritura impe = modelo;
-
-        ControladorPartida controlador = new ControladorPartida(impe);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
@@ -138,6 +177,16 @@ public class EnsambladorPartida {
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
+
+        PaqueteDTO solicitarTurnos = new PaqueteDTO(jugadoresdto, "SOLICITAR_TURNOS");
+        solicitarTurnos.setHost(host);
+        solicitarTurnos.setPuertoOrigen(puertoServidor);
+        solicitarTurnos.setPuertoDestino(puertoEntrada);
+        // emisor.enviarCambio(solicitarTurnos);
+
+        //MVC de juego
+        partida.setJugadorSesion(sesion);
+
         partida.inicioPartida();
     }
 }
