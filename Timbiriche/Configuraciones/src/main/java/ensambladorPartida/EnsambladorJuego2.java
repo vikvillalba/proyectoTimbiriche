@@ -57,7 +57,7 @@ public class EnsambladorJuego2 {
         // Jugador 2 es la sesion de esta ventana
       
         JugadorDTO jugador = new JugadorDTO();
-        jugador.setListo(true);
+        jugador.setListo(false);
         jugador.setId("lucia");
         jugador.setAvatar("TIBURON_STILL_GRAY");
         jugador.setColor("AMARILLO_PASTEL");

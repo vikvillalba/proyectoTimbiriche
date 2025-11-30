@@ -3,6 +3,7 @@ package org.itson.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -22,23 +23,43 @@ public class ConfiguracionesDTO {
     }
 
     public void agregarJugador(Object contenido) {
+        JugadorDTO jugadorAGregar = null;
+
         if (contenido instanceof JugadorDTO jugador) {
-            jugadores.add(jugador);
+            jugadorAGregar = jugador;
         } else if (contenido instanceof PaqueteDTO<?> paquete) {
             Object inner = paquete.getContenido();
             if (inner instanceof JugadorDTO jugador) {
-                jugadores.add(jugador);
+                jugadorAGregar = jugador;
             } else if (inner instanceof Map<?, ?> mapa) {
+                String id = (String) mapa.get("id");
 
-                JugadorDTO jugador = new JugadorDTO();
-                jugador.setId((String) mapa.get("id"));
-                jugador.setTurno(Boolean.TRUE.equals(mapa.get("turno")));
-                jugador.setScore(mapa.get("score") != null ? ((Number) mapa.get("score")).intValue() : 0);
-                jugador.setListo(Boolean.TRUE.equals(mapa.get("listo")));
-                jugador.setAvatar((String) mapa.get("avatar"));
-                jugador.setColor((String) mapa.get("color"));
-                jugadores.add(jugador);
+                Optional<JugadorDTO> existente = jugadores.stream()
+                        .filter(j -> j.getId().equals(id))
+                        .findFirst();
+
+                if (existente.isPresent()) {
+                    JugadorDTO j = existente.get();
+                    j.setTurno(Boolean.TRUE.equals(mapa.get("turno")));
+                    j.setScore(mapa.get("score") != null ? ((Number) mapa.get("score")).intValue() : 0);
+                    j.setListo(Boolean.TRUE.equals(mapa.get("listo")));
+                    j.setAvatar((String) mapa.get("avatar"));
+                    j.setColor((String) mapa.get("color"));
+                    return; 
+                }
+
+                jugadorAGregar = new JugadorDTO();
+                jugadorAGregar.setId(id);
+                jugadorAGregar.setTurno(Boolean.TRUE.equals(mapa.get("turno")));
+                jugadorAGregar.setScore(mapa.get("score") != null ? ((Number) mapa.get("score")).intValue() : 0);
+                jugadorAGregar.setListo(Boolean.TRUE.equals(mapa.get("listo")));
+                jugadorAGregar.setAvatar((String) mapa.get("avatar"));
+                jugadorAGregar.setColor((String) mapa.get("color"));
             }
+        }
+
+        if (jugadorAGregar != null) {
+            jugadores.add(jugadorAGregar);
         }
     }
 

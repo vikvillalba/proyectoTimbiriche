@@ -35,6 +35,11 @@ public class JugadorConfig {
     public boolean isListo() {
         return listo;
     }
+
+    public void setListo(boolean listo) {
+        this.listo = listo;
+    }
+    
     
     
 }

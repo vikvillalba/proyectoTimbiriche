@@ -105,6 +105,9 @@
               <Image iconType="3" name="/botones/regresarHover.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegresarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnIniciar">
           <Properties>
@@ -124,6 +127,9 @@
               <Image iconType="3" name="/botones/iniciarPatidaHover.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIniciarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

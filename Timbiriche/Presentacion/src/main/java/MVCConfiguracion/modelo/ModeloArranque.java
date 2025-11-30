@@ -2,9 +2,14 @@ package MVCConfiguracion.modelo;
 
 import ConfiguracionesFachada.ConfiguracionesFachada;
 import ConfiguracionesFachada.Observer.ObservadorEventos;
+import ConfiguracionesFachada.Observer.ObservadorSolicitudInicio;
+import Entidades.AvatarEnum;
+import Entidades.ColorEnum;
+import Entidades.Jugador;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
+import MVCConfiguracion.observer.ObservadorSolicitudes;
 import java.awt.Color;
 import java.awt.Image;
 import java.net.URL;
@@ -24,10 +29,11 @@ import org.itson.dto.TableroDTO;
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, ObservadorEventos<Object> {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, ObservadorEventos<Object>, ObservadorSolicitudInicio {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ObservadorEventoInicio observadorInicio;
+    private ObservadorSolicitudes observadorSolicitudes;
     private ConfiguracionesFachada configuracionesPartida;
     private JugadorDTO sesion;
 
@@ -84,6 +90,24 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         return COLORES.get(colorEnum.toLowerCase());
     }
 
+    private ColorEnum getColorEnum(Color color) {
+        for (Map.Entry<String, Color> entry : COLORES.entrySet()) {
+            if (entry.getValue().equals(color)) {
+                return ColorEnum.valueOf(entry.getKey().toUpperCase());
+            }
+        }
+        return null;
+    }
+
+    private AvatarEnum getAvatarEnum(Image avatar) {
+        for (Map.Entry<String, Image> entry : AVATARES.entrySet()) {
+            if (entry.getValue() == avatar) {
+                return AvatarEnum.valueOf(entry.getKey().toUpperCase());
+            }
+        }
+        return null;
+    }
+
     @Override
     public PartidaPresentable getConfiguracionesPartida() {
         List<JugadorDTO> jugadoresDTO = configuraciones.getJugadores();
@@ -125,14 +149,27 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    private JugadorDTO presentableADTO(JugadorConfig jugador) {
+        JugadorDTO jugadorDTO = new JugadorDTO();
+        jugadorDTO.setId(jugador.getNombre());
+        jugadorDTO.setAvatar(getAvatarEnum(jugador.getAvatar()).toString());
+        jugadorDTO.setColor(getColorEnum(jugador.getColor()).toString());
+        jugadorDTO.setScore(0);
+        jugadorDTO.setTurno(false);
+        jugadorDTO.setListo(jugador.isListo());
+
+        return jugadorDTO;
+    }
+
     @Override
     public void solicitarInicioConexion(JugadorConfig jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // llamada al modelo de juego
+        configuracionesPartida.solicitarInicioJuego(presentableADTO(jugador));
     }
 
     @Override
     public void confirmarInicioJuego(JugadorConfig jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
@@ -165,7 +202,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         if (cambio instanceof PartidaDTO) {
             this.configuraciones = (PartidaDTO) cambio;
         }
-        
+
         notificarConfiguraciones(getConfiguracionesPartida());
     }
 
@@ -176,6 +213,23 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     public void setSesion(JugadorDTO sesion) {
         this.sesion = sesion;
+    }
+
+    @Override
+    public void agregarObservadorSolicitudes(ObservadorSolicitudes ob) {
+        this.observadorSolicitudes = ob;
+    }
+
+    @Override
+    public void notificarObservadorSolicitudes() {
+        observadorSolicitudes.mostrar();
+    }
+
+    @Override
+    public void actualizar(PartidaDTO configuracionesPartida) {
+        this.configuraciones = configuracionesPartida;
+        notificarConfiguraciones(getConfiguracionesPartida());
+        notificarObservadorSolicitudes();
     }
 
 }

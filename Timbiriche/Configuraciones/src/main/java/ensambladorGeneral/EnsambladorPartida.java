@@ -21,6 +21,7 @@ import configuraciones.Configuraciones;
 import ConfiguracionesFachada.ConfiguracionesPartida;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
+import MVCConfiguracion.vista.DlgInicioJuego;
 import MVCConfiguracion.vista.FrmSalaEspera;
 import java.util.Arrays;
 import java.util.List;
@@ -141,9 +142,12 @@ public class EnsambladorPartida {
         modeloConfig.setSesion(sesion);
         ControladorArranque controladorConfig = new ControladorArranque(controlador, modeloConfig);
         FrmSalaEspera vista = new FrmSalaEspera(modeloConfig, controladorConfig);
+        DlgInicioJuego dialogoInicio = new DlgInicioJuego(controladorConfig, modeloConfig);
         configuraciones.agregarObservador(modeloConfig);
+        configuraciones.agregarObservadorSolicitudInicio(modeloConfig);
         modeloConfig.agregarObservadorConfiguraciones(vista);
         modeloConfig.agregarObservadorEventoInicio(controladorConfig);
+        modeloConfig.agregarObservadorSolicitudes(dialogoInicio);
 
         new Thread(() -> servidorPartida.iniciar()).start();
         emisor.enviarCambio(solicitarConexion);

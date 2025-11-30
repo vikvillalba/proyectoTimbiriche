@@ -69,7 +69,7 @@ public class EnsambladorBus {
 
         // configuraciones de la partida :P
         JugadorDTO jugador1 = new JugadorDTO();
-        jugador1.setListo(false);
+        jugador1.setListo(true);
         jugador1.setId("sol");
         jugador1.setAvatar("TIBURON_MARTILLO");
         jugador1.setColor("MORAS");

@@ -41,17 +41,19 @@ public class EventBus {
             Servicio nuevoServicio = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
 
             List<String> eventos = (List<String>) paquete.getContenido();
-
             if (eventos != null) {
                 for (String evento : eventos) {
-                    registrarServicio(evento, nuevoServicio);
+                    List<Servicio> lista = servicios.computeIfAbsent(evento, k -> new ArrayList<>());
+
+                    if (lista.stream().noneMatch(s -> s.getHost().equals(nuevoServicio.getHost())
+                            && s.getPuerto() == nuevoServicio.getPuerto())) {
+                        lista.add(nuevoServicio);
+                    }
                 }
             }
 
             System.out.println("[EventBus] Servicio registrado: " + nuevoServicio);
-            return;
         }
-
         if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
             paquete.setContenido(configuraciones);
             notificarServicios(paquete);
@@ -62,6 +64,12 @@ public class EventBus {
 
             paquete.setContenido(configuraciones);
             paquete.setTipoEvento("OBTENER_CONFIGURACIONES_PARTIDA");
+            notificarServicios(paquete);
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("SOLICITAR_INICIAR_PARTIDA")) {
+            configuraciones.agregarJugador(paquete);
+            paquete.setContenido(configuraciones);
             notificarServicios(paquete);
         }
         if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_TABLERO")) {

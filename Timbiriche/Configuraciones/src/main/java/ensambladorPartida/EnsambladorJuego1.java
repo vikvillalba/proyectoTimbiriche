@@ -61,7 +61,7 @@ public class EnsambladorJuego1 {
 //                .iniciarPartida(jugadores, alto, ancho, jugador1);
 
         JugadorDTO jugador = new JugadorDTO();
-        jugador.setListo(true);
+        jugador.setListo(false);
         jugador.setId("biki");
         jugador.setAvatar("TIBURON_BALLENA");
         jugador.setColor("MAGENTA");

@@ -58,7 +58,11 @@ public class PartidaComunicacion implements IReceptor{
                 configuraciones.configuracionesRecibidas(paquete);
                 break;
             }
-            case SOLICITAR_INICIAR_PARTIDA:
+            case SOLICITAR_INICIAR_PARTIDA:{
+                configuraciones.recibirSolicitudInicioJuego(paquete);
+                System.out.println("llego");
+                break;
+            }
 
             case INICIO_PARTIDA: {
                 

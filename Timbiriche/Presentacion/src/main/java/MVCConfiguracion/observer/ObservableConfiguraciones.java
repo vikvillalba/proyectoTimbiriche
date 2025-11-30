@@ -11,4 +11,6 @@ public interface ObservableConfiguraciones {
     void agregarObservadorEventoInicio(ObservadorEventoInicio ob);
     void notificarInicioPartida(PartidaPresentable partida);
     void notificarConfiguraciones(PartidaPresentable partida);
+    void agregarObservadorSolicitudes(ObservadorSolicitudes ob);
+    void notificarObservadorSolicitudes();
 }   

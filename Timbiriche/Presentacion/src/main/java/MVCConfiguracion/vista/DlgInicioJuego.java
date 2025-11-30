@@ -1,22 +1,29 @@
 package MVCConfiguracion.vista;
 
 import MVCConfiguracion.controlador.ControladorArranque;
+import MVCConfiguracion.modelo.IModeloArranqueLectura;
+import MVCConfiguracion.observer.ObservadorSolicitudes;
 import objetosPresentables.JugadorConfig;
 
 /**
  *
  * @author victoria
  */
-public class DlgInicioJuego extends javax.swing.JFrame {
+public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSolicitudes{
     
     private JugadorConfig jugador;
     private ControladorArranque controlador;
+    private IModeloArranqueLectura modelo;
     
-    public DlgInicioJuego(JugadorConfig jugador, ControladorArranque controlador) {
+    
+    public DlgInicioJuego(ControladorArranque controlador, IModeloArranqueLectura modelo) {
         initComponents();
-        this.jugador = jugador;
+        this.modelo = modelo;
+        this.jugador = modelo.getSesion();
         this.controlador = controlador;
-        this.lblJugador.setText(jugador.getNombre());
+        setSize(695, 300);
+        setLocationRelativeTo(null);
+        setTitle("Solicitud de incio - Sesión de " + jugador.getNombre());
     }
 
     /**
@@ -41,10 +48,9 @@ public class DlgInicioJuego extends javax.swing.JFrame {
 
         lblJugador.setFont(new java.awt.Font("Helvetica Neue", 0, 30)); // NOI18N
         lblJugador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblJugador.setText("NombreJugador");
 
         lblJugador1.setFont(new java.awt.Font("Helvetica Neue", 0, 30)); // NOI18N
-        lblJugador1.setText("Solicitó iniciar el juego");
+        lblJugador1.setText("Se solicitó iniciar el juego");
 
         btnMasTiempo.setBackground(new java.awt.Color(229, 227, 255));
         btnMasTiempo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/masTiempo.png"))); // NOI18N
@@ -58,6 +64,7 @@ public class DlgInicioJuego extends javax.swing.JFrame {
             }
         });
 
+        btnIniciar.setBackground(new java.awt.Color(229, 227, 255));
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarJuego.png"))); // NOI18N
         btnIniciar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnIniciar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarJuegoHover.png"))); // NOI18N
@@ -69,25 +76,26 @@ public class DlgInicioJuego extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblJugador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(225, 225, 225)
-                        .addComponent(lblJugador1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(btnMasTiempo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnIniciar))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(166, 166, 166)
+                                .addComponent(lblJugador1)))
+                        .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(btnMasTiempo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnIniciar)
-                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(77, 77, 77)
+                .addGap(50, 50, 50)
                 .addComponent(lblJugador)
                 .addGap(27, 27, 27)
                 .addComponent(lblJugador1)
@@ -95,7 +103,7 @@ public class DlgInicioJuego extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnMasTiempo)
                     .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,7 +114,7 @@ public class DlgInicioJuego extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -125,4 +133,9 @@ public class DlgInicioJuego extends javax.swing.JFrame {
     private javax.swing.JLabel lblJugador;
     private javax.swing.JLabel lblJugador1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mostrar() {
+        this.setVisible(true);
+    }
 }

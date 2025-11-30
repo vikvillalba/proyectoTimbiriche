@@ -12,29 +12,35 @@ import org.itson.dto.JugadorDTO;
  *
  * @author victoria
  */
-public class ControladorArranque implements ObservadorEventoInicio{
+public class ControladorArranque implements ObservadorEventoInicio {
+
     private ControladorPartida controladorPartida;
-    private JugadorConfig sesion;
     private IModeloArranqueEscritura modelo;
 
     public ControladorArranque(ControladorPartida controladorPartida, IModeloArranqueEscritura modelo) {
         this.controladorPartida = controladorPartida;
-        this.sesion = modelo.getSesion();
         this.modelo = modelo;
     }
 
+    /**
+     * Solicita a los demás jugadores conectados iniciar el juego.
+     */
+    public void solicitarInicioJuego(JugadorConfig jugador) {
+        // llamada al modelo
+        modelo.solicitarInicioConexion(jugador);
+    }
 
-    public void solicitarInicioJuego(JugadorConfig jugador){
-        
+    public void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
     }
-    
-    public void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion){
+
+    /**
+     * El jugador de sesión acepta la solicitud de inicio de juego.
+     */
+    public void confirmarInicioJuego(JugadorConfig jugador) {
+
     }
-    
-    public void confirmarInicioJuego(JugadorConfig jugador){
-    }
-    
-    public void obtenerConfiguraciones(){
+
+    public void obtenerConfiguraciones() {
         modelo.solicitarConfiguraciones();
     }
 

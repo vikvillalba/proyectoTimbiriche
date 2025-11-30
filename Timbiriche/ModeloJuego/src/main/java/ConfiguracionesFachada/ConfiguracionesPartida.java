@@ -2,6 +2,7 @@ package ConfiguracionesFachada;
 
 import ConfiguracionesFachada.Observer.ObservableEventos;
 import ConfiguracionesFachada.Observer.ObservadorEventos;
+import ConfiguracionesFachada.Observer.ObservadorSolicitudInicio;
 import Entidades.Jugador;
 import Entidades.TipoEvento;
 import java.util.ArrayList;
@@ -23,11 +24,11 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
 
     private IEmisor emisor;
     private ObservadorEventos<PartidaDTO> observadorConfiguraciones;
+    private ObservadorSolicitudInicio observadorSolicitudInicio;
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
     private PartidaDTO partida;
-
 
     public void configuracionesRecibidas(PaqueteDTO paquete) {
         PartidaDTO partida = PaqueteDTOAPartida(paquete);
@@ -52,12 +53,27 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     }
 
     @Override
-    public void solicitarInicioJuego(Jugador jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void solicitarInicioJuego(JugadorDTO jugador) {
+        // validar status de los jugadores (si todos ya estan listos)
+        
+        PaqueteDTO solicitud = new PaqueteDTO(jugador, TipoEvento.SOLICITAR_INICIAR_PARTIDA.toString());
+        solicitud.setHost(host);
+        solicitud.setPuertoOrigen(puertoOrigen);
+        solicitud.setPuertoDestino(puertoDestino);
+
+        emisor.enviarCambio(solicitud);
+    }
+    
+    public void recibirSolicitudInicioJuego(PaqueteDTO paquete){
+        PartidaDTO partida = PaqueteDTOAPartida(paquete);
+        this.partida = partida;
+        
+        notificarSolictudInicio(partida);
+        
     }
 
     @Override
-    public void confirmarIncioJuego(Jugador jugador) {
+    public void confirmarIncioJuego(JugadorDTO jugador) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -152,5 +168,15 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     @Override
     public void notificarInicioJuego(PartidaDTO partida) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void agregarObservadorSolicitudInicio(ObservadorSolicitudInicio ob) {
+        observadorSolicitudInicio = ob;
+    }
+
+    @Override
+    public void notificarSolictudInicio(PartidaDTO partida) {
+        observadorSolicitudInicio.actualizar(partida);
     }
 }

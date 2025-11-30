@@ -36,6 +36,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         pnlJugadores.setAlignmentX(CENTER_ALIGNMENT);
 
         this.setLocationRelativeTo(null);
+        this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
         this.setBackground(COLOR_FONDO);
         this.setSize(1100, 940);
 
@@ -115,12 +116,22 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         btnRegresar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/regresarHover.png"))); // NOI18N
         btnRegresar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/regresarHover.png"))); // NOI18N
         btnRegresar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/regresarHover.png"))); // NOI18N
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         btnIniciar.setBackground(new java.awt.Color(224, 233, 255));
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarPatida.png"))); // NOI18N
         btnIniciar.setBorder(null);
         btnIniciar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarPatidaHover.png"))); // NOI18N
         btnIniciar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarPatidaHover.png"))); // NOI18N
+        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlFooterLayout = new javax.swing.GroupLayout(pnlFooter);
         pnlFooter.setLayout(pnlFooterLayout);
@@ -326,6 +337,24 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        // comunicar que el jugador que solicita iniciar está listo :P
+        this.sesion.setListo(true);
+        
+        for (JugadorConfig jugador : jugadores) {
+            if(jugador.getNombre().equals(sesion.getNombre())){
+                jugador.setListo(sesion.isListo());
+            }
+        }
+        
+        cargarJugadores();
+        controlador.solicitarInicioJuego(sesion);
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

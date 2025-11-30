@@ -4,6 +4,7 @@ Fachada/Partida.class
 Observer/ObservadorJugadores.class
 Observer/ObservadorEventos.class
 excepciones/PartidaExcepcion.class
+ConfiguracionesFachada/Observer/ObservadorSolicitudInicio.class
 Observer/ObservadorInicio.class
 org/itson/modelojuego/InicioJuego.class
 Observer/ObservadorTurnos.class
