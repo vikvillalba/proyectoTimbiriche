@@ -57,16 +57,13 @@ public class EventBus {
             notificarServicios(paquete);
             return;
         }
-
         if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_JUGADOR")) {
             configuraciones.agregarJugador(paquete);
 
             paquete.setContenido(configuraciones);
             paquete.setTipoEvento("OBTENER_CONFIGURACIONES_PARTIDA");
             notificarServicios(paquete);
-            return;
         }
-
         if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_TABLERO")) {
             configuraciones.setTablero(paquete);
             System.out.println("Tablero registrado");
@@ -74,6 +71,7 @@ public class EventBus {
         }
 
         notificarServicios(paquete);
+
     }
 
     public void registrarServicio(String tipoEvento, Servicio servicio) {
@@ -102,32 +100,19 @@ public class EventBus {
             return;
         }
 
-        if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
-
-            for (Servicio servicio : lista) {
-                if (servicio.getHost().equals(paquete.getHost())
-                        && servicio.getPuerto() == paquete.getPuertoOrigen()) {
-
-                    paquete.setHost(servicio.getHost());
-                    paquete.setPuertoDestino(servicio.getPuerto());
-                    emisor.enviarCambio(paquete);
-                    return;
-                }
-            }
-
-            return;
-        }
-
         for (Servicio servicio : lista) {
-
-            if (servicio.getHost().equals(paquete.getHost())
+            if (!paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")
+                    && servicio.getHost().equals(paquete.getHost())
                     && servicio.getPuerto() == paquete.getPuertoOrigen()) {
                 continue;
             }
 
-            paquete.setHost(servicio.getHost());
-            paquete.setPuertoDestino(servicio.getPuerto());
-            emisor.enviarCambio(paquete);
+            PaqueteDTO copia = new PaqueteDTO(paquete.getContenido(), paquete.getTipoEvento());
+            copia.setHost(servicio.getHost());
+            copia.setPuertoOrigen(paquete.getPuertoOrigen());
+            copia.setPuertoDestino(servicio.getPuerto());
+
+            emisor.enviarCambio(copia);
         }
     }
 

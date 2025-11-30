@@ -42,17 +42,19 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     }
 
     private void cargarJugadores() {
+        pnlJugadores.removeAll();
         for (JugadorConfig jugador : jugadores) {
             pnlJugadores.add(new PnlJugador(jugador));
             pnlJugadores.add(Box.createHorizontalGlue());
         }
+        pnlJugadores.revalidate();
+        pnlJugadores.repaint();
     }
 
     @Override
     public void actualizar(PartidaPresentable configuraciones) {
         this.tablero = configuraciones.getTablero();
         this.jugadores = configuraciones.getJugadores();
-        System.out.println("vista");
 
         if (modelo.isVista()) {
             cargarJugadores();
