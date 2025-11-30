@@ -1,6 +1,7 @@
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\configuracionesPartida\ConfiguracionesPartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\excepciones\JugadaException.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\controlador\ControladorArranque.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\controlador\ControladorUnisePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\IModeloArranqueEscritura.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\IModeloArranqueLectura.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\ModeloArranque.java
@@ -16,11 +17,6 @@ C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgPartidaEnCurso.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgSolicitudHost.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgUnirsePartida.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\controlador\ControladorArranque.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\modelo\ModeloArranque.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\observer\Observable.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\observer\Observador.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\vista\FrmSalaEspera.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\controlador\ControladorPartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloJugadoresLectura.java

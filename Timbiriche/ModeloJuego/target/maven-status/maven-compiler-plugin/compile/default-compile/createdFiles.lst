@@ -18,6 +18,7 @@ Entidades\Cuadro.class
 Fachada\PartidaFachada.class
 Entidades\Jugador.class
 Entidades\AvatarEnum.class
+ModeloUnirsePartida\IUnirsePartida.class
 ConfiguracionesFachada\Observer\ObservableEventos.class
 Entidades\ColorEnum.class
 Fachada\Partida.class

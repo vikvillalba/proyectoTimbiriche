@@ -1,5 +1,7 @@
 package MVCConfiguracion.modelo;
 
+import DTO.JugadorSolicitanteDTO;
+import SolicitudEntity.SolicitudUnirse;
 import java.util.List;
 import objetosPresentables.JugadorConfig;
 
@@ -11,4 +13,9 @@ public interface IModeloArranqueEscritura {
     void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion);
     void solicitarInicioConexion(JugadorConfig jugador);
     void confirmarInicioJuego(JugadorConfig jugador);
+    
+    //METODOS CU_UNIRSE_PARTIDA
+    public JugadorSolicitanteDTO crearJugadorSolicitante(String ip,int puerto);
+    public void enviarSolicitud(JugadorSolicitanteDTO jugadorsolicitante);
+    public void setEstadoSolicitud(boolean estadoSolicitud);
 }

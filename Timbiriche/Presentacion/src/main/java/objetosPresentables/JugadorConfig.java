@@ -8,16 +8,35 @@ import java.awt.Image;
  * @author victoria
  */
 public class JugadorConfig {
+
     private String nombre;
     private Image avatar;
     private Color color;
     private boolean listo;
+    public boolean esHost;
 
     public JugadorConfig(String nombre, Image avatar, Color color, boolean listo) {
         this.nombre = nombre;
         this.avatar = avatar;
         this.color = color;
         this.listo = listo;
+    }
+
+    //CU_UnirsePartida
+    public JugadorConfig(String nombre, Image avatar, Color color, boolean listo, boolean esHost) {
+        this.nombre = nombre;
+        this.avatar = avatar;
+        this.color = color;
+        this.listo = listo;
+        this.esHost = esHost;
+    }
+
+    public boolean isEsHost() {
+        return esHost;
+    }
+
+    public void setEsHost(boolean esHost) {
+        this.esHost = esHost;
     }
 
     public String getNombre() {
@@ -35,6 +54,5 @@ public class JugadorConfig {
     public boolean isListo() {
         return listo;
     }
-    
-    
+
 }
