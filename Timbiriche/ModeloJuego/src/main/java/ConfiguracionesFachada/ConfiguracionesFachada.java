@@ -15,6 +15,5 @@ public interface ConfiguracionesFachada {
     void iniciarConexion(List<Jugador> jugadores, TableroDTO tablero, Jugador sesion);
     void solicitarInicioJuego(Jugador jugador);
     void confirmarIncioJuego(Jugador jugador);
-    void configuracionesRecibidas(PaqueteDTO paquete);
     PartidaDTO getConfiguraciones();
 }

@@ -118,7 +118,8 @@ public class EnsambladorPartida {
                 "ACTUALIZAR_PUNTOS",
                 "OBTENER_CONFIGURACIONES_PARTIDA",
                 "CONFIRMAR_INICIO_PARTIDA",
-                "SOLICITAR_INICIAR_PARTIDA"
+                "SOLICITAR_INICIAR_PARTIDA",
+                "REGISTRAR_JUGADOR"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -126,8 +127,11 @@ public class EnsambladorPartida {
         solicitarConexion.setPuertoOrigen(puertoServidor);
         solicitarConexion.setPuertoDestino(puertoEntrada);
 
-        new Thread(() -> servidorPartida.iniciar()).start();
-        emisor.enviarCambio(solicitarConexion);
+        PaqueteDTO registrarJugador = new PaqueteDTO(sesion, TipoEvento.REGISTRAR_JUGADOR.toString());
+        registrarJugador.setHost(host);
+        registrarJugador.setPuertoOrigen(puertoServidor);
+        registrarJugador.setPuertoDestino(puertoEntrada);
+
         modelo = new ModeloPartida(partida);
 
         controlador = new ControladorPartida(modelo);
@@ -135,14 +139,17 @@ public class EnsambladorPartida {
         // MVC de configuraciones
         ModeloArranque modeloConfig = new ModeloArranque(configuraciones);
         modeloConfig.setSesion(sesion);
-        ControladorArranque controladorConfig = new ControladorArranque(controlador, sesion, modeloConfig);
+        ControladorArranque controladorConfig = new ControladorArranque(controlador, modeloConfig);
         FrmSalaEspera vista = new FrmSalaEspera(modeloConfig, controladorConfig);
         configuraciones.agregarObservador(modeloConfig);
         modeloConfig.agregarObservadorConfiguraciones(vista);
         modeloConfig.agregarObservadorEventoInicio(controladorConfig);
 
-        controladorConfig.obtenerConfiguraciones();
+        new Thread(() -> servidorPartida.iniciar()).start();
+        emisor.enviarCambio(solicitarConexion);
+        emisor.enviarCambio(registrarJugador);
 
+//        controladorConfig.obtenerConfiguraciones();
     }
 
     /**

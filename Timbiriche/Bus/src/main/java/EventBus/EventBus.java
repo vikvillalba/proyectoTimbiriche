@@ -2,11 +2,13 @@ package EventBus;
 
 import Servicio.Servicio;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.dto.ConfiguracionesDTO;
 
 import org.itson.dto.PaqueteDTO;
 
@@ -19,10 +21,11 @@ public class EventBus {
 
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
-    private PaqueteDTO configuraciones; // adentro del paquete viene una partidaDTO
+    private ConfiguracionesDTO configuraciones;
 
     public EventBus() {
         this.servicios = new ConcurrentHashMap<>();
+        this.configuraciones = new ConfiguracionesDTO();
 
     }
 
@@ -50,9 +53,23 @@ public class EventBus {
         }
 
         if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
-            paquete.setContenido(configuraciones.getContenido());
-            System.out.println(configuraciones.getContenido().getClass());
+            paquete.setContenido(configuraciones);
             notificarServicios(paquete);
+            return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_JUGADOR")) {
+            configuraciones.agregarJugador(paquete);
+
+            paquete.setContenido(configuraciones);
+            paquete.setTipoEvento("OBTENER_CONFIGURACIONES_PARTIDA");
+            notificarServicios(paquete);
+            return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_TABLERO")) {
+            configuraciones.setTablero(paquete);
+            System.out.println("Tablero registrado");
             return;
         }
 
@@ -145,8 +162,11 @@ public class EventBus {
         }
     }
 
-    public void setConfiguraciones(PaqueteDTO configuraciones) {
-        this.configuraciones = configuraciones;
+    public void setConfiguracionJugadores(PaqueteDTO jugador) {
+        configuraciones.agregarJugador(jugador);
     }
 
+    public void setConfiguracionesTablero(PaqueteDTO tablero) {
+        configuraciones.setTablero(tablero);
+    }
 }

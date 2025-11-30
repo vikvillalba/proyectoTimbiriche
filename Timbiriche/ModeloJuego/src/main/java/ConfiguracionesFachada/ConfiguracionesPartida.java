@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.dto.ConfiguracionesDTO;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PartidaDTO;
@@ -27,11 +28,10 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     private int puertoDestino;
     private PartidaDTO partida;
 
-    @Override
+
     public void configuracionesRecibidas(PaqueteDTO paquete) {
         PartidaDTO partida = PaqueteDTOAPartida(paquete);
         this.partida = partida;
-
         observadorConfiguraciones.actualizar(partida);
 
     }
@@ -67,36 +67,32 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     }
 
     private PartidaDTO PaqueteDTOAPartida(PaqueteDTO<?> paquete) {
-
         if (paquete == null || paquete.getContenido() == null) {
             throw new IllegalArgumentException("Paquete null o sin contenido.");
         }
 
         Object contenido = paquete.getContenido();
-        if (contenido instanceof PartidaDTO) {
-            return (PartidaDTO) contenido;
+
+        if (contenido instanceof PartidaDTO dto) {
+            return dto;
         }
 
-        if (contenido instanceof Map) {
+        if (contenido instanceof ConfiguracionesDTO config) {
+            return new PartidaDTO(config.getTablero(), config.getJugadores());
+        }
 
-            Map<?, ?> map = (Map<?, ?>) contenido;
+        if (contenido instanceof Map<?, ?> mapa) {
+            Map<?, ?> tableroMap = (Map<?, ?>) mapa.get("tablero");
+            List<?> jugadoresList = (List<?>) mapa.get("jugadores");
 
-            Map<?, ?> tableroMap = (Map<?, ?>) map.get("tablero");
-            int alto = ((Number) tableroMap.get("alto")).intValue();
-            int ancho = ((Number) tableroMap.get("ancho")).intValue();
-            TableroDTO tablero = new TableroDTO(alto, ancho);
+            TableroDTO tablero = new TableroDTO(
+                    ((Number) tableroMap.get("alto")).intValue(),
+                    ((Number) tableroMap.get("ancho")).intValue()
+            );
 
-            List<?> listaJugadores = (List<?>) map.get("jugadores");
             List<JugadorDTO> jugadores = new ArrayList<>();
-
-            for (Object o : listaJugadores) {
-
-                if (!(o instanceof Map)) {
-                    continue;
-                }
-
-                Map<?, ?> j = (Map<?, ?>) o;
-
+            for (Object jObj : jugadoresList) {
+                Map<?, ?> j = (Map<?, ?>) jObj;
                 JugadorDTO dto = new JugadorDTO();
                 dto.setId((String) j.get("id"));
                 dto.setTurno(j.get("turno") != null && (Boolean) j.get("turno"));
@@ -104,14 +100,15 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
                 dto.setListo(j.get("listo") != null && (Boolean) j.get("listo"));
                 dto.setAvatar((String) j.get("avatar"));
                 dto.setColor((String) j.get("color"));
-
                 jugadores.add(dto);
             }
 
             return new PartidaDTO(tablero, jugadores);
         }
 
-        throw new IllegalArgumentException("Contenido del paquete no es PartidaDTO ni Map.");
+        throw new IllegalArgumentException(
+                "Contenido del paquete no es PartidaDTO ni ConfiguracionesDTO."
+        );
     }
 
     @Override

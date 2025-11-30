@@ -19,4 +19,6 @@ public interface IModeloArranqueEscritura {
     public PartidaPresentable getConfiguracionesPartida();
 
     void solicitarConfiguraciones();
+
+    public JugadorConfig getSesion();
 }

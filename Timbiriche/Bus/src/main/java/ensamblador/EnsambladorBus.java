@@ -69,35 +69,19 @@ public class EnsambladorBus {
 
         // configuraciones de la partida :P
         JugadorDTO jugador1 = new JugadorDTO();
-        jugador1.setListo(true);
+        jugador1.setListo(false);
         jugador1.setId("sol");
         jugador1.setAvatar("TIBURON_MARTILLO");
         jugador1.setColor("MORAS");
 
-        JugadorDTO jugador2 = new JugadorDTO();
-        jugador2.setListo(false);
-        jugador2.setId("biki");
-        jugador2.setAvatar("TIBURON_JUMP_BLUE");
-        jugador2.setColor("MAGENTA");
-
-        JugadorDTO jugador3 = new JugadorDTO();
-        jugador3.setListo(false);
-        jugador3.setId("lucia");
-        jugador3.setAvatar("TIBURON_SMILE_BLUE");
-        jugador3.setColor("AMARILLO_PASTEL");
-
-        JugadorDTO jugador4 = new JugadorDTO();
-        jugador4.setListo(true);
-        jugador4.setId("pablo");
-        jugador4.setAvatar("TIBURON_BALLENA");
-        jugador4.setColor("AZUL_PASTEL");
-
-        List<JugadorDTO> jugadores = Arrays.asList(jugador1, jugador2, jugador3, jugador4);
         TableroDTO tablero = new TableroDTO(10, 10);
-        PartidaDTO partida = new PartidaDTO(tablero, jugadores);
-        PaqueteDTO configuraciones = new PaqueteDTO(partida, "OBTENER_CONFIGURACIONES_PARTIDA");
+        PaqueteDTO tableroConfig = new PaqueteDTO(tablero, "REGISTRAR_TABLERO");
+        PaqueteDTO configuraciones = new PaqueteDTO(jugador1, "REGISTRAR_JUGADOR");
+        
+        eventBus.setConfiguracionJugadores(configuraciones);
+        eventBus.setConfiguracionesTablero(tableroConfig);
 
-        eventBus.setConfiguraciones(configuraciones);
+
 
         new Thread(() -> servidorTCPBus.iniciar()).start();
         System.out.println("[EventBus] Servicio iniciado en puerto " + puertoEntrada);

@@ -14,12 +14,12 @@ import org.itson.dto.JugadorDTO;
  */
 public class ControladorArranque implements ObservadorEventoInicio{
     private ControladorPartida controladorPartida;
-    private JugadorDTO sesion;
+    private JugadorConfig sesion;
     private IModeloArranqueEscritura modelo;
 
-    public ControladorArranque(ControladorPartida controladorPartida, JugadorDTO sesion, IModeloArranqueEscritura modelo) {
+    public ControladorArranque(ControladorPartida controladorPartida, IModeloArranqueEscritura modelo) {
         this.controladorPartida = controladorPartida;
-        this.sesion = sesion;
+        this.sesion = modelo.getSesion();
         this.modelo = modelo;
     }
 
