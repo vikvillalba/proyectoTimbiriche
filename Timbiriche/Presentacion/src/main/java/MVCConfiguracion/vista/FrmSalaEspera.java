@@ -22,6 +22,8 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     private List<JugadorConfig> jugadores;
     private TableroConfig tablero;
     private JugadorConfig sesion;
+    
+    private int tamanoPanel = 0;
 
     private IModeloArranqueLectura modelo;
     private ControladorArranque controlador;
@@ -34,20 +36,23 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         pnlJugadores.setLayout(new BoxLayout(pnlJugadores, BoxLayout.X_AXIS));
         pnlJugadores.setAlignmentX(CENTER_ALIGNMENT);
+       
 
         this.setLocationRelativeTo(null);
         this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
         this.setBackground(COLOR_FONDO);
-        this.setSize(1100, 940);
+        this.setSize(1000, 940);
 
     }
 
-    private void cargarJugadores() {
+    public void cargarJugadores() {
         pnlJugadores.removeAll();
         for (JugadorConfig jugador : jugadores) {
+            tamanoPanel ++;
             pnlJugadores.add(new PnlJugador(jugador));
             pnlJugadores.add(Box.createHorizontalGlue());
         }
+        pnlJugadores.setSize((250 * tamanoPanel), 261);
         pnlJugadores.revalidate();
         pnlJugadores.repaint();
     }
@@ -71,6 +76,16 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     @Override
     public void mostrarVista() {
         this.setVisible(true);
+    }
+
+    public void setStatusSesion(boolean status) {
+        this.sesion.setListo(status);
+
+        for (JugadorConfig jugador : jugadores) {
+            if (jugador.getNombre().equals(sesion.getNombre())) {
+                jugador.setListo(sesion.isListo());
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -138,7 +153,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         pnlFooterLayout.setHorizontalGroup(
             pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFooterLayout.createSequentialGroup()
-                .addGap(263, 263, 263)
+                .addGap(229, 229, 229)
                 .addComponent(btnRegresar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnIniciar)
@@ -283,12 +298,12 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(437, 437, 437)
+                        .addGap(411, 411, 411)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(227, 227, 227)
+                        .addGap(193, 193, 193)
                         .addComponent(lblTitulo)))
-                .addContainerGap(243, Short.MAX_VALUE))
+                .addContainerGap(277, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,14 +359,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // comunicar que el jugador que solicita iniciar está listo :P
-        this.sesion.setListo(true);
-        
-        for (JugadorConfig jugador : jugadores) {
-            if(jugador.getNombre().equals(sesion.getNombre())){
-                jugador.setListo(sesion.isListo());
-            }
-        }
-        
+        setStatusSesion(true);
         cargarJugadores();
         controlador.solicitarInicioJuego(sesion);
     }//GEN-LAST:event_btnIniciarActionPerformed

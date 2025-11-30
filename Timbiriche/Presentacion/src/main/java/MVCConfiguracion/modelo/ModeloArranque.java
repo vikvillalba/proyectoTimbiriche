@@ -169,7 +169,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void confirmarInicioJuego(JugadorConfig jugador) {
-
+        configuracionesPartida.confirmarIncioJuego(presentableADTO(jugador));
     }
 
     @Override

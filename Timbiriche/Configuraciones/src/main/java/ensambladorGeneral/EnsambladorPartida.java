@@ -142,7 +142,7 @@ public class EnsambladorPartida {
         modeloConfig.setSesion(sesion);
         ControladorArranque controladorConfig = new ControladorArranque(controlador, modeloConfig);
         FrmSalaEspera vista = new FrmSalaEspera(modeloConfig, controladorConfig);
-        DlgInicioJuego dialogoInicio = new DlgInicioJuego(controladorConfig, modeloConfig);
+        DlgInicioJuego dialogoInicio = new DlgInicioJuego(controladorConfig, modeloConfig, vista);
         configuraciones.agregarObservador(modeloConfig);
         configuraciones.agregarObservadorSolicitudInicio(modeloConfig);
         modeloConfig.agregarObservadorConfiguraciones(vista);

@@ -14,15 +14,17 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
     private JugadorConfig jugador;
     private ControladorArranque controlador;
     private IModeloArranqueLectura modelo;
+    private FrmSalaEspera frm;
     
     
-    public DlgInicioJuego(ControladorArranque controlador, IModeloArranqueLectura modelo) {
+    public DlgInicioJuego(ControladorArranque controlador, IModeloArranqueLectura modelo, FrmSalaEspera frm) {
         initComponents();
+        this.frm = frm;
         this.modelo = modelo;
         this.jugador = modelo.getSesion();
         this.controlador = controlador;
         setSize(695, 300);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(frm);
         setTitle("Solicitud de incio - Sesión de " + jugador.getNombre());
     }
 
@@ -69,6 +71,11 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
         btnIniciar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnIniciar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarJuegoHover.png"))); // NOI18N
         btnIniciar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/iniciarJuegoHover.png"))); // NOI18N
+        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -121,8 +128,17 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMasTiempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasTiempoActionPerformed
-        // TODO add your handling code here:
+       this.dispose();
     }//GEN-LAST:event_btnMasTiempoActionPerformed
+
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        frm.setStatusSesion(true);
+        frm.cargarJugadores();
+        
+        this.jugador.setListo(true);
+        controlador.confirmarInicioJuego(jugador);
+        this.dispose();
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
   
 

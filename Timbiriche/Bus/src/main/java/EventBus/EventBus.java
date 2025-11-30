@@ -59,7 +59,7 @@ public class EventBus {
             notificarServicios(paquete);
             return;
         }
-        if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_JUGADOR")) {
+        if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_JUGADOR") || paquete.getTipoEvento().equalsIgnoreCase("CONFIRMAR_INICIO_PARTIDA")) {
             configuraciones.agregarJugador(paquete);
 
             paquete.setContenido(configuraciones);

@@ -34,6 +34,9 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
         PartidaDTO partida = PaqueteDTOAPartida(paquete);
         this.partida = partida;
         observadorConfiguraciones.actualizar(partida);
+        if(validarEstadoJugadores()){
+            System.out.println("k ya inicia el juego");
+        }
 
     }
 
@@ -52,10 +55,31 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    private boolean validarEstadoJugadores() {
+        List<JugadorDTO> jugadores = partida.getJugadores();
+        int numeroJugadores = jugadores.size();
+        int confirmados = 0;
+
+        for (JugadorDTO jugadorDTO : jugadores) {
+            if (jugadorDTO.isListo()) {
+                confirmados++;
+            }
+        }
+
+        if (confirmados == numeroJugadores) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void solicitarInicioJuego(JugadorDTO jugador) {
-        // validar status de los jugadores (si todos ya estan listos)
-        
+
+        if (validarEstadoJugadores()) {
+            System.out.println("JUEGO INICIAO");
+            return;
+        }
+
         PaqueteDTO solicitud = new PaqueteDTO(jugador, TipoEvento.SOLICITAR_INICIAR_PARTIDA.toString());
         solicitud.setHost(host);
         solicitud.setPuertoOrigen(puertoOrigen);
@@ -63,18 +87,25 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
 
         emisor.enviarCambio(solicitud);
     }
-    
-    public void recibirSolicitudInicioJuego(PaqueteDTO paquete){
+
+    public void recibirSolicitudInicioJuego(PaqueteDTO paquete) {
         PartidaDTO partida = PaqueteDTOAPartida(paquete);
         this.partida = partida;
-        
+
         notificarSolictudInicio(partida);
-        
+
     }
+    
 
     @Override
     public void confirmarIncioJuego(JugadorDTO jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        jugador.setListo(true);
+        PaqueteDTO solicitud = new PaqueteDTO(jugador, TipoEvento.CONFIRMAR_INICIO_PARTIDA.toString());
+        solicitud.setHost(host);
+        solicitud.setPuertoOrigen(puertoOrigen);
+        solicitud.setPuertoDestino(puertoDestino);
+
+        emisor.enviarCambio(solicitud);
     }
 
     @Override

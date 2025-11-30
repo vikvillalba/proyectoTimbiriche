@@ -64,6 +64,11 @@ public class PartidaComunicacion implements IReceptor{
                 break;
             }
 
+            case CONFIRMAR_INICIO_PARTIDA :{
+                 configuraciones.configuracionesRecibidas(paquete);
+                break;
+            }
+            
             case INICIO_PARTIDA: {
                 
                 partida.inicioPartida();

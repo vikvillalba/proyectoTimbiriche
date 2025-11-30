@@ -37,7 +37,7 @@ public class ControladorArranque implements ObservadorEventoInicio {
      * El jugador de sesión acepta la solicitud de inicio de juego.
      */
     public void confirmarInicioJuego(JugadorConfig jugador) {
-
+        modelo.confirmarInicioJuego(jugador);
     }
 
     public void obtenerConfiguraciones() {

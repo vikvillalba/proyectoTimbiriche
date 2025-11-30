@@ -15,6 +15,7 @@ MVCConfiguracion/vista/DlgInicioJuego$1.class
 objetosPresentables/JugadorPresentable.class
 objetosPresentables/TableroConfig.class
 MVCConfiguracion/modelo/IModeloArranqueLectura.class
+MVCConfiguracion/vista/DlgInicioJuego$2.class
 configuracionesPartida/ConfiguracionesPartida.class
 MVCConfiguracion/vista/FrmSalaEspera$2.class
 MVCJuegoEnCurso/observer/ObservadorJugadores.class
