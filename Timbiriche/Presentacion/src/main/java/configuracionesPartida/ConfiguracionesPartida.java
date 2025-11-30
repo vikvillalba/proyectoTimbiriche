@@ -6,6 +6,7 @@ import Fachada.PartidaFachada;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.vista.FrmPartida;
@@ -24,8 +25,9 @@ public class ConfiguracionesPartida {
         IModeloJugadoresLectura modeloJugadoresLectura = modeloPartida;
         IModeloTableroLectura modeloTableroLectura = modeloPartida;
         IModeloPartidaEscritura modeloPartidaEscritura = modeloPartida;
+        IModeloMensajeEscritura modeloMensajeEscritura = modeloPartida;
 
-        ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura);
+        ControladorPartida controlador = new ControladorPartida(modeloPartidaEscritura,modeloMensajeEscritura);
         FrmPartida frmPartida = new FrmPartida(modeloJugadoresLectura, modeloTableroLectura, controlador);
 
         partida.agregarObservadorInicioJuego(modeloPartida);

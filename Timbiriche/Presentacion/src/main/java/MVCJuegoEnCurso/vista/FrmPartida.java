@@ -1,6 +1,5 @@
 package MVCJuegoEnCurso.vista;
 
-
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
@@ -9,20 +8,24 @@ import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import MVCJuegoEnCurso.observer.ObservadorMensaje;
 import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 import objetosPresentables.JugadorPresentable;
 
 /**
- * Vista que engloba una partida en curso.
- * contiene a los jugadores y al tablero.
+ * Vista que engloba una partida en curso. contiene a los jugadores y al
+ * tablero.
+ *
  * @author victoria
  */
-public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno {
+public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno, ObservadorMensaje {
 
     private PnlTablero tablero;
     private PnlJugadores jugadores;
     private JugadorPresentable sesion;
+    private ControladorPartida controlador;
     private final Color COLOR_FONDO = new Color(224, 233, 255);
 
     public FrmPartida(IModeloJugadoresLectura modeloJugadores, IModeloTableroLectura modeloTablero, ControladorPartida controlador) {
@@ -39,6 +42,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         this.setBackground(COLOR_FONDO);
         this.pnlFooter.setBackground(COLOR_FONDO);
         this.setLocationRelativeTo(null);
+        this.controlador = controlador;
         setSize(1050, 740);
 
         // Deshabilitar tablero si no es el turno del jugador sesion
@@ -47,16 +51,36 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     private void actualizarEstadoTablero() {
         JugadorPresentable jugadorEnTurno = jugadores.getJugadorEnTurno();
-        boolean estaEnTurno = jugadorEnTurno != null &&
-                           jugadorEnTurno.getNombre().equals(sesion.getNombre());
+        boolean estaEnTurno = jugadorEnTurno != null
+                && jugadorEnTurno.getNombre().equals(sesion.getNombre());
         tablero.setInteraccionHabilitada(estaEnTurno);
 
         //jesus en moto
         if (estaEnTurno) {
             System.out.println("[" + sesion.getNombre() + "] Es tu turno");
         } else {
-            System.out.println("[" + sesion.getNombre() + "] Esperando turno de: " +
-                             (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
+            System.out.println("[" + sesion.getNombre() + "] Esperando turno de: "
+                    + (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
+        }
+    }
+
+    @Override
+    public void mostrarMensaje() {
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Seguro que quieres abandonar la partida?",
+                "Confirmación",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        eleccionAbandonar(opcion);
+    }
+
+    public void eleccionAbandonar(int opcion) {
+        if (opcion == JOptionPane.OK_OPTION) {
+            System.out.println("Abandonaste la partida");
+        } else if (opcion == JOptionPane.CANCEL_OPTION) {
         }
     }
 
@@ -64,9 +88,10 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         return (ObservadorTablero) tablero;
     }
 
-    public ObservadorJugadores getObservadorJugadores(){
+    public ObservadorJugadores getObservadorJugadores() {
         return (ObservadorJugadores) jugadores;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,6 +120,11 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         btnAbandonarPartida.setBorder(null);
         btnAbandonarPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
         btnAbandonarPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/abandonarPartidaHover.png"))); // NOI18N
+        btnAbandonarPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbandonarPartidaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlFooterLayout = new javax.swing.GroupLayout(pnlFooter);
         pnlFooter.setLayout(pnlFooterLayout);
@@ -121,14 +151,16 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAbandonarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbandonarPartidaActionPerformed
+
+        controlador.mostrarMensaje();
+
+    }//GEN-LAST:event_btnAbandonarPartidaActionPerformed
     // recibe notificacion del modelo de que el juego ya inicia
     @Override
     public void mostrarJuego() {
-       this.setVisible(true);
+        this.setVisible(true);
     }
-
- 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbandonarPartida;

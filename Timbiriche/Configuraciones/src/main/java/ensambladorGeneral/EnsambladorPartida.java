@@ -10,6 +10,7 @@ import Fachada.PartidaComunicacion;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.vista.FrmPartida;
@@ -128,8 +129,9 @@ public class EnsambladorPartida {
         IModeloJugadoresLectura imjl = modelo;
         IModeloTableroLectura imtl = modelo;
         IModeloPartidaEscritura impe = modelo;
+        IModeloMensajeEscritura imme = modelo;
 
-        ControladorPartida controlador = new ControladorPartida(impe);
+        ControladorPartida controlador = new ControladorPartida(impe,imme);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
@@ -138,6 +140,7 @@ public class EnsambladorPartida {
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
+        modelo.agregarObservadorMensaje(frm);
         partida.inicioPartida();
     }
 }
