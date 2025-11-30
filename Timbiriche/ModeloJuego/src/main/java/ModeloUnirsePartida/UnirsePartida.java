@@ -45,6 +45,7 @@ public class UnirsePartida implements IUnirsePartida {
      * Constructor con jugador host.
      *
      * @param jugadorHost El jugador que crea la partida
+     * @param receptorSolicitud
      */
     public UnirsePartida(JugadorConfigDTO jugadorHost,IReceptor receptorSolicitud) {
         this();
