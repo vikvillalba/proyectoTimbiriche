@@ -9,6 +9,7 @@ package DTO;
  * @author Jack Murrrieta
  */
 public class JugadorSolicitanteDTO {
+
     public String ip;
     public int puerto;
 
@@ -16,7 +17,6 @@ public class JugadorSolicitanteDTO {
         this.ip = ip;
         this.puerto = puerto;
     }
-    
 
     public String getIp() {
         return ip;
@@ -33,6 +33,5 @@ public class JugadorSolicitanteDTO {
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
-    
-    
+
 }

@@ -11,7 +11,8 @@ package Entidades;
 public enum TipoEvento {
     NUEVA_LINEA,
     INICIAR_CONEXION,
-    UNIRSE_PARTIDA,
+    SOLICITAR_UNIRSE,           // Evento enviado por solicitante recibido por host
+    RESPUESTA_SOLICITUD,        // Evento enviado por host recibido por solicitante
     CONFIGURAR_PARTIDA,
     SOLICITAR_INICIAR_PARTIDA,
     SOLICITAR_FINALIZAR_PARTIDA,

@@ -7,15 +7,18 @@ package ModeloUnirsePartida;
 import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import SolicitudEntity.SolicitudUnirse;
+import java.util.ArrayList;
+import java.util.List;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
+import org.itson.dto.PaqueteDTO;
 
 /**
  * Clase que maneja la lógica para unirse a una partida. Gestiona las solicitudes de jugadores que quieren unirse a una partida existente.
  *
  * @author Jack Murrieta
  */
-public class UnirsePartida implements IUnirsePartida {
+public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
 
     //Se cambia por la variable deñ CU_configurarTablero
     private static final int MAX_JUGADORES = 4;
@@ -23,55 +26,44 @@ public class UnirsePartida implements IUnirsePartida {
     private static final String ESTADO_EN_ESPERA = "EN_ESPERA";
     private static final String ESTADO_INICIADA = "INICIADA";
     private static final String ESTADO_FINALIZADA = "FINALIZADA";
-
+    
     private JugadorConfigDTO jugadorHost;
     private SolicitudUnirse solicitudActual;
     private int numeroJugadores; // Número actual de jugadores en la partida
     private String estadoPartida; // Estado de la partida
-    
+
     //enviar solicitud al eventBus
     private IEmisor emisorSolicitud;
     private IReceptor receptorSolicitud;
 
-    /**
-     * Constructor por defecto. Inicializa la partida en estado EN_ESPERA con 1 jugador (el host).
-     */
-    public UnirsePartida() {
-        this.numeroJugadores = 1; // El host cuenta como un jugador
-        this.estadoPartida = ESTADO_EN_ESPERA;
-    }
+    //enviar a MVC UnirsePartida cambio
+    private List<INotificadorSolicitud> notificados = new ArrayList<>();
 
-    /**
-     * Constructor con jugador host.
-     *
-     * @param jugadorHost El jugador que crea la partida
-     * @param receptorSolicitud
-     */
-    public UnirsePartida(JugadorConfigDTO jugadorHost,IReceptor receptorSolicitud) {
-        this();
-        this.jugadorHost = jugadorHost;
-        if (this.jugadorHost != null) {
-            this.jugadorHost.setEsHost(true);
-        }
+    // Configuración de red para EventBus (igual que en Partida)
+    private String host;
+    private int puertoOrigen;
+    private int puertoDestino;
+    
+    public UnirsePartida() {
+    }
+    
+    public UnirsePartida(IEmisor emisorSolicitud, IReceptor receptorSolicitud) {
+        this.emisorSolicitud = emisorSolicitud;
         this.receptorSolicitud = receptorSolicitud;
     }
-
-    /**
-     * Constructor completo.
-     *
-     * @param jugadorHost El jugador host
-     * @param numeroJugadores Número inicial de jugadores
-     * @param estadoPartida Estado inicial de la partida
-     */
-    public UnirsePartida(JugadorConfigDTO jugadorHost, int numeroJugadores, String estadoPartida) {
-        this.jugadorHost = jugadorHost;
-        if (this.jugadorHost != null) {
-            this.jugadorHost.setEsHost(true);
-        }
-        this.numeroJugadores = numeroJugadores;
-        this.estadoPartida = estadoPartida;
+    
+    public void setSolicitudActual(SolicitudUnirse solicitudActual) {
+        this.solicitudActual = solicitudActual;
     }
-
+    
+    public void setEmisorSolicitud(IEmisor emisorSolicitud) {
+        this.emisorSolicitud = emisorSolicitud;
+    }
+    
+    public void setReceptorSolicitud(IReceptor receptorSolicitud) {
+        this.receptorSolicitud = receptorSolicitud;
+    }
+    
     @Override
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
         // Validar que la partida esté en estado EN_ESPERA
@@ -90,31 +82,55 @@ public class UnirsePartida implements IUnirsePartida {
         }
 
         // Crear la solicitud con el jugador solicitante y el host
-        SolicitudUnirse solicitud =new SolicitudUnirse(jugadorSolicitanteDTO, jugadorHost);
-
+        SolicitudUnirse solicitud = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorHost);
+        
         return this.solicitudActual;
     }
     
-    
-
     @Override
-    public JugadorConfigDTO obtenerJugadorHost() {
-        if (this.jugadorHost == null) {
-            throw new IllegalStateException("No existe un jugador host configurado.");
+    public void enviarSolicitudJugadorHost(SolicitudUnirse solicitud) {
+        // Enviar evento SOLICITAR_UNIRSE al EventBus
+        // Este evento solo será recibido por el Host (único suscrito)
+        PaqueteDTO paquete = new PaqueteDTO(solicitud, "SOLICITAR_UNIRSE");
+
+        // Configurar campos de red (igual que en Partida)
+        paquete.setHost(this.host);
+        paquete.setPuertoOrigen(this.puertoOrigen);
+        paquete.setPuertoDestino(this.puertoDestino);
+
+        emisorSolicitud.enviarCambio(paquete);
+
+        System.out.println("✓ Solicitud enviada al EventBus con evento SOLICITAR_UNIRSE");
+        System.out.println("  → Host: " + this.host + ", Puerto origen: " + this.puertoOrigen + ", Puerto destino: " + this.puertoDestino);
+    }
+
+    /**
+     * Envía la respuesta de la solicitud al solicitante. Este método es usado por el Host para responder.
+     *
+     * @param solicitud La solicitud con el estado actualizado (aceptada/rechazada)
+     */
+    @Override
+    public void enviarRespuestaSolicitud(SolicitudUnirse solicitud) {
+        if (solicitud == null) {
+            throw new IllegalArgumentException("La solicitud no puede ser nula");
         }
-        return this.jugadorHost;
-    }
 
-    @Override
-    public boolean validarEspacioJugador() {
-        return this.numeroJugadores < MAX_JUGADORES;
-    }
+        // Enviar evento RESPUESTA_SOLICITUD al EventBus
+        // Este evento solo será recibido por el Solicitante (único suscrito)
+        PaqueteDTO paquete = new PaqueteDTO(solicitud, "RESPUESTA_SOLICITUD");
 
-    @Override
-    public String obtenerEstadoPartida() {
-        return this.estadoPartida;
-    }
+        // Configurar campos de red (igual que en Partida)
+        paquete.setHost(this.host);
+        paquete.setPuertoOrigen(this.puertoOrigen);
+        paquete.setPuertoDestino(this.puertoDestino);
 
+        emisorSolicitud.enviarCambio(paquete);
+
+        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
+        System.out.println("✓ Respuesta enviada al EventBus: " + estado);
+        System.out.println("  → Host: " + this.host + ", Puerto origen: " + this.puertoOrigen + ", Puerto destino: " + this.puertoDestino);
+    }
+    
     @Override
     public void cambiarEstadoSolicitud(SolicitudUnirse solicitud, boolean aceptada) {
         if (solicitud == null) {
@@ -123,37 +139,43 @@ public class UnirsePartida implements IUnirsePartida {
 
         // Cambiar el estado de la solicitud
         solicitud.setSolicitudEstado(aceptada);
-
-        // Si la solicitud fue aceptada, incrementar el número de jugadores
-        if (aceptada) {
-            if (validarEspacioJugador()) {
-                this.numeroJugadores++;
-                System.out.println("Solicitud aceptada. Número de jugadores: " + this.numeroJugadores);
-            } else {
-                //mandar el msj a modelo
-                throw new IllegalStateException("No se puede aceptar la solicitud. La partida está llena.");
-            }
-        } else {
-            //mandar el msj de rechazado a modelo
-            System.out.println("Solicitud rechazada.");
-        }
-
-        // Actualizar la solicitud actual si es la misma
-        if (this.solicitudActual != null && this.solicitudActual.equals(solicitud)) {
-            this.solicitudActual = solicitud;
-            //si la solicitud fue aceptada que entre al frmSala espera
-        }
+        
+        //observer para modeloJuego
+        notificar(solicitud);
     }
 
+    /**
+     * Obtiene la solicitud actual.
+     *
+     * @return SolicitudUnirse actual
+     */
     @Override
+    public SolicitudUnirse getSolicitudActual() {
+        return solicitudActual;
+    }
+    
+    public JugadorConfigDTO obtenerJugadorHost() {
+        if (this.jugadorHost == null) {
+            throw new IllegalStateException("No existe un jugador host configurado.");
+        }
+        return this.jugadorHost;
+    }
+    
+    public boolean validarEspacioJugador() {
+        return this.numeroJugadores < MAX_JUGADORES;
+    }
+    
+    public String obtenerEstadoPartida() {
+        return this.estadoPartida;
+    }
+    
     public void setJugadorHost(JugadorConfigDTO jugadorHost) {
         this.jugadorHost = jugadorHost;
         if (this.jugadorHost != null) {
             this.jugadorHost.setEsHost(true);
         }
     }
-
-    @Override
+    
     public void setNumeroJugadores(int numeroJugadores) {
         if (numeroJugadores < 1) {
             throw new IllegalArgumentException("El número de jugadores debe ser al menos 1.");
@@ -163,8 +185,7 @@ public class UnirsePartida implements IUnirsePartida {
         }
         this.numeroJugadores = numeroJugadores;
     }
-
-    @Override
+    
     public void setEstadoPartida(String estado) {
         // Validar que el estado sea válido
         if (!ESTADO_EN_ESPERA.equals(estado)
@@ -183,15 +204,6 @@ public class UnirsePartida implements IUnirsePartida {
      */
     public int getNumeroJugadores() {
         return numeroJugadores;
-    }
-
-    /**
-     * Obtiene la solicitud actual.
-     *
-     * @return SolicitudUnirse actual
-     */
-    public SolicitudUnirse getSolicitudActual() {
-        return solicitudActual;
     }
 
     /**
@@ -220,4 +232,43 @@ public class UnirsePartida implements IUnirsePartida {
     public static int getMaxJugadores() {
         return MAX_JUGADORES;
     }
+    
+    @Override
+    public void agregarNotificador(INotificadorSolicitud notificador) {
+        notificados.add(notificador);
+    }
+
+    @Override
+    public void notificar(SolicitudUnirse solicitud) {
+        for (INotificadorSolicitud notificado : notificados) {
+            notificado.actualizar(solicitud);
+
+        }
+    }
+
+    // Setters para configuración de red (igual que en Partida)
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPuertoOrigen(int puertoOrigen) {
+        this.puertoOrigen = puertoOrigen;
+    }
+
+    public void setPuertoDestino(int puertoDestino) {
+        this.puertoDestino = puertoDestino;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPuertoOrigen() {
+        return puertoOrigen;
+    }
+
+    public int getPuertoDestino() {
+        return puertoDestino;
+    }
+
 }

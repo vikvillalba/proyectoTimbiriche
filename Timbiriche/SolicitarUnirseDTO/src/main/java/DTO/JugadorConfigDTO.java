@@ -1,13 +1,9 @@
 package DTO;
 
 /**
- * Clase DTO que representa a un jugador durante la fase de configuración
- * (antes de iniciar la partida). Esta clase se usa para transferir información
- * de jugadores entre la presentación y el modelo durante el setUp.
+ * Clase DTO que representa a un jugador durante la fase de configuración (antes de iniciar la partida). Esta clase se usa para transferir información de jugadores entre la presentación y el modelo durante el setUp.
  *
- * A diferencia de JugadorDTO que representa un jugador durante el juego,
- * esta clase incluye información específica de la configuración como
- * avatar, color, estado de listo y si es host.
+ * A diferencia de JugadorDTO que representa un jugador durante el juego, esta clase incluye información específica de la configuración como avatar, color, estado de listo y si es host.
  *
  * @author Jack Murrieta
  */
@@ -55,7 +51,6 @@ public class JugadorConfigDTO {
     }
 
     // Getters y Setters
-
     public String getNombre() {
         return nombre;
     }
@@ -98,12 +93,12 @@ public class JugadorConfigDTO {
 
     @Override
     public String toString() {
-        return "JugadorConfigDTO{" +
-                "nombre='" + nombre + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", color='" + color + '\'' +
-                ", listo=" + listo +
-                ", esHost=" + esHost +
-                '}';
+        return "JugadorConfigDTO{"
+                + "nombre='" + nombre + '\''
+                + ", avatar='" + avatar + '\''
+                + ", color='" + color + '\''
+                + ", listo=" + listo
+                + ", esHost=" + esHost
+                + '}';
     }
 }

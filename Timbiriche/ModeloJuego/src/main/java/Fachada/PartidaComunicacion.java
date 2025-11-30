@@ -10,7 +10,6 @@ import static Entidades.TipoEvento.NUEVA_LINEA;
 import static Entidades.TipoEvento.SOLICITAR_FINALIZAR_PARTIDA;
 import static Entidades.TipoEvento.SOLICITAR_INICIAR_PARTIDA;
 import static Entidades.TipoEvento.TURNO_ACTUALIZADO;
-import static Entidades.TipoEvento.UNIRSE_PARTIDA;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
 
@@ -62,10 +61,11 @@ public class PartidaComunicacion implements IReceptor{
                 partida.obtenerJugadorTurno(paquete);
                 break;
             }
-
-            case UNIRSE_PARTIDA:
-                partida.notificarEventoRecibido("Un jugador se unio a la partida");
-                break;
+//
+            //case para elestado de partida si esta en cuerso y jugadores llenos 
+//            case UNIRSE_PARTIDA:
+//                partida.notificarEventoRecibido("Un jugador se unio a la partida");
+//                break;
 
             case ABANDONAR_PARTIDA:
                 partida.notificarEventoRecibido("Un jugador abandono la partida");

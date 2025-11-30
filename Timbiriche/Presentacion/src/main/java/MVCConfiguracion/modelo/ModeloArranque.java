@@ -2,13 +2,13 @@ package MVCConfiguracion.modelo;
 
 import ConfiguracionesFachada.ConfiguracionesFachada;
 import DTO.JugadorSolicitanteDTO;
-import Entidades.TipoEvento;
 import MVCConfiguracion.observer.INotificadorUnirsePartida;
 import MVCConfiguracion.observer.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
-import ModeloUnirsePartida.UnirsePartida;
+import ModeloUnirsePartida.INotificadorSolicitud;
+import ModeloUnirsePartida.IUnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
 import java.awt.Image;
@@ -20,15 +20,13 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import objetosPresentables.JugadorConfig;
 import objetosPresentables.PartidaPresentable;
-import org.itson.componenteemisor.IEmisor;
-import org.itson.dto.PaqueteDTO;
 
 /**
  * Modelo de arranque que maneja la configuración de la partida y el proceso de unirse a partidas existentes.
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, IPublicadorUnirsePartida {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, IPublicadorUnirsePartida, INotificadorSolicitud {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ConfiguracionesFachada configuracionesPartida;
@@ -37,7 +35,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     //CU_UnirsePartida
     //modelo unirse partida LOGICA
-    private UnirsePartida unirsePartida;
+    private IUnirsePartida unirsePartida;
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
@@ -45,7 +43,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     //Solicitud de UnirsePartida
     private SolicitudUnirse solicitud;
 
-    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, UnirsePartida unirsePartida) {
+    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, IUnirsePartida unirsePartida) {
         this.configuracionesPartida = configuracionesPartida;
         this.unirsePartida = unirsePartida;
     }
@@ -147,13 +145,17 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
             throw new IllegalArgumentException("El jugador solicitante no puede ser nulo");
         }
         // Obtener la solicitud actual creada
-        SolicitudUnirse solicitud = obtenerSolicitud();
+        solicitud = obtenerSolicitud();
         //si la solicitud es null crear una por primera vez
         if (solicitud == null) {
             //crear la solicitud en unirsePartida 
-            unirsePartida.crearSolicitud(jugadorsolicitante);
-
+            solicitud = unirsePartida.crearSolicitud(jugadorsolicitante);
+            //enviar solicitud
+            unirsePartida.enviarSolicitudJugadorHost(solicitud);
         }
+
+        //cuando vaya a querer enviarla otra vez
+        unirsePartida.enviarSolicitudJugadorHost(solicitud);
 
     }
 
@@ -175,67 +177,39 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void setEstadoSolicitud(boolean estadoSolicitud) {
-        //settear el etado de la solicitud que esta en unirsePartida
-
+        // Cambiar el estado de la solicitud
         unirsePartida.cambiarEstadoSolicitud(solicitud, estadoSolicitud);
-        //obtine la solicitud seteada 
+
+        // Obtener la solicitud actualizada
         solicitud = obtenerSolicitud();
 
+        // Enviar la respuesta al solicitante por EventBus
+        if (solicitud != null) {
+            enviarRespuestaASolicitante(solicitud);
+        }
     }
 
-//
-//    /**
-//     * Establece el jugador host para las solicitudes de unirse.
-//     *
-//     * @param jugadorHost Jugador que es el host de la partida
-//     */
-//    public void setJugadorHost(JugadorConfig jugadorHost) {
-//        if (jugadorHost == null) {
-//            throw new IllegalArgumentException("El jugador host no puede ser nulo");
-//        }
-//
-//        // Convertir JugadorConfig a JugadorConfigDTO
-//        DTO.JugadorConfigDTO jugadorHostDTO = new DTO.JugadorConfigDTO(
-//                jugadorHost.getNombre(),
-//                obtenerNombreAvatar(jugadorHost.getAvatar()),
-//                obtenerNombreColor(jugadorHost.getColor()),
-//                jugadorHost.isListo(),
-//                jugadorHost.isEsHost()
-//        );
-//
-//        unirsePartida.setJugadorHost(jugadorHostDTO);
-//        System.out.println("Jugador host establecido: " + jugadorHost.getNombre());
-//    }
-//
-//    /**
-//     * Obtiene el nombre del color desde el objeto Color.
-//     *
-//     * @param color Color a buscar
-//     * @return Nombre del color o "desconocido"
-//     */
-//    private String obtenerNombreColor(Color color) {
-//        for (Map.Entry<String, Color> entry : COLORES.entrySet()) {
-//            if (entry.getValue().equals(color)) {
-//                return entry.getKey();
-//            }
-//        }
-//        return "desconocido";
-//    }
-//
-//    /**
-//     * Obtiene el nombre del avatar desde el objeto Image.
-//     *
-//     * @param avatar Imagen del avatar
-//     * @return Nombre del avatar o "desconocido"
-//     */
-//    private String obtenerNombreAvatar(Image avatar) {
-//        for (Map.Entry<String, Image> entry : AVATARES.entrySet()) {
-//            if (entry.getValue().equals(avatar)) {
-//                return entry.getKey();
-//            }
-//        }
-//        return "desconocido";
-//    }
+    /**
+     * Envía la respuesta de la solicitud al solicitante a través del EventBus. Este método es privado y se usa internamente por setEstadoSolicitud.
+     *
+     * @param solicitud La solicitud con el estado actualizado
+     */
+    private void enviarRespuestaASolicitante(SolicitudUnirse solicitud) {
+        try {
+            // Verificar que UnirsePartida tenga el método
+            if (unirsePartida instanceof ModeloUnirsePartida.UnirsePartida) {
+                ModeloUnirsePartida.UnirsePartida unirse = (ModeloUnirsePartida.UnirsePartida) unirsePartida;
+                unirse.enviarRespuestaSolicitud(solicitud);
+
+                String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
+                System.out.println("✓ Respuesta " + estado + " enviada al solicitante");
+            }
+        } catch (Exception e) {
+            System.err.println("ERROR al enviar respuesta al solicitante: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     //PUBLICADOR METODOS
     @Override
     public void agregarNotificador(INotificadorUnirsePartida notificador) {
@@ -245,11 +219,28 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     @Override
     public void notificar() {
         for (INotificadorUnirsePartida notificado : notificadosUnirsePartida) {
-            //se le puede pasar un param 
+            //se le puede pasar un param
             notificado.actualizar();
 
         }
 
+    }
+
+    /**
+     * Establece la solicitud actual. Este método es usado por los receptores para actualizar la solicitud.
+     *
+     * @param solicitud La solicitud recibida
+     */
+    @Override
+    public void setSolicitudActual(SolicitudUnirse solicitud) {
+        this.solicitud = solicitud;
+        System.out.println("✓ Solicitud actualizada en el modelo");
+    }
+
+    @Override
+    public void actualizar(SolicitudUnirse solicitud) {
+        //logica de la solicitud obtenida
+        //dependiendo del estado mostrar jdialogs
     }
 
 }

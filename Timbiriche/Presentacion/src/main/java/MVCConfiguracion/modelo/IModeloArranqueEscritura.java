@@ -18,4 +18,5 @@ public interface IModeloArranqueEscritura {
     public JugadorSolicitanteDTO crearJugadorSolicitante(String ip,int puerto);
     public void enviarSolicitud(JugadorSolicitanteDTO jugadorsolicitante);
     public void setEstadoSolicitud(boolean estadoSolicitud);
+    public void setSolicitudActual(SolicitudUnirse solicitud);
 }
