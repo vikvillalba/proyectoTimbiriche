@@ -4,22 +4,60 @@
  */
 package MVCConfiguracion.vista.unirsePartida;
 
+import MVCConfiguracion.controlador.ControladorUnisePartida;
+import MVCConfiguracion.observer.INotificadorUnirsePartida;
+
 /**
  *
  * @author Jack Murrieta
  */
-public class DlgEnviarSolicitud extends javax.swing.JDialog {
-    
+public class DlgEnviarSolicitud extends javax.swing.JDialog implements INotificadorUnirsePartida {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgEnviarSolicitud.class.getName());
+    private ControladorUnisePartida controlador;
+    private String ipDestino;
+    private int puertoDestino;
 
     /**
      * Creates new form DlgenviarSolicitud
      */
     public DlgEnviarSolicitud(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        
+
         initComponents();
         setSize(759, 481);
+        configurarEventos();
+    }
+
+    public void setControlador(ControladorUnisePartida controlador) {
+        this.controlador = controlador;
+    }
+
+    public void setDatosDestino(String ip, int puerto) {
+        this.ipDestino = ip;
+        this.puertoDestino = puerto;
+    }
+
+    private void configurarEventos() {
+        // btn Enviar Solicitud
+        btnEnviarSolicitud.addActionListener(e -> {
+            if (controlador != null && ipDestino != null) {
+                controlador.enviarSolicitud(ipDestino, puertoDestino);
+                dispose(); // Cerrar después de reenviar
+            }
+        });
+
+        // btn Volver
+        btnVolver.addActionListener(e -> {
+            dispose();
+        });
+    }
+
+    @Override
+    public void actualizar() {
+        // Este método se llama cuando la solicitud es rechazada
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**

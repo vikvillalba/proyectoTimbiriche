@@ -4,13 +4,18 @@
  */
 package FrmsUnirsePartida;
 
+import MVCConfiguracion.controlador.ControladorUnisePartida;
+import MVCConfiguracion.observer.INotificadorUnirsePartida;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Usuario
  */
-public class DlgUnirsePartida extends javax.swing.JDialog {
+public class DlgUnirsePartida extends javax.swing.JDialog implements INotificadorUnirsePartida {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgUnirsePartida.class.getName());
+    private ControladorUnisePartida controlador;
 
     /**
      * Creates new form DlgUnirsePartida
@@ -19,7 +24,58 @@ public class DlgUnirsePartida extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setSize(750, 480);
+        configurarEventos();
+    }
 
+    public void setControlador(ControladorUnisePartida controlador) {
+        this.controlador = controlador;
+    }
+
+    private void configurarEventos() {
+        // Botón Solicitar Unirse - pide IP y puerto, luego envía solicitud
+        btnSolicitarUnirse.addActionListener(e -> {
+            if (controlador != null) {
+                // Solicitar IP al usuario
+                String ip = JOptionPane.showInputDialog(this,
+                    "Ingrese la IP del host:",
+                    "Conectar a partida",
+                    JOptionPane.QUESTION_MESSAGE);
+
+                if (ip != null && !ip.trim().isEmpty()) {
+                    // Solicitar puerto al usuario
+                    String puertoStr = JOptionPane.showInputDialog(this,
+                        "Ingrese el puerto del host:",
+                        "Conectar a partida",
+                        JOptionPane.QUESTION_MESSAGE);
+
+                    if (puertoStr != null && !puertoStr.trim().isEmpty()) {
+                        try {
+                            int puerto = Integer.parseInt(puertoStr);
+                            controlador.enviarSolicitud(ip, puerto);
+                            dispose(); // Cerrar después de enviar
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(this,
+                                "Puerto inválido. Debe ser un número.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        });
+
+        // Botón Volver - cierra el diálogo
+        btnVolver.addActionListener(e -> {
+            dispose();
+        });
+    }
+
+    @Override
+    public void actualizar() {
+        // Este método se puede usar para actualizar el estado del diálogo
+        // Por ejemplo, cuando hay una partida disponible
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**

@@ -12,6 +12,7 @@ import Observer.ObservableEventos;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
+import SolicitudEntity.SolicitudUnirse;
 import excepciones.PartidaExcepcion;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,7 @@ import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
 
 /**
- * Clase que representa una partida de juego. Engloba a todas las clases
- * necesarias para iniciar una partida.
+ * Clase que representa una partida de juego. Engloba a todas las clases necesarias para iniciar una partida.
  *
  * @author victoria
  */
@@ -232,14 +232,14 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-      
+
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
     }
 
     public void obtenerJugadorTurno(PaqueteDTO paquete) {
-          // Convertir contenido a List<JugadorDTO>
+        // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
         for (JugadorDTO dto : jugadoresDTO) {
@@ -276,12 +276,38 @@ public class Partida implements PartidaFachada, ObservableEventos {
         notificarEventoRecibido("Puntos actualizados");
     }
 
+    /**
+     * Rechaza automáticamente solicitudes de unirse cuando la partida ya está en curso. Envía una respuesta negativa al jugador solicitante.
+     *
+     * @param paquete Paquete con la solicitud recibida
+     */
+    public void rechazarSolicitudUnirse(PaqueteDTO paquete) {
+        SolicitudUnirse solicitud = convertirASolicitudUnirse(paquete.getContenido());
+
+        if (solicitud == null) {
+            notificarEventoRecibido("ERROR: SolicitudUnirse inválida recibida");
+            return;
+        }
+
+        // Marcar solicitud como rechazada
+        solicitud.setSolicitudEstado(false);
+
+        // Crear paquete de respuesta
+        PaqueteDTO respuesta = new PaqueteDTO(solicitud, TipoEvento.RESPUESTA_SOLICITUD.toString());
+        respuesta.setHost(this.host);
+        respuesta.setPuertoOrigen(this.puertoOrigen);
+        respuesta.setPuertoDestino(this.puertoDestino);
+
+        // Enviar rechazo al solicitante
+        emisor.enviarCambio(respuesta);
+
+        notificarEventoRecibido("Solicitud rechazada: partida en curso");
+        System.out.println("[Partida] Solicitud de unirse rechazada - partida ya iniciada");
+    }
+
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
-
-   
-
 
     @Override
     public void notificarEventoRecibido(Object evento) {
@@ -394,6 +420,19 @@ public class Partida implements PartidaFachada, ObservableEventos {
         }
 
         return resultado;
+    }
+
+    /**
+     * Convierte el contenido del paquete a SolicitudUnirse.
+     *
+     */
+    private SolicitudUnirse convertirASolicitudUnirse(Object contenido) {
+        if (contenido instanceof SolicitudUnirse) {
+            return (SolicitudUnirse) contenido;
+        }
+        // Si llega como Map, se podría deserializar manualmente
+        //contenido ya es SolicitudUnirse??? a mappearlo
+        return null;
     }
 
 }

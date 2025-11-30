@@ -4,13 +4,17 @@
  */
 package MVCConfiguracion.vista.unirsePartida;
 
+import MVCConfiguracion.controlador.ControladorUnisePartida;
+import MVCConfiguracion.observer.INotificadorUnirsePartida;
+
 /**
  *
  * @author Jack Murrieta
  */
-public class DlgSolicitudHost extends javax.swing.JDialog {
+public class DlgSolicitudHost extends javax.swing.JDialog implements INotificadorUnirsePartida {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgSolicitudHost.class.getName());
+    private ControladorUnisePartida controlador;
 
     /**
      * Creates new form DlgSolicitudHost
@@ -20,6 +24,34 @@ public class DlgSolicitudHost extends javax.swing.JDialog {
 
         initComponents();
         setSize(750, 480);
+        configurarEventos();
+    }
+
+    public void setControlador(ControladorUnisePartida controlador) {
+        this.controlador = controlador;
+    }
+
+    private void configurarEventos() {
+        btnAceptar.addActionListener(e -> {
+            if (controlador != null) {
+                controlador.aceptarSolicitud(true);
+                dispose();
+            }
+        });
+
+        // Botón Rechazar - rechaza la solicitud
+        btnVolver.addActionListener(e -> {
+            if (controlador != null) {
+                controlador.aceptarSolicitud(false);
+                dispose();
+            }
+        });
+    }
+
+    @Override
+    public void actualizar() {
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public static void main(String[] args) {

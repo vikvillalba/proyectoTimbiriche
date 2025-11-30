@@ -9,6 +9,7 @@ import static Entidades.TipoEvento.INICIO_PARTIDA;
 import static Entidades.TipoEvento.NUEVA_LINEA;
 import static Entidades.TipoEvento.SOLICITAR_FINALIZAR_PARTIDA;
 import static Entidades.TipoEvento.SOLICITAR_INICIAR_PARTIDA;
+import static Entidades.TipoEvento.SOLICITAR_UNIRSE;
 import static Entidades.TipoEvento.TURNO_ACTUALIZADO;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
@@ -56,13 +57,19 @@ public class PartidaComunicacion implements IReceptor{
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                
+
                 partida.inicioPartida();
                 partida.obtenerJugadorTurno(paquete);
                 break;
             }
+
+            case SOLICITAR_UNIRSE: {
+                // Si la partida ya está en curso, rechazar automáticamente
+                partida.rechazarSolicitudUnirse(paquete);
+                break;
+            }
 //
-            //case para elestado de partida si esta en cuerso y jugadores llenos 
+            //case para elestado de partida si esta en cuerso y jugadores llenos
 //            case UNIRSE_PARTIDA:
 //                partida.notificarEventoRecibido("Un jugador se unio a la partida");
 //                break;

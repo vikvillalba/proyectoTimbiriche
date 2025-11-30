@@ -234,13 +234,27 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     @Override
     public void setSolicitudActual(SolicitudUnirse solicitud) {
         this.solicitud = solicitud;
-        System.out.println("✓ Solicitud actualizada en el modelo");
+        System.out.println("Solicitud actualizada en el modelo");
     }
 
+    /**
+     * Método llamado cuando se recibe una actualización de solicitud desde UnirsePartida.
+     * Determina qué diálogo mostrar según el estado de la solicitud.
+     *
+     * @param solicitud La solicitud actualizada
+     */
     @Override
     public void actualizar(SolicitudUnirse solicitud) {
-        //logica de la solicitud obtenida
-        //dependiendo del estado mostrar jdialogs
+        // Actualizar la solicitud en el modelo
+        this.solicitud = solicitud;
+
+        System.out.println("ModeloArranque.actualizar() - Estado: " + (solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA"));
+
+        // Notificar a los diálogos registrados para que actualicen su vista
+        // Los diálogos decidirán si mostrarse según su propósito:
+        // DlglicitudHostSe muestra cuando llega una solicitud nueva (lado HOST)
+        // DlgEnviarSolicitudSe muestra cuando la solicitud es rechazada (lado CLIENTE)
+        notificar();
     }
 
 }
