@@ -290,5 +290,6 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     public void abandonarPartida() {
         Jugador sesion = partida.getJugadorSesion();
         partida.abandonarPartida(sesion);
+        actualizarTurnos();
     }
 }
