@@ -5,6 +5,7 @@ import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
 import Fachada.PartidaFachada;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloAbandonarEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
@@ -42,6 +43,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         IModeloPartidaEscritura,
         IModeloTableroLectura,
         IModeloMensajeEscritura,
+        IModeloAbandonarEscritura,
         ObservablePartida,
         ObservableMensaje,
         ObservadorInicio,
@@ -284,4 +286,9 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         observadorMensaje.mostrarMensaje();
     }
 
+    @Override
+    public void abandonarPartida() {
+        Jugador sesion = partida.getJugadorSesion();
+        partida.abandonarPartida(sesion);
+    }
 }

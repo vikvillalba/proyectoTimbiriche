@@ -116,4 +116,8 @@ public interface PartidaFachada extends Observable {
      * @param paquete
      */
     void actualizarPuntos(PaqueteDTO paquete);
+    
+    void abandonarPartida(Jugador jugadorSesion);
+    
+    void partidaAbandonada(PaqueteDTO paquete);
 }

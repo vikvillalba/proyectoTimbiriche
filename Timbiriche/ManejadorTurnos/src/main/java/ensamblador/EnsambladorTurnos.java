@@ -66,7 +66,8 @@ public class EnsambladorTurnos {
         // le indica al bus a que eventos esta suscrito
         List<String> eventos = Arrays.asList(
                 "SOLICITAR_TURNOS",
-                "ACTUALIZAR_TURNO"
+                "ACTUALIZAR_TURNO",
+                "ABANDONAR_PARTIDA"
         );
 
         PaqueteDTO paquete = new PaqueteDTO(eventos, "INICIAR_CONEXION");

@@ -5,6 +5,7 @@ import org.itson.dto.JugadorDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
@@ -100,6 +101,40 @@ public class ManejadorTurnos implements IReceptor {
         System.out.println("Se repartieron los jugadores");
     }
 
+    public void abandonarPartida(PaqueteDTO paquete) {
+        JugadorDTO jugador = convertirAJugadorDTO(paquete.getContenido());
+
+        synchronized (turnos) {
+            boolean eliminado = turnos.removeIf(j -> j.getId().equals(jugador.getId()));
+            if (eliminado) {
+                System.out.println("Se removió de los turnos al jugador: " + jugador);
+            }
+        }
+        actualizarTurno();
+
+        PaqueteDTO paquetes = new PaqueteDTO(jugador, "PARTIDA_ABANDONADA");
+        paquetes.setHost(host);
+        paquetes.setPuertoOrigen(puertoOrigen);
+        paquetes.setPuertoDestino(puertoDestino);
+
+        emisor.enviarCambio(paquetes);
+    }
+
+    private JugadorDTO convertirAJugadorDTO(Object contenido) {
+        if (contenido instanceof JugadorDTO) {
+            return (JugadorDTO) contenido;
+        }
+
+        if (contenido instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) contenido;
+            String id = (String) map.get("id");
+            boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
+            return new JugadorDTO(id, turno);
+        }
+
+        return null;
+    }
+
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
         System.out.println("[ManejadorTurnos] evento recibido: " + paquete.getTipoEvento());
@@ -124,6 +159,11 @@ public class ManejadorTurnos implements IReceptor {
                 actualizarTurno();
                 System.out.println("[ManejadorTurnos] Jugador en turno ahora: " + jugadorEnTurno.getId());
                 break;
+
+            case ABANDONAR_PARTIDA:
+                abandonarPartida(paquete);
+                break;
+
         }
     }
 

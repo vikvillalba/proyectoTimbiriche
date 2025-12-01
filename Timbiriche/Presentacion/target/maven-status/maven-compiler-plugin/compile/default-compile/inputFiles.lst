@@ -7,6 +7,7 @@ C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presenta
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\vista\FrmSalaEspera.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\controlador\ControladorPartida.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.java
+C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloAbandonarEscritura.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloJugadoresLectura.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloMensajeEscritura.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloPartidaEscritura.java

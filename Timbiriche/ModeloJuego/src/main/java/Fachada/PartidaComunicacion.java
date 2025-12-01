@@ -61,7 +61,8 @@ public class PartidaComunicacion implements IReceptor{
                 partida.notificarEventoRecibido("Un jugador se unio a la partida");
                 break;
 
-            case ABANDONAR_PARTIDA:
+            case PARTIDA_ABANDONADA:
+                partida.partidaAbandonada(paquete);
                 partida.notificarEventoRecibido("Un jugador abandono la partida");
                 break;
 

@@ -169,6 +169,24 @@ public class Partida implements PartidaFachada, ObservableEventos {
     }
 
     @Override
+    public void abandonarPartida(Jugador jugador) {
+        JugadorDTO jugadorsesion = mapperJugadores.toDTO(jugador);
+        PaqueteDTO paquete = new PaqueteDTO(jugadorsesion, TipoEvento.ABANDONAR_PARTIDA.toString());
+        paquete.setHost(this.host);
+        paquete.setPuertoOrigen(this.puertoOrigen);
+        paquete.setPuertoDestino(puertoDestino);
+        System.out.println("[PARTIDA]: Se envió el cambio de abandonar partida");
+        emisor.enviarCambio(paquete);
+    }
+    
+    @Override
+    public void partidaAbandonada(PaqueteDTO paquete) {
+        JugadorDTO jugadorSesion = convertirAJugadorDTO(paquete.getContenido());
+        System.out.println("[PARTIDA]: Jugador que abandono partida: "+jugadorSesion);
+        //Se notifica el cambio a las pantallas
+    }
+
+    @Override
     public void nuevaLinea(PaqueteDTO paquete) {
         // Convertir contenido a PuntoDTO[]
         PuntoDTO[] puntosDTO = convertirAPuntosDTO(paquete.getContenido());
@@ -232,14 +250,14 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-      
+
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
     }
 
     public void obtenerJugadorTurno(PaqueteDTO paquete) {
-          // Convertir contenido a List<JugadorDTO>
+        // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
         for (JugadorDTO dto : jugadoresDTO) {
@@ -280,8 +298,8 @@ public class Partida implements PartidaFachada, ObservableEventos {
         this.emisor = emisor;
     }
 
-   
-
+    
+    
 
     @Override
     public void notificarEventoRecibido(Object evento) {

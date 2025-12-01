@@ -46,4 +46,8 @@ public class JugadorDTO {
         this.score = score;
     }
 
+    @Override
+    public String toString() {
+        return "JugadorDTO{" + "id=" + id + ", turno=" + turno + ", score=" + score + '}';
+    }
 }

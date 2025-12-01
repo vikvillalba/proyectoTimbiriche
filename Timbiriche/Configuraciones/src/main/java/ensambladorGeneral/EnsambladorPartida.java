@@ -9,6 +9,7 @@ import Fachada.Partida;
 import Fachada.PartidaComunicacion;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloAbandonarEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
@@ -104,6 +105,7 @@ public class EnsambladorPartida {
                 "NUEVA_LINEA",
                 "UNIRSE_PARTIDA",
                 "ABANDONAR_PARTIDA",
+                "PARTIDA_ABANDONADA",
                 "CONFIGURAR_PARTIDA",
                 "SOLICITAR_FINALIZAR_PARTIDA",
                 "ACTUALIZAR_PUNTOS"
@@ -130,8 +132,9 @@ public class EnsambladorPartida {
         IModeloTableroLectura imtl = modelo;
         IModeloPartidaEscritura impe = modelo;
         IModeloMensajeEscritura imme = modelo;
+        IModeloAbandonarEscritura imap = modelo;
 
-        ControladorPartida controlador = new ControladorPartida(impe,imme);
+        ControladorPartida controlador = new ControladorPartida(impe,imme,imap);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);

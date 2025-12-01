@@ -79,7 +79,8 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     public void eleccionAbandonar(int opcion) {
         if (opcion == JOptionPane.OK_OPTION) {
-            System.out.println("Abandonaste la partida");
+            System.out.println("[FRM Partida]: Abandonaste la partida");
+            controlador.abandonarPartida();
         } else if (opcion == JOptionPane.CANCEL_OPTION) {
         }
     }

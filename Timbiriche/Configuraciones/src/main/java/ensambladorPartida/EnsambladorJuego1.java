@@ -32,13 +32,13 @@ public class EnsambladorJuego1 {
                 false
         );
 
-//        Jugador jugador3 = new Jugador(
-//                "biki",
-//                AvatarEnum.TIBURON_BLANCO,
-//                ColorEnum.MORAS,
-//                0,
-//                false
-//        );
+        Jugador jugador3 = new Jugador(
+                "biki",
+                AvatarEnum.TIBURON_BLANCO,
+                ColorEnum.MORAS,
+                0,
+                false
+        );
 //
 //        Jugador jugador4 = new Jugador(
 //                "lusia",
@@ -48,7 +48,7 @@ public class EnsambladorJuego1 {
 //                false
 //        );
 
-        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
+        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2,jugador3);
 
         int alto = 10;
         int ancho = 10;

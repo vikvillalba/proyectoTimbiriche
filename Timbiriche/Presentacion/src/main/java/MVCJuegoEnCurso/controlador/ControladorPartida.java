@@ -1,5 +1,6 @@
 package MVCJuegoEnCurso.controlador;
 
+import MVCJuegoEnCurso.modelo.interfaces.IModeloAbandonarEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import excepciones.JugadaException;
@@ -14,11 +15,13 @@ public class ControladorPartida {
 
     private IModeloPartidaEscritura modelo;
     private IModeloMensajeEscritura modeloMensaje;
+    private IModeloAbandonarEscritura modeloAbandonar;
     private PuntoPresentable[] puntosSeleccionados = new PuntoPresentable[2]; // puntos que el jugador selecciona
 
-    public ControladorPartida(IModeloPartidaEscritura modelo, IModeloMensajeEscritura modeloMensaje) {
+    public ControladorPartida(IModeloPartidaEscritura modelo, IModeloMensajeEscritura modeloMensaje, IModeloAbandonarEscritura modeloAbandonar) {
         this.modelo = modelo;
         this.modeloMensaje = modeloMensaje;
+        this.modeloAbandonar = modeloAbandonar;
     }
 
     /**
@@ -54,6 +57,10 @@ public class ControladorPartida {
     
     public void mostrarMensaje(){
         modeloMensaje.mostrarMensaje();
+    }
+    
+    public void abandonarPartida(){
+        modeloAbandonar.abandonarPartida();
     }
 
     /**

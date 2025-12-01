@@ -4,6 +4,7 @@ MVCJuegoEnCurso\observer\ObservableMensaje.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloJugadoresLectura.class
 MVCJuegoEnCurso\vista\FrmPartida.class
 MVCJuegoEnCurso\observer\ObservadorJugadores.class
+MVCJuegoEnCurso\modelo\interfaces\IModeloAbandonarEscritura.class
 MVCConfiguraciones\vista\FrmSalaEspera.class
 objetosPresentables\PuntoPresentable.class
 MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.class
