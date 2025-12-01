@@ -8,9 +8,11 @@ import ObserverReceptor.ObservableRecibos;
 import ObserverReceptor.ObservadorRecibos;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import org.itson.dto.PaqueteDTO;
 
 /**
@@ -21,25 +23,23 @@ public class ColaRecibos implements ObservableRecibos {
 
     private Queue<String> cola = new LinkedList<>();
     private Gson serializador = new Gson();
-    private ObservableRecibos observadorRecibos;
-    private List<ObservadorRecibos> observadores = new ArrayList<>();
+    private ObservadorRecibos observadorRecibos;
 
     @Override
     public void agregarObservador(ObservadorRecibos ob) {
-        observadores.add(ob);
+        observadorRecibos = ob;
     }
 
     @Override
     public void notificar() {
-        for (ObservadorRecibos ob : observadores) {
-            ob.actualizar();
-        }
+        observadorRecibos.actualizar();
     }
 
     public void queue(String paquete) {
         cola.add(paquete);
-        notificar();
         System.out.println("[ColaRecibos] agregado: " + paquete);
+        notificar();
+
     }
 
     public PaqueteDTO<?> dequeue() {

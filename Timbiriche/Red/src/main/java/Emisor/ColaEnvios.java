@@ -33,12 +33,16 @@ public class ColaEnvios implements ObservableEnvios {
 
     public void queue(PaqueteDTO paquete) {
         cola.offer(paquete);
-        notificar();
+        notificar(); 
     }
 
     //?????
     public String dequeue() {
-        return serializar(cola.poll());
+        PaqueteDTO paquete = cola.poll();
+        if (paquete == null) {
+            return null;
+        }
+        return serializar(paquete);
     }
 
     public String serializar(PaqueteDTO paquete) {
@@ -46,5 +50,4 @@ public class ColaEnvios implements ObservableEnvios {
         return paqueteJson;
     }
 
-   
 }

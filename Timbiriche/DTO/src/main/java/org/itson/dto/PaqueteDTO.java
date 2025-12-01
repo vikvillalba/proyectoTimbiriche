@@ -1,5 +1,7 @@
 package org.itson.dto;
 
+import java.util.UUID;
+
 /**
  *
  * @author erika
@@ -7,11 +9,11 @@ package org.itson.dto;
 public class PaqueteDTO<T> {
 
     private T contenido;
+    private String id;
     private String tipoEvento;
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
-
 
     public PaqueteDTO(T contenido, String tipoEvento) {
         this.contenido = contenido;
@@ -25,6 +27,7 @@ public class PaqueteDTO<T> {
         this.host = host;
         this.puertoOrigen = puertoOrigen;
         this.puertoDestino = puertoDestino;
+        this.id = UUID.randomUUID().toString();  //crea identificador para que el paquete no se duplique
     }
 
     public T getContenido() {
@@ -66,10 +69,10 @@ public class PaqueteDTO<T> {
     public void setPuertoDestino(int puertoDestino) {
         this.puertoDestino = puertoDestino;
     }
+
+    public String getId() {
+        return id;
+    }
+
     
-    
-
-
-
-
 }

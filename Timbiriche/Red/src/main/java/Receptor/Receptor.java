@@ -4,7 +4,6 @@
  */
 package Receptor;
 
-
 import ObserverReceptor.ObservadorRecibos;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
@@ -14,9 +13,10 @@ import org.itson.dto.PaqueteDTO;
  * @author erika
  */
 public class Receptor implements ObservadorRecibos {
+
     private ColaRecibos cola;
     private IReceptor receptor;
-    
+
     public Receptor() {
     }
 
@@ -28,17 +28,17 @@ public class Receptor implements ObservadorRecibos {
         this.receptor = receptor;
     }
 
-    
     @Override
     public void actualizar() {
-        PaqueteDTO paquete = cola.dequeue();
 
-        if (paquete == null) {
-            System.out.println("No hay paquetes en cola al recibir la notificación.");
-            return;
-        }
-        if (receptor != null) {
-            receptor.recibirCambio(paquete);
+        PaqueteDTO paquete;
+
+        while ((paquete = cola.dequeue()) != null) {
+
+            if (receptor != null) {
+                receptor.recibirCambio(paquete);
+            }
         }
     }
+
 }
