@@ -44,9 +44,17 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     }
 
     /**
-     * Método llamado cuando se recibe una nueva solicitud de unirse a la partida.
-     * Solo muestra el diálogo si la solicitud NO ha sido procesada aún (estado = false y sin tipo de rechazo).
-     * Esto evita que el diálogo se muestre múltiples veces después de que el host ya respondió.
+     * Cierra cualquier diálogo activo antes de mostrar uno nuevo
+     */
+    private void cerrarDialogosActivos() {
+        if (dlgSolicitudHost != null && dlgSolicitudHost.isDisplayable()) {
+            dlgSolicitudHost.dispose();
+            dlgSolicitudHost = null;
+        }
+    }
+
+    /**
+     * Método llamado cuando se recibe una nueva solicitud de unirse a la partida. Solo muestra el diálogo si la solicitud NO ha sido procesada aún (estado = false y sin tipo de rechazo). Esto evita que el diálogo se muestre múltiples veces después de que el host ya respondió.
      */
     @Override
     public void actualizar(SolicitudUnirse solicitud) {
@@ -57,18 +65,17 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         // - NO está aceptada (solicitudEstado = false)
         // - Y NO tiene tipo de rechazo asignado (es null o vacío)
         boolean estaPendiente = !solicitud.isSolicitudEstado()
-            && (solicitud.getTipoRechazo() == null || solicitud.getTipoRechazo().isEmpty());
+                && (solicitud.getTipoRechazo() == null || solicitud.getTipoRechazo().isEmpty());
 
         if (!estaPendiente) {
-            System.out.println("[FrmSalaEspera] Solicitud ya fue procesada. No se muestra el diálogo.");
+            System.out.println("[FrmSalaEspera] Solicitud ya fue procesada. Cerrando cualquier diálogo activo.");
+            // Si la solicitud ya fue procesada (aceptada o rechazada), cerrar el diálogo si está abierto
+            cerrarDialogosActivos();
             return;
         }
 
-        // Cerrar diálogo previo si existe
-        if (dlgSolicitudHost != null && dlgSolicitudHost.isDisplayable()) {
-            dlgSolicitudHost.dispose();
-            dlgSolicitudHost = null;
-        }
+        // Cerrar diálogo previo si existe antes de mostrar uno nuevo
+        cerrarDialogosActivos();
 
         System.out.println("[FrmSalaEspera] Mostrando diálogo de solicitud...");
 

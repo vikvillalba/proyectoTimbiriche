@@ -11,7 +11,6 @@ import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
 import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
-import ModeloUnirsePartida.IUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
@@ -30,8 +29,8 @@ import objetosPresentables.PartidaPresentable;
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, 
-        IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado,IPublicadorHostUnirsePartida {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones,
+        IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado, IPublicadorHostUnirsePartida {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ConfiguracionesFachada configuracionesPartida;
@@ -44,7 +43,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
-    
+
     private INotificadorHostUnirsePartida frmMenuInicio;
 
     //Solicitud de UnirsePartida
@@ -187,6 +186,11 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void setEstadoSolicitud(boolean estadoSolicitud) {
+        // Si la solicitud fue rechazada, establecer el tipo de rechazo ANTES de notificar
+        if (solicitud != null && !estadoSolicitud) {
+            solicitud.setTipoRechazo("RECHAZADO_POR_HOST");
+        }
+
         // Cambiar el estado de la solicitud
         unirsePartida.cambiarEstadoSolicitud(solicitud, estadoSolicitud);
 
@@ -304,8 +308,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     /**
-     * Cuando se encuentra el host de la partida, convierte el DTO y notifica a la vista.
-     * Implementa INotificadorHostEncontrado.
+     * Cuando se encuentra el host de la partida, convierte el DTO y notifica a la vista. Implementa INotificadorHostEncontrado.
      *
      * @param jugador El jugador host encontrado (puede ser null)
      */
@@ -336,8 +339,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     /**
-     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host.
-     * Implementa IPublicadorHostUnirsePartida.
+     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host. Implementa IPublicadorHostUnirsePartida.
      *
      * @param notificador El notificador a registrar (FrmMenuInicio)
      */
@@ -348,8 +350,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     /**
-     * Notifica a FrmMenuInicio que se encontró un host.
-     * Implementa IPublicadorHostUnirsePartida.
+     * Notifica a FrmMenuInicio que se encontró un host. Implementa IPublicadorHostUnirsePartida.
      *
      * @param jugadorHost El jugador host encontrado (puede ser null)
      */

@@ -24,7 +24,7 @@ import org.itson.dto.PaqueteDTO;
 /**
  * Main para iniciar el juego como HOST con interfaz gráfica.
  *
- * @author Usuario
+ * @author Jack Murrieta
  */
 public class IniciarHost {
 
@@ -96,8 +96,6 @@ public class IniciarHost {
         jugadorHostDTO.setPuerto(PUERTO_HOST);
 
         // Configurar el host en UnirsePartida
-        unirsePartida.actualizar(jugadorHostDTO);
-
         List<String> eventos = Arrays.asList(
                 "SOLICITAR_UNIRSE",
                 "RESPUESTA_SOLICITUD"

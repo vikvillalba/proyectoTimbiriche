@@ -22,6 +22,10 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     private String ip;
     private int puerto;
 
+    private DlgMostrarMensaje dlgMostrarMensajeActivo;
+    private DlgEnviarSolicitud dlgEnviarSolicitudActivo;
+    private DlgUnirsePartida dlgUnirsePartidaActivo;
+
     public FrmMenuInicio() {
         initComponents();
         this.setBackground(COLOR_FONDO);
@@ -55,12 +59,32 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     }
 
     /**
+     * Cierra todos los diálogos activos antes de mostrar uno nuevo
+     */
+    private void cerrarDialogosActivos() {
+        if (dlgMostrarMensajeActivo != null && dlgMostrarMensajeActivo.isDisplayable()) {
+            dlgMostrarMensajeActivo.dispose();
+            dlgMostrarMensajeActivo = null;
+        }
+        if (dlgEnviarSolicitudActivo != null && dlgEnviarSolicitudActivo.isDisplayable()) {
+            dlgEnviarSolicitudActivo.dispose();
+            dlgEnviarSolicitudActivo = null;
+        }
+        if (dlgUnirsePartidaActivo != null && dlgUnirsePartidaActivo.isDisplayable()) {
+            dlgUnirsePartidaActivo.dispose();
+            dlgUnirsePartidaActivo = null;
+        }
+    }
+
+    /**
      * Dependiendo del tipo de respuesta se muestra un JDialog. Implementa INotificadorUnirsePartida.
      *
      * @param solicitud La solicitud con la respuesta del host
      */
     @Override
     public void actualizar(SolicitudUnirse solicitud) {
+        // Cerrar cualquier diálogo activo antes de mostrar uno nuevo
+        cerrarDialogosActivos();
         boolean estadoSolicitud = solicitud.isSolicitudEstado();
         String tipoRechazo = solicitud.getTipoRechazo();
 
@@ -91,9 +115,9 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
                 + "Entrando a la sala de espera..."
                 + "</div></html>";
 
-        DlgMostrarMensaje dlgAceptacion = new DlgMostrarMensaje(this, true, mensajeAceptacion);
-        dlgAceptacion.setLocationRelativeTo(this);
-        dlgAceptacion.setVisible(true);
+        dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false, mensajeAceptacion);
+        dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+        dlgMostrarMensajeActivo.setVisible(true);
 
     }
 
@@ -137,9 +161,9 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
                 + "Por favor, intenta unirte a otra partida o crea una nueva."
                 + "</div></html>";
 
-        DlgMostrarMensaje dlgRechazo = new DlgMostrarMensaje(this, true, mensaje);
-        dlgRechazo.setLocationRelativeTo(this);
-        dlgRechazo.setVisible(true);
+        dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false, mensaje);
+        dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+        dlgMostrarMensajeActivo.setVisible(true);
     }
 
     /**
@@ -147,9 +171,9 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
      */
     private void mostrarDialogoPartidaIniciada() {
         // Usar el diálogo con el mensaje por defecto
-        DlgMostrarMensaje dlgPartidaEnCurso = new DlgMostrarMensaje(this, true);
-        dlgPartidaEnCurso.setLocationRelativeTo(this);
-        dlgPartidaEnCurso.setVisible(true);
+        dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false);
+        dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+        dlgMostrarMensajeActivo.setVisible(true);
     }
 
     /**
@@ -161,18 +185,19 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
                 + "Por favor, intenta unirte a otra partida o crea una nueva."
                 + "</div></html>";
 
-        DlgMostrarMensaje dlgRechazo = new DlgMostrarMensaje(this, true, mensaje);
-        dlgRechazo.setLocationRelativeTo(this);
-        dlgRechazo.setVisible(true);
+        dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false, mensaje);
+        dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+        dlgMostrarMensajeActivo.setVisible(true);
     }
 
     /**
      * Muestra un diálogo indicando que el host rechazó la solicitud.
      */
     private void mostrarDialogoRechazadoPorHost(SolicitudUnirse solicitud) {
-        DlgEnviarSolicitud dlgEnviarSoli = new DlgEnviarSolicitud(this, true, solicitud);
-        dlgEnviarSoli.setLocationRelativeTo(this);
-        dlgEnviarSoli.setVisible(true);
+        dlgEnviarSolicitudActivo = new DlgEnviarSolicitud(this, false, solicitud);
+        dlgEnviarSolicitudActivo.setControlador(controlador);
+        dlgEnviarSolicitudActivo.setLocationRelativeTo(this);
+        dlgEnviarSolicitudActivo.setVisible(true);
     }
 
     /**
@@ -187,9 +212,9 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
                 + "Por favor, intenta unirte a otra partida o crea una nueva."
                 + "</div></html>";
 
-        DlgMostrarMensaje dlgRechazo = new DlgMostrarMensaje(this, true, mensaje);
-        dlgRechazo.setLocationRelativeTo(this);
-        dlgRechazo.setVisible(true);
+        dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false, mensaje);
+        dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+        dlgMostrarMensajeActivo.setVisible(true);
     }
 
     /**
@@ -296,6 +321,9 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     public void actualizar(JugadorConfig jugadorHost) {
         System.out.println("[FrmMenuInicio] actualizar(JugadorConfig) llamado. Host: " + (jugadorHost != null ? jugadorHost.getNombre() : "NULL"));
 
+        // Cerrar cualquier diálogo activo antes de mostrar uno nuevo
+        cerrarDialogosActivos();
+
         //si es null mostrar Jdialog no se encontro una partida existente
         if (jugadorHost == null) {
             String mensaje = "<html><div style='text-align: center;'>"
@@ -303,24 +331,25 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
                     + "Puedes crear una nueva partida desde el menú principal."
                     + "</div></html>";
 
-            DlgMostrarMensaje dlgNoHost = new DlgMostrarMensaje(this, true, mensaje);
-            dlgNoHost.setLocationRelativeTo(this);
-            dlgNoHost.setVisible(true);
+            dlgMostrarMensajeActivo = new DlgMostrarMensaje(this, false, mensaje);
+            dlgMostrarMensajeActivo.setLocationRelativeTo(this);
+            dlgMostrarMensajeActivo.setVisible(true);
 
             return;
         }
 
-        // Configurar y mostrar diálogo de unirse a partida
-        DlgUnirsePartida dlgUnirse = new DlgUnirsePartida(this, true);
+        // Configurar y mostrar diálogo de unirse a partida (NO MODAL)
+        // Al ser no modal, permite que la respuesta del host cierre el diálogo automáticamente
+        dlgUnirsePartidaActivo = new DlgUnirsePartida(this, false);
 
         // Configurar el controlador para que pueda enviar solicitudes
-        dlgUnirse.setControlador(controlador);
+        dlgUnirsePartidaActivo.setControlador(controlador);
 
         // Configurar IP y puerto del cliente
-        dlgUnirse.setIp(this.ip);
-        dlgUnirse.setPuerto(this.puerto);
+        dlgUnirsePartidaActivo.setIp(this.ip);
+        dlgUnirsePartidaActivo.setPuerto(this.puerto);
 
-        dlgUnirse.setLocationRelativeTo(this);
-        dlgUnirse.setVisible(true);
+        dlgUnirsePartidaActivo.setLocationRelativeTo(this);
+        dlgUnirsePartidaActivo.setVisible(true);
     }
 }

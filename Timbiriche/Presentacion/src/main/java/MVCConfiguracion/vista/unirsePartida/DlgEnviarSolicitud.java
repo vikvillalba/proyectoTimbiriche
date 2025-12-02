@@ -113,6 +113,8 @@ public class DlgEnviarSolicitud extends javax.swing.JDialog {
     private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
         // TODO add your handling code here:
         controlador.enviarSolicitudExistente(solicitud);
+        // Cerrar el diálogo después de reenviar la solicitud
+        dispose();
     }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
