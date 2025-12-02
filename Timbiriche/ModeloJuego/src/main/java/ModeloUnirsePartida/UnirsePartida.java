@@ -4,6 +4,10 @@
  */
 package ModeloUnirsePartida;
 
+import ModeloUnirsePartida.Observadores.IPublicadorHostEncontrado;
+import ModeloUnirsePartida.Observadores.IPublicadorSolicitud;
+import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
+import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import SolicitudEntity.SolicitudUnirse;
@@ -18,7 +22,7 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Jack Murrieta
  */
-public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, INotificadorHostPartida, PublicadorHostEncontrado {
+public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPublicadorHostEncontrado {
 
     // Constantes de estado
     private static final String ESTADO_EN_ESPERA = "EN_ESPERA";
@@ -41,7 +45,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, INot
     private int puertoOrigen;
     private int puertoDestino;
 
-    //notificador
+    //notificadorHost encontrado a modeloArranque 
     INotificadorHostEncontrado modeloArranque;
 
     public UnirsePartida() {
@@ -81,29 +85,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, INot
         emisorSolicitud.enviarCambio(paquete);
     }
 
-    /**
-     * Actualiza el jugador host cuando se recibe la respuesta del EventBus.
-     * Implementa INotificadorHostPartida.
-     *
-     * @param jugadorHost El jugador host recibido
-     */
-    @Override
-    public void actualizar(JugadorConfigDTO jugadorHost) {
-        System.out.println("[UnirsePartida] actualizar(JugadorConfigDTO) llamado. Host: " + (jugadorHost != null ? jugadorHost.getIp() : "NULL"));
-
-        this.jugadorHost = jugadorHost;
-        if (this.jugadorHost != null) {
-            this.jugadorHost.setEsHost(true);
-        }
-
-        // Notificar al modelo que se encontró (o no) un host
-        if (modeloArranque != null) {
-            System.out.println("[UnirsePartida] Notificando a modeloArranque...");
-            notificarHostEncontrado(jugadorHost);
-        } else {
-            System.err.println("[ERROR] [UnirsePartida] modeloArranque es NULL - no se puede notificar");
-        }
-    }
 
     @Override
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
@@ -374,27 +355,20 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, INot
         this.jugadorSolicitate = jugadorSolicitate;
     }
 
-    /**
-     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host.
-     * Implementa PublicadorHostEncontrado.
-     *
-     * @param notificador El notificador a registrar (ModeloArranque)
-     */
+  
+    //NOTIFICAR HOST A MODELO ARRANQUE
     @Override
     public void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador) {
-        System.out.println("[UnirsePartida] Registrando notificador host encontrado: " + (notificador != null ? notificador.getClass().getSimpleName() : "NULL"));
         this.modeloArranque = notificador;
     }
 
     /**
-     * Notifica al ModeloArranque que se encontró (o no) un host.
-     * Implementa PublicadorHostEncontrado.
+     * Notifica al ModeloArranque que se encontró (o no) un host. Implementa PublicadorHostEncontrado.
      *
      * @param jugador El jugador host encontrado (puede ser null)
      */
     @Override
     public void notificarHostEncontrado(JugadorConfigDTO jugador) {
-        System.out.println("[UnirsePartida] notificarHostEncontrado() - Llamando a modeloArranque.actualizar(). Host: " + (jugador != null ? jugador.getIp() : "NULL"));
         modeloArranque.actualizar(jugador);
     }
 

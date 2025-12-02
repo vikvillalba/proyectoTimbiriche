@@ -75,8 +75,9 @@ public class ReceptorSolicitudCliente implements IReceptor {
         try {
             JugadorConfigDTO jugadorHost = MapperUnirsePartida.mapearHost(paquete.getContenido());
 
-            // Usar actualizar() en lugar de setJugadorHost() para que se notifique al modelo
-            unirsePartida.actualizar(jugadorHost);
+            // Usar actualizar() para que se notifique al modelo
+            unirsePartida.modeloArranque.actualizar(jugadorHost);
+            unirsePartida.setJugadorHost(jugadorHost);
 
             if (jugadorHost != null) {
                 System.out.println("✓ Host encontrado: " + jugadorHost.getIp() + ":" + jugadorHost.getPuerto());

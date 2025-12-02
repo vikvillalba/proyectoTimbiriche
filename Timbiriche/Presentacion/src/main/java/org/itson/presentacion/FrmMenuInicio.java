@@ -55,8 +55,7 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     }
 
     /**
-     * Dependiendo del tipo de respuesta se muestra un JDialog.
-     * Implementa INotificadorUnirsePartida.
+     * Dependiendo del tipo de respuesta se muestra un JDialog. Implementa INotificadorUnirsePartida.
      *
      * @param solicitud La solicitud con la respuesta del host
      */
@@ -289,8 +288,7 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Muestra el diálogo de unirse a partida cuando se encuentra un host.
-     * Implementa INotificadorHostUnirsePartida.
+     * Muestra el diálogo de unirse a partida cuando se encuentra un host. Implementa INotificadorHostUnirsePartida.
      *
      * @param jugadorHost El jugador host encontrado (null si no se encontró)
      */

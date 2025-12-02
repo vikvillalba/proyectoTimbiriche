@@ -2,16 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package ModeloUnirsePartida;
+package ModeloUnirsePartida.Observadores;
 
-import DTO.JugadorConfigDTO;
+import SolicitudEntity.SolicitudUnirse;
 
 /**
  *
  * @author Jack Murrieta
+ * actualiza a vista paa que se muesten sus jdialogs 
  */
-interface IPublicadorHostPartida {
-    public void agregarNotificador(INotificadorHostPartida notificador);
-    public void notificar(JugadorConfigDTO jugadorHost);
+public interface INotificadorSolicitud {
+    public void actualizar(SolicitudUnirse solicitud);
     
 }

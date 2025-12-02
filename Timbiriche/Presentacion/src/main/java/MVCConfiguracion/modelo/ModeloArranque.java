@@ -9,8 +9,8 @@ import MVCConfiguracion.observer.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
-import ModeloUnirsePartida.INotificadorHostEncontrado;
-import ModeloUnirsePartida.INotificadorSolicitud;
+import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
+import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
 import ModeloUnirsePartida.IUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
@@ -30,7 +30,8 @@ import objetosPresentables.PartidaPresentable;
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado,IPublicadorHostUnirsePartida {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, 
+        IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado,IPublicadorHostUnirsePartida {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ConfiguracionesFachada configuracionesPartida;
@@ -310,12 +311,9 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
      */
     @Override
     public void actualizar(JugadorConfigDTO jugador) {
-        System.out.println("[ModeloArranque] actualizar(JugadorConfigDTO) llamado. Jugador: " + (jugador != null ? jugador.getIp() : "NULL"));
 
         this.jugadorHost = jugador;
         JugadorConfig jugadorHostEncontrado = mapearJugadorConfig(jugador);
-
-        System.out.println("[ModeloArranque] Llamando a notificar(JugadorConfig). frmMenuInicio es null? " + (frmMenuInicio == null));
 
         // Notificar a FrmMenuInicio
         notificar(jugadorHostEncontrado);
