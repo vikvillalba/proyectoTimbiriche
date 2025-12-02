@@ -7,11 +7,13 @@ package ModeloUnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
 
 /**
+ * Publicador para notificar cambios en el estado de las solicitudes. Implementado por UnirsePartida para notificar al ModeloArranque.
  *
  * @author Jack Murrieta
  */
-interface IPublicadorSolicitud {
-    public void agregarNotificador(INotificadorSolicitud notificador);
-    public void notificar(SolicitudUnirse solicitud);
-    
+public interface IPublicadorSolicitud {
+
+    void agregarNotificadorSolicitud(INotificadorSolicitud notificador);
+
+    void notificarSolicitud(SolicitudUnirse solicitud);
 }

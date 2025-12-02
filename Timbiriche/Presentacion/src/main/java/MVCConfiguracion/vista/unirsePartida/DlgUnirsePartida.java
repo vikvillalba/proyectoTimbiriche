@@ -2,20 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package FrmsUnirsePartida;
+package MVCConfiguracion.vista.unirsePartida;
 
+import DTO.JugadorSolicitanteDTO;
 import MVCConfiguracion.controlador.ControladorUnisePartida;
 import MVCConfiguracion.observer.INotificadorUnirsePartida;
 import javax.swing.JOptionPane;
+import objetosPresentables.JugadorConfig;
 
 /**
  *
- * @author Usuario
+ * @author Jack Murrieta
  */
-public class DlgUnirsePartida extends javax.swing.JDialog implements INotificadorUnirsePartida {
+public class DlgUnirsePartida extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgUnirsePartida.class.getName());
     private ControladorUnisePartida controlador;
+    private String ip;
+    private int puerto;
 
     /**
      * Creates new form DlgUnirsePartida
@@ -24,58 +28,31 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
         super(parent, modal);
         initComponents();
         setSize(750, 480);
-        configurarEventos();
+        
     }
+    
+    
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+
+   
 
     public void setControlador(ControladorUnisePartida controlador) {
         this.controlador = controlador;
-    }
-
-    private void configurarEventos() {
-        // Botón Solicitar Unirse - pide IP y puerto, luego envía solicitud
-        btnSolicitarUnirse.addActionListener(e -> {
-            if (controlador != null) {
-                // Solicitar IP al usuario
-                String ip = JOptionPane.showInputDialog(this,
-                    "Ingrese la IP del host:",
-                    "Conectar a partida",
-                    JOptionPane.QUESTION_MESSAGE);
-
-                if (ip != null && !ip.trim().isEmpty()) {
-                    // Solicitar puerto al usuario
-                    String puertoStr = JOptionPane.showInputDialog(this,
-                        "Ingrese el puerto del host:",
-                        "Conectar a partida",
-                        JOptionPane.QUESTION_MESSAGE);
-
-                    if (puertoStr != null && !puertoStr.trim().isEmpty()) {
-                        try {
-                            int puerto = Integer.parseInt(puertoStr);
-                            controlador.enviarSolicitud(ip, puerto);
-                            dispose(); // Cerrar después de enviar
-                        } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(this,
-                                "Puerto inválido. Debe ser un número.",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        });
-
-        // Botón Volver - cierra el diálogo
-        btnVolver.addActionListener(e -> {
-            dispose();
-        });
-    }
-
-    @Override
-    public void actualizar() {
-        // Este método se puede usar para actualizar el estado del diálogo
-        // Por ejemplo, cuando hay una partida disponible
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     /**
@@ -89,7 +66,7 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
         jPanel2 = new javax.swing.JPanel();
         btnVolver = new javax.swing.JButton();
         btnSolicitarUnirse = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        lblMensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(221, 238, 255));
@@ -104,6 +81,11 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
         btnVolver.setContentAreaFilled(false);
         btnVolver.setFocusPainted(false);
         btnVolver.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/volverHover.png"))); // NOI18N
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         btnSolicitarUnirse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/solicitarUnirse.png"))); // NOI18N
         btnSolicitarUnirse.setBorderPainted(false);
@@ -111,6 +93,11 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
         btnSolicitarUnirse.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSolicitarUnirse.setRolloverEnabled(true);
         btnSolicitarUnirse.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/solicitarUnirseHover.png"))); // NOI18N
+        btnSolicitarUnirse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSolicitarUnirseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -136,17 +123,27 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
 
         jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_END);
 
-        jLabel1.setBackground(new java.awt.Color(221, 238, 255));
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(65, 77, 106));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html><div style='text-align: center;'>Se encontró una partida existente.<br>¿Deseas unirte?</div></html>");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
+        lblMensaje.setBackground(new java.awt.Color(221, 238, 255));
+        lblMensaje.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        lblMensaje.setForeground(new java.awt.Color(65, 77, 106));
+        lblMensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMensaje.setText("<html><div style='text-align: center;'>Se encontró una partida existente.<br>¿Deseas unirte?</div></html>");
+        jPanel1.add(lblMensaje, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSolicitarUnirseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarUnirseActionPerformed
+        // TODO add your handling code here:
+        controlador.enviarSolicitud(ip, puerto);
+    }//GEN-LAST:event_btnSolicitarUnirseActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -188,8 +185,8 @@ public class DlgUnirsePartida extends javax.swing.JDialog implements INotificado
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSolicitarUnirse;
     private javax.swing.JButton btnVolver;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblMensaje;
     // End of variables declaration//GEN-END:variables
 }

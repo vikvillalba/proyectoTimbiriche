@@ -22,6 +22,8 @@ public class SolicitudUnirse {
 
     // Estado de la solicitud: true = aceptada, false = rechazada/pendiente
     private boolean solicitudEstado;
+    
+    private String tipoRechazo;
 
     /**
      * Constructor por defecto.
@@ -45,6 +47,14 @@ public class SolicitudUnirse {
     // Getters y Setters
     public JugadorSolicitanteDTO getJugadorSolicitante() {
         return jugadorSolicitante;
+    }
+
+    public String getTipoRechazo() {
+        return tipoRechazo;
+    }
+
+    public void setTipoRechazo(String tipoRechazo) {
+        this.tipoRechazo = tipoRechazo;
     }
 
     public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante) {
@@ -75,4 +85,5 @@ public class SolicitudUnirse {
                 + ", solicitudEstado=" + solicitudEstado
                 + '}';
     }
+    
 }

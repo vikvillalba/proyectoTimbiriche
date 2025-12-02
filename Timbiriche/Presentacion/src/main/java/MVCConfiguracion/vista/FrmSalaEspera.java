@@ -2,7 +2,10 @@ package MVCConfiguracion.vista;
 
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.IModeloArranqueLectura;
+import MVCConfiguracion.observer.INotificadorUnirsePartida;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
+import MVCConfiguracion.vista.unirsePartida.DlgSolicitudHost;
+import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.List;
@@ -14,7 +17,7 @@ import objetosPresentables.TableroConfig;
  *
  * @author victoria
  */
-public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfiguraciones {
+public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfiguraciones, INotificadorUnirsePartida {
 
     private final Color COLOR_FONDO = new Color(224, 233, 255);
     private List<JugadorConfig> jugadores;
@@ -23,12 +26,57 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
     private IModeloArranqueLectura modelo;
     private ControladorArranque controlador;
+    private DlgSolicitudHost dlgSolicitudHost;
 
     public FrmSalaEspera(List<JugadorConfig> jugadores, TableroConfig tablero, JugadorConfig sesion) {
         initComponents();
         pnlJugadores.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        this.jugadores = jugadores;
+        this.tablero = tablero;
+        this.sesion = sesion;
         cargarJugadores();
 
+    }
+
+    public void setControlador(ControladorArranque controlador) {
+        this.controlador = controlador;
+
+    }
+
+    /**
+     * Método llamado cuando se recibe una nueva solicitud de unirse a la partida.
+     * Solo muestra el diálogo si la solicitud NO ha sido procesada aún (estado = false y sin tipo de rechazo).
+     * Esto evita que el diálogo se muestre múltiples veces después de que el host ya respondió.
+     */
+    @Override
+    public void actualizar(SolicitudUnirse solicitud) {
+        System.out.println("[FrmSalaEspera] actualizar() llamado. Estado: " + solicitud.isSolicitudEstado() + ", TipoRechazo: " + solicitud.getTipoRechazo());
+
+        // Solo mostrar el diálogo si la solicitud está PENDIENTE (no procesada)
+        // Una solicitud está pendiente si:
+        // - NO está aceptada (solicitudEstado = false)
+        // - Y NO tiene tipo de rechazo asignado (es null o vacío)
+        boolean estaPendiente = !solicitud.isSolicitudEstado()
+            && (solicitud.getTipoRechazo() == null || solicitud.getTipoRechazo().isEmpty());
+
+        if (!estaPendiente) {
+            System.out.println("[FrmSalaEspera] Solicitud ya fue procesada. No se muestra el diálogo.");
+            return;
+        }
+
+        // Cerrar diálogo previo si existe
+        if (dlgSolicitudHost != null && dlgSolicitudHost.isDisplayable()) {
+            dlgSolicitudHost.dispose();
+            dlgSolicitudHost = null;
+        }
+
+        System.out.println("[FrmSalaEspera] Mostrando diálogo de solicitud...");
+
+        dlgSolicitudHost = new DlgSolicitudHost(this, true);
+        dlgSolicitudHost.setControlador(controlador);
+
+        dlgSolicitudHost.setLocationRelativeTo(this);
+        dlgSolicitudHost.setVisible(true);
     }
 
     private void cargarJugadores() {
@@ -404,7 +452,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addComponent(pnlJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

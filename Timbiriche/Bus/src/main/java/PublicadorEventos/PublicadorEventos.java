@@ -22,6 +22,11 @@ public class PublicadorEventos implements IReceptor {
 
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
+        if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_HOST")) {
+            eventBus.enviarHost(paquete);
+            return;
+        }
+
         System.out.println("[PublicadorEventos] Evento recibido:" + paquete.getTipoEvento());
         eventBus.publicarEvento(paquete);
     }

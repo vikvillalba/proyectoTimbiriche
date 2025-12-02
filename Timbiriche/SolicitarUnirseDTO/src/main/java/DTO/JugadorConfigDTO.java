@@ -14,12 +14,31 @@ public class JugadorConfigDTO {
     private String color;   // Nombre del enum ColorEnum (ej: "AZUL_PASTEL")
     private boolean listo;  // Indica si el jugador está listo para iniciar
     private boolean esHost; // Indica si el jugador es el host de la partida
+    private String ip;
+    private int puerto;
 
     /**
      * Constructor por defecto.
      */
     public JugadorConfigDTO() {
     }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+    
 
     /**
      * Constructor completo para crear un jugador de configuración.

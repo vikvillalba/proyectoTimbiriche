@@ -5,13 +5,12 @@
 package MVCConfiguracion.vista.unirsePartida;
 
 import MVCConfiguracion.controlador.ControladorUnisePartida;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
 
 /**
  *
  * @author Jack Murrieta
  */
-public class DlgSolicitudHost extends javax.swing.JDialog implements INotificadorUnirsePartida {
+public class DlgSolicitudHost extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgSolicitudHost.class.getName());
     private ControladorUnisePartida controlador;
@@ -24,34 +23,10 @@ public class DlgSolicitudHost extends javax.swing.JDialog implements INotificado
 
         initComponents();
         setSize(750, 480);
-        configurarEventos();
     }
 
     public void setControlador(ControladorUnisePartida controlador) {
         this.controlador = controlador;
-    }
-
-    private void configurarEventos() {
-        btnAceptar.addActionListener(e -> {
-            if (controlador != null) {
-                controlador.aceptarSolicitud(true);
-                dispose();
-            }
-        });
-
-        // Botón Rechazar - rechaza la solicitud
-        btnVolver.addActionListener(e -> {
-            if (controlador != null) {
-                controlador.aceptarSolicitud(false);
-                dispose();
-            }
-        });
-    }
-
-    @Override
-    public void actualizar() {
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -101,12 +76,22 @@ public class DlgSolicitudHost extends javax.swing.JDialog implements INotificado
         btnAceptar.setContentAreaFilled(false);
         btnAceptar.setFocusPainted(false);
         btnAceptar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/aceptarHover.png"))); // NOI18N
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/rechazar.png"))); // NOI18N
         btnVolver.setBorderPainted(false);
         btnVolver.setContentAreaFilled(false);
         btnVolver.setFocusPainted(false);
         btnVolver.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/rechazarHover.png"))); // NOI18N
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -141,6 +126,19 @@ public class DlgSolicitudHost extends javax.swing.JDialog implements INotificado
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        // TODO add your handling code here:
+        //mandar la solicitud
+        controlador.aceptarSolicitud(true);
+        dispose();
+    }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        // TODO add your handling code here:
+        controlador.aceptarSolicitud(false);
+        dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

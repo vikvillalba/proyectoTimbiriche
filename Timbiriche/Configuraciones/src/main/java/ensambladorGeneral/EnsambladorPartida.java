@@ -61,11 +61,16 @@ public class EnsambladorPartida {
     }
 
     /**
-     * Metodo que inicializa una nueva partida con configuraciones brindadas por
-     * el usuario.
+     * Metodo que inicializa una nueva partida con configuraciones brindadas por el usuario. Conecta la Partida con UnirsePartida si se proporciona ModeloArranque.
+     *
+     * @param jugadores Lista de jugadores que participarán en la partida
+     * @param alto Alto del tablero
+     * @param ancho Ancho del tablero
+     * @param sesion Jugador de la sesión actual
+     * @param modeloArranque ModeloArranque para conectar la Partida (puede ser null si no es HOST)
      */
-    public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
-        
+    public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion, MVCConfiguracion.modelo.ModeloArranque modeloArranque) {
+
         PartidaComunicacion partidaComunicacion = new PartidaComunicacion();
         if (jugadores.size() > NUMERO_JUGADORES) {
             throw new IllegalArgumentException("Se ha alcanzado el limite de jugadores");
@@ -77,7 +82,13 @@ public class EnsambladorPartida {
         partida.setHost(host);
         partida.setPuertoOrigen(puertoServidor);
         partida.setPuertoDestino(puertoEntrada);
+        partida.setMaxJugadores(NUMERO_JUGADORES);
 
+        // Conectar Partida con UnirsePartida si es HOST (modeloArranque != null)
+        if (modeloArranque != null) {
+            modeloArranque.setPartida(partida);
+        }
+        
         // emisor del servicio
         ColaEnvios colaEnvios = new ColaEnvios();
         IEmisor emisor = new Emisor(colaEnvios);
@@ -139,5 +150,17 @@ public class EnsambladorPartida {
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
         partida.inicioPartida();
+    }
+
+    /**
+     * Versión simplificada de iniciarPartida sin conexión a UnirsePartida. Útil para testing o cuando no se necesita manejo de solicitudes.
+     *
+     * @param jugadores Lista de jugadores que participarán en la partida
+     * @param alto Alto del tablero
+     * @param ancho Ancho del tablero
+     * @param sesion Jugador de la sesión actual
+     */
+    public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
+        iniciarPartida(jugadores, alto, ancho, sesion, null);
     }
 }

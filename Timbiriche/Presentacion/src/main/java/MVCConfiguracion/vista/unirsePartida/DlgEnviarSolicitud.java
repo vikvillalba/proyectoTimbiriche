@@ -5,59 +5,31 @@
 package MVCConfiguracion.vista.unirsePartida;
 
 import MVCConfiguracion.controlador.ControladorUnisePartida;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
+import SolicitudEntity.SolicitudUnirse;
 
 /**
  *
  * @author Jack Murrieta
  */
-public class DlgEnviarSolicitud extends javax.swing.JDialog implements INotificadorUnirsePartida {
+public class DlgEnviarSolicitud extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgEnviarSolicitud.class.getName());
     private ControladorUnisePartida controlador;
-    private String ipDestino;
-    private int puertoDestino;
+    private SolicitudUnirse solicitud;
 
     /**
      * Creates new form DlgenviarSolicitud
      */
-    public DlgEnviarSolicitud(java.awt.Frame parent, boolean modal) {
+    public DlgEnviarSolicitud(java.awt.Frame parent, boolean modal, SolicitudUnirse solicitud) {
         super(parent, modal);
+        this.solicitud = solicitud;
 
         initComponents();
         setSize(759, 481);
-        configurarEventos();
     }
 
     public void setControlador(ControladorUnisePartida controlador) {
         this.controlador = controlador;
-    }
-
-    public void setDatosDestino(String ip, int puerto) {
-        this.ipDestino = ip;
-        this.puertoDestino = puerto;
-    }
-
-    private void configurarEventos() {
-        // btn Enviar Solicitud
-        btnEnviarSolicitud.addActionListener(e -> {
-            if (controlador != null && ipDestino != null) {
-                controlador.enviarSolicitud(ipDestino, puertoDestino);
-                dispose(); // Cerrar después de reenviar
-            }
-        });
-
-        // btn Volver
-        btnVolver.addActionListener(e -> {
-            dispose();
-        });
-    }
-
-    @Override
-    public void actualizar() {
-        // Este método se llama cuando la solicitud es rechazada
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     /**
@@ -86,12 +58,22 @@ public class DlgEnviarSolicitud extends javax.swing.JDialog implements INotifica
         btnEnviarSolicitud.setContentAreaFilled(false);
         btnEnviarSolicitud.setFocusPainted(false);
         btnEnviarSolicitud.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/nuevaSolicitudHover.png"))); // NOI18N
+        btnEnviarSolicitud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarSolicitudActionPerformed(evt);
+            }
+        });
 
         btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/volver.png"))); // NOI18N
         btnVolver.setBorderPainted(false);
         btnVolver.setContentAreaFilled(false);
         btnVolver.setFocusPainted(false);
         btnVolver.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/volverHover.png"))); // NOI18N
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -128,42 +110,16 @@ public class DlgEnviarSolicitud extends javax.swing.JDialog implements INotifica
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
+        // TODO add your handling code here:
+        controlador.enviarSolicitudExistente(solicitud);
+    }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DlgEnviarSolicitud dialog = new DlgEnviarSolicitud(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviarSolicitud;

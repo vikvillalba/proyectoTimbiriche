@@ -44,6 +44,13 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
+    private int maxJugadores; // Máximo de jugadores permitidos en la partida
+    private String estadoPartida; // Estado de la partida: "EN_ESPERA", "INICIADA", "FINALIZADA"
+
+    // Constantes de estado
+    private static final String ESTADO_EN_ESPERA = "EN_ESPERA";
+    private static final String ESTADO_INICIADA = "INICIADA";
+    private static final String ESTADO_FINALIZADA = "FINALIZADA";
 
     /**
      * Constructor de partida.
@@ -61,6 +68,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
         this.tablero = new Tablero(alto, ancho);
         this.mapperJugadores = new MapperJugadores();
         this.jugadorEnTurno = jugadores.get(0);
+        this.estadoPartida = ESTADO_EN_ESPERA; // Inicialmente en espera
     }
 
     @Override
@@ -232,7 +240,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-
+        this.estadoPartida = ESTADO_INICIADA; // Cambiar estado a INICIADA
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
@@ -289,8 +297,11 @@ public class Partida implements PartidaFachada, ObservableEventos {
             return;
         }
 
+        String tipoRechazo = asignarTipoRechazo();
+
         // Marcar solicitud como rechazada
         solicitud.setSolicitudEstado(false);
+        solicitud.setTipoRechazo(tipoRechazo);
 
         // Crear paquete de respuesta
         PaqueteDTO respuesta = new PaqueteDTO(solicitud, TipoEvento.RESPUESTA_SOLICITUD.toString());
@@ -301,8 +312,92 @@ public class Partida implements PartidaFachada, ObservableEventos {
         // Enviar rechazo al solicitante
         emisor.enviarCambio(respuesta);
 
-        notificarEventoRecibido("Solicitud rechazada: partida en curso");
-        System.out.println("[Partida] Solicitud de unirse rechazada - partida ya iniciada");
+        notificarEventoRecibido("Solicitud rechazada: " + tipoRechazo);
+        System.out.println("[Partida] Solicitud de unirse rechazada - " + tipoRechazo);
+    }
+
+    /**
+     * Determina el tipo de rechazo basado en el estado actual de la partida.
+     *
+     * @return String con el tipo de rechazo
+     */
+    private String asignarTipoRechazo() {
+        // Verificar si la partida está llena
+        if (jugadores != null && maxJugadores > 0 && jugadores.size() >= maxJugadores) {
+            return "PARTIDA_LLENA";
+        }
+
+        // Verificar si la partida ya ha iniciado
+        if (ESTADO_INICIADA.equals(this.estadoPartida)) {
+            return "PARTIDA_INICIADA";
+        }
+
+        // Verificar si la partida ha finalizado
+        if (ESTADO_FINALIZADA.equals(this.estadoPartida)) {
+            return "PARTIDA_FINALIZADA";
+        }
+
+        // Rechazo genérico (por ejemplo, por decisión del host)
+        return "RECHAZADO_POR_HOST";
+    }
+
+    /**
+     * Obtiene el estado actual de la partida.
+     *
+     * @return Estado de la partida
+     */
+    public String getEstadoPartida() {
+        return this.estadoPartida;
+    }
+
+    /**
+     * Establece el estado de la partida.
+     *
+     * @param estadoPartida Estado de la partida (EN_ESPERA, INICIADA, FINALIZADA)
+     */
+    public void setEstadoPartida(String estadoPartida) {
+        if (!ESTADO_EN_ESPERA.equals(estadoPartida)
+                && !ESTADO_INICIADA.equals(estadoPartida)
+                && !ESTADO_FINALIZADA.equals(estadoPartida)) {
+            throw new IllegalArgumentException("Estado inválido. Use: EN_ESPERA, INICIADA o FINALIZADA.");
+        }
+        this.estadoPartida = estadoPartida;
+    }
+
+    /**
+     * Verifica si la partida está en espera.
+     *
+     * @return true si está en espera
+     */
+    public boolean isPartidaEnEspera() {
+        return ESTADO_EN_ESPERA.equals(this.estadoPartida);
+    }
+
+    /**
+     * Verifica si la partida ha iniciado.
+     *
+     * @return true si ha iniciado
+     */
+    public boolean isPartidaIniciada() {
+        return ESTADO_INICIADA.equals(this.estadoPartida);
+    }
+
+    /**
+     * Verifica si la partida ha finalizado.
+     *
+     * @return true si ha finalizado
+     */
+    public boolean isPartidaFinalizada() {
+        return ESTADO_FINALIZADA.equals(this.estadoPartida);
+    }
+
+    /**
+     * Verifica si la partida está llena.
+     *
+     * @return true si está llena
+     */
+    public boolean isPartidaLlena() {
+        return this.maxJugadores > 0 && this.jugadores.size() >= this.maxJugadores;
     }
 
     public void setEmisor(IEmisor emisor) {
@@ -332,6 +427,14 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     public void setPuertoDestino(int puertoDestino) {
         this.puertoDestino = puertoDestino;
+    }
+
+    public void setMaxJugadores(int maxJugadores) {
+        this.maxJugadores = maxJugadores;
+    }
+
+    public int getMaxJugadores() {
+        return maxJugadores;
     }
 
     @Override
@@ -430,7 +533,6 @@ public class Partida implements PartidaFachada, ObservableEventos {
         if (contenido instanceof SolicitudUnirse) {
             return (SolicitudUnirse) contenido;
         }
-        // Si llega como Map, se podría deserializar manualmente
         //contenido ya es SolicitudUnirse??? a mappearlo
         return null;
     }

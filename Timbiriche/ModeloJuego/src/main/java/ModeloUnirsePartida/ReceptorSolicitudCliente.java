@@ -1,5 +1,6 @@
 package ModeloUnirsePartida;
 
+import DTO.JugadorConfigDTO;
 import SolicitudEntity.SolicitudUnirse;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
@@ -11,9 +12,9 @@ import org.itson.dto.PaqueteDTO;
  */
 public class ReceptorSolicitudCliente implements IReceptor {
 
-    private IUnirsePartida unirsePartida;
+    private UnirsePartida unirsePartida;
 
-    public ReceptorSolicitudCliente(IUnirsePartida unirsePartida) {
+    public ReceptorSolicitudCliente(UnirsePartida unirsePartida) {
         this.unirsePartida = unirsePartida;
     }
 
@@ -23,44 +24,88 @@ public class ReceptorSolicitudCliente implements IReceptor {
 
         System.out.println("ReceptorSolicitudCliente - Paquete recibido: " + tipoEvento);
 
-        if ("RESPUESTA_SOLICITUD".equals(tipoEvento)) {
-            manejarRespuestaSolicitud(paquete);
-        } else {
-            System.out.println("Evento no manejado por ReceptorSolicitudCliente: " + tipoEvento);
+        switch (tipoEvento) {
+            case "RESPUESTA_SOLICITUD":
+                manejarRespuestaSolicitud(paquete);
+                break;
+            case "RESPUESTA_HOST":
+                manejarRespuestaHost(paquete);
+                break;
+            default:
+                System.out.println("Evento no manejado por ReceptorSolicitudCliente: " + tipoEvento);
         }
     }
 
     /**
-     * Maneja la respuesta de la solicitud recibida desde el host.
-     *
-     * @param paquete Paquete con la respuesta
+     * Maneja la respuesta de solicitud del host.
      */
     private void manejarRespuestaSolicitud(PaqueteDTO paquete) {
         try {
-            // Extraer la respuesta del paquete
-            SolicitudUnirse respuesta = (SolicitudUnirse) paquete.getContenido();
+            SolicitudUnirse respuesta = MapperUnirsePartida.mapearSolicitud(paquete.getContenido());
+
+            if (respuesta == null) {
+                System.err.println("ERROR: No se pudo mapear SolicitudUnirse");
+                return;
+            }
 
             boolean aceptada = respuesta.isSolicitudEstado();
             String estadoTexto = aceptada ? "ACEPTADA ✓" : "RECHAZADA ✗";
 
             System.out.println("✓ Respuesta recibida del host: " + estadoTexto);
 
-            // Actualizar la solicitud en el modelo
             unirsePartida.cambiarEstadoSolicitud(respuesta, aceptada);
 
             if (aceptada) {
                 System.out.println("✓ ¡Tu solicitud fue aceptada! Entrando a la sala de espera...");
             } else {
-                System.out.println("✗ Tu solicitud fue rechazada por el host.");
+                String mensajeRechazo = obtenerMensajeRechazo(respuesta.getTipoRechazo());
+                System.out.println("✗ Tu solicitud fue rechazada. Motivo: " + mensajeRechazo);
             }
 
-        } catch (ClassCastException e) {
-            System.err.println("ERROR: El contenido del paquete no es una SolicitudUnirse");
-            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("ERROR al manejar respuesta de solicitud: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    /**
+     * Manejar respuesta del host (cuando solicitamos OBTENER_HOST)
+     */
+    private void manejarRespuestaHost(PaqueteDTO paquete) {
+        try {
+            JugadorConfigDTO jugadorHost = MapperUnirsePartida.mapearHost(paquete.getContenido());
+
+            // Usar actualizar() en lugar de setJugadorHost() para que se notifique al modelo
+            unirsePartida.actualizar(jugadorHost);
+
+            if (jugadorHost != null) {
+                System.out.println("✓ Host encontrado: " + jugadorHost.getIp() + ":" + jugadorHost.getPuerto());
+            } else {
+                System.out.println("✗ No se encontró un host disponible");
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR al manejar RESPUESTA_HOST: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private String obtenerMensajeRechazo(String tipoRechazo) {
+        if (tipoRechazo == null) {
+            return "Rechazado por el host";
+        }
+
+        switch (tipoRechazo) {
+            case "PARTIDA_LLENA":
+                return "La partida está llena";
+            case "PARTIDA_INICIADA":
+                return "La partida ya inició";
+            case "PARTIDA_FINALIZADA":
+                return "La partida ha finalizado";
+            case "RECHAZADO_POR_HOST":
+                return "Rechazado por el host";
+            default:
+                return "Rechazado - " + tipoRechazo;
+        }
+    }
 }

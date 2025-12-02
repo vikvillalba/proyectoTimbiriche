@@ -4,6 +4,8 @@
  */
 package MVCConfiguracion.observer;
 
+import SolicitudEntity.SolicitudUnirse;
+
 /**
  *
  * @author Jack Murrieta
@@ -13,6 +15,6 @@ public interface IPublicadorUnirsePartida {
     //frms qu mostraran el Jdialog
     public void agregarNotificador(INotificadorUnirsePartida notificador);
     //puede ir algo meybe???
-    public void notificar();
+    public void notificar(SolicitudUnirse solicitud);
     
 }

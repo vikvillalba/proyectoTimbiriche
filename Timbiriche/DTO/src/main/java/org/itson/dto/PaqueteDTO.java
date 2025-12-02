@@ -13,6 +13,10 @@ public class PaqueteDTO<T> {
     private int puertoOrigen;
     private int puertoDestino;
 
+    public PaqueteDTO() {
+    }
+
+    
 
     public PaqueteDTO(T contenido, String tipoEvento) {
         this.contenido = contenido;

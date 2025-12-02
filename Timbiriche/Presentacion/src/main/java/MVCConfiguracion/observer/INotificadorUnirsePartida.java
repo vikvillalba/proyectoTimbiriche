@@ -4,12 +4,14 @@
  */
 package MVCConfiguracion.observer;
 
+import SolicitudEntity.SolicitudUnirse;
+
 /**
  *
  * @author Jack Murrieta
  */
 public interface INotificadorUnirsePartida {
     
-    public void actualizar();
+    public void actualizar(SolicitudUnirse solicitud);
     
 }

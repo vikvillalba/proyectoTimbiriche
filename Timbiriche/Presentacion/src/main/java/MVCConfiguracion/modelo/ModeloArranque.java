@@ -1,14 +1,18 @@
 package MVCConfiguracion.modelo;
 
 import ConfiguracionesFachada.ConfiguracionesFachada;
+import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
+import Fachada.Partida;
 import MVCConfiguracion.observer.INotificadorUnirsePartida;
 import MVCConfiguracion.observer.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
+import ModeloUnirsePartida.INotificadorHostEncontrado;
 import ModeloUnirsePartida.INotificadorSolicitud;
 import ModeloUnirsePartida.IUnirsePartida;
+import ModeloUnirsePartida.UnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
 import java.awt.Image;
@@ -26,7 +30,7 @@ import objetosPresentables.PartidaPresentable;
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, IPublicadorUnirsePartida, INotificadorSolicitud {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado,IPublicadorHostUnirsePartida {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ConfiguracionesFachada configuracionesPartida;
@@ -35,15 +39,19 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     //CU_UnirsePartida
     //modelo unirse partida LOGICA
-    private IUnirsePartida unirsePartida;
+    private UnirsePartida unirsePartida;
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
+    
+    private INotificadorHostUnirsePartida frmMenuInicio;
 
     //Solicitud de UnirsePartida
     private SolicitudUnirse solicitud;
 
-    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, IUnirsePartida unirsePartida) {
+    private JugadorConfigDTO jugadorHost;
+
+    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, UnirsePartida unirsePartida) {
         this.configuracionesPartida = configuracionesPartida;
         this.unirsePartida = unirsePartida;
     }
@@ -144,19 +152,20 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         if (jugadorsolicitante == null) {
             throw new IllegalArgumentException("El jugador solicitante no puede ser nulo");
         }
-        // Obtener la solicitud actual creada
+
+        // Establecer el jugador solicitante
+        unirsePartida.setJugadorSolicitate(jugadorsolicitante);
+
+        // Obtener la solicitud actual si existe
         solicitud = obtenerSolicitud();
-        //si la solicitud es null crear una por primera vez
+
+        // Si no existe solicitud, crear una nueva
         if (solicitud == null) {
-            //crear la solicitud en unirsePartida 
             solicitud = unirsePartida.crearSolicitud(jugadorsolicitante);
-            //enviar solicitud
-            unirsePartida.enviarSolicitudJugadorHost(solicitud);
         }
 
-        //cuando vaya a querer enviarla otra vez
+        // Enviar la solicitud al host
         unirsePartida.enviarSolicitudJugadorHost(solicitud);
-
     }
 
     /**
@@ -217,10 +226,10 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     @Override
-    public void notificar() {
+    public void notificar(SolicitudUnirse solicitud) {
         for (INotificadorUnirsePartida notificado : notificadosUnirsePartida) {
             //se le puede pasar un param
-            notificado.actualizar();
+            notificado.actualizar(solicitud);
 
         }
 
@@ -238,8 +247,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     /**
-     * Método llamado cuando se recibe una actualización de solicitud desde UnirsePartida.
-     * Determina qué diálogo mostrar según el estado de la solicitud.
+     * Método llamado cuando se recibe una actualización de solicitud desde UnirsePartida. Determina qué diálogo mostrar según el estado de la solicitud.
      *
      * @param solicitud La solicitud actualizada
      */
@@ -248,13 +256,114 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         // Actualizar la solicitud en el modelo
         this.solicitud = solicitud;
 
-        System.out.println("ModeloArranque.actualizar() - Estado: " + (solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA"));
-
         // Notificar a los diálogos registrados para que actualicen su vista
         // Los diálogos decidirán si mostrarse según su propósito:
         // DlglicitudHostSe muestra cuando llega una solicitud nueva (lado HOST)
         // DlgEnviarSolicitudSe muestra cuando la solicitud es rechazada (lado CLIENTE)
-        notificar();
+        notificar(solicitud);
     }
 
+    @Override
+    public void volverEnviarSolicitud(SolicitudUnirse solicitud) {
+        this.solicitud = solicitud;
+        this.solicitud.setSolicitudEstado(false);
+        this.solicitud.setTipoRechazo("");
+        unirsePartida.enviarSolicitudJugadorHost(solicitud);
+    }
+
+    /**
+     * Conecta la PartidaPresentable con el módulo UnirsePartida SOLO SI este ModeloArranque pertenece a un HOST.
+     *
+     * @param partida La partida creada por el host
+     */
+    public void setPartida(Partida partida) {
+
+        if (partida == null) {
+            System.err.println("No se puede conectar una partida nula.");
+            return;
+        }
+
+        if (unirsePartida != null) {
+
+            try {
+                unirsePartida.setPartida(partida);
+
+            } catch (Exception e) {
+                System.err.println("ERROR al conectar partida a UnirsePartida: " + e.getMessage());
+            }
+
+        } else {
+            System.err.println("UnirsePartida es null. No se pudo establecer la conexión.");
+        }
+    }
+
+    @Override
+    public void buscarHostPartida(JugadorSolicitanteDTO jugadorSolicitante) {
+        unirsePartida.solicitarHost(jugadorSolicitante);
+    }
+
+    /**
+     * Cuando se encuentra el host de la partida, convierte el DTO y notifica a la vista.
+     * Implementa INotificadorHostEncontrado.
+     *
+     * @param jugador El jugador host encontrado (puede ser null)
+     */
+    @Override
+    public void actualizar(JugadorConfigDTO jugador) {
+        System.out.println("[ModeloArranque] actualizar(JugadorConfigDTO) llamado. Jugador: " + (jugador != null ? jugador.getIp() : "NULL"));
+
+        this.jugadorHost = jugador;
+        JugadorConfig jugadorHostEncontrado = mapearJugadorConfig(jugador);
+
+        System.out.println("[ModeloArranque] Llamando a notificar(JugadorConfig). frmMenuInicio es null? " + (frmMenuInicio == null));
+
+        // Notificar a FrmMenuInicio
+        notificar(jugadorHostEncontrado);
+    }
+
+    //mappear JugadorConfigDTO a jugadrConfig 
+    private JugadorConfig mapearJugadorConfig(JugadorConfigDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        JugadorConfig jugador = new JugadorConfig();
+        jugador.setNombre(dto.getNombre());
+        jugador.setAvatar(AVATARES.get(dto.getAvatar()));
+        jugador.setColor(COLORES.get(dto.getColor()));
+
+        jugador.setEsHost(dto.isEsHost());
+
+        return jugador;
+    }
+
+    /**
+     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host.
+     * Implementa IPublicadorHostUnirsePartida.
+     *
+     * @param notificador El notificador a registrar (FrmMenuInicio)
+     */
+    @Override
+    public void agregarNotificadorHostUnirsePartida(INotificadorHostUnirsePartida notificador) {
+        System.out.println("[ModeloArranque] Registrando notificador para host encontrado: " + (notificador != null ? notificador.getClass().getSimpleName() : "NULL"));
+        this.frmMenuInicio = notificador;
+    }
+
+    /**
+     * Notifica a FrmMenuInicio que se encontró un host.
+     * Implementa IPublicadorHostUnirsePartida.
+     *
+     * @param jugadorHost El jugador host encontrado (puede ser null)
+     */
+    @Override
+    public void notificar(JugadorConfig jugadorHost) {
+        System.out.println("[ModeloArranque] notificar(JugadorConfig) - Notificando a FrmMenuInicio. Host: " + (jugadorHost != null ? jugadorHost.getNombre() : "NULL"));
+
+        if (frmMenuInicio == null) {
+            System.err.println("[ERROR] frmMenuInicio es NULL - no se puede notificar");
+            return;
+        }
+
+        frmMenuInicio.actualizar(jugadorHost);
+    }
 }

@@ -18,19 +18,17 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Jack Murrieta
  */
-public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
+public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, INotificadorHostPartida, PublicadorHostEncontrado {
 
-    //Se cambia por la variable deñ CU_configurarTablero
-    private static final int MAX_JUGADORES = 4;
-    
+    // Constantes de estado
     private static final String ESTADO_EN_ESPERA = "EN_ESPERA";
     private static final String ESTADO_INICIADA = "INICIADA";
     private static final String ESTADO_FINALIZADA = "FINALIZADA";
-    
+
     private JugadorConfigDTO jugadorHost;
+    private JugadorSolicitanteDTO jugadorSolicitate;
     private SolicitudUnirse solicitudActual;
-    private int numeroJugadores; // Número actual de jugadores en la partida
-    private String estadoPartida; // Estado de la partida
+    private Fachada.Partida partida; // Referencia a la partida real
 
     //enviar solicitud al eventBus
     private IEmisor emisorSolicitud;
@@ -40,72 +38,104 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
     private List<INotificadorSolicitud> notificados = new ArrayList<>();
 
     // Configuración de red para EventBus (igual que en Partida)
-    private String host;
     private int puertoOrigen;
     private int puertoDestino;
-    
+
+    //notificador
+    INotificadorHostEncontrado modeloArranque;
+
     public UnirsePartida() {
     }
-    
-    public UnirsePartida(IEmisor emisorSolicitud, IReceptor receptorSolicitud) {
+
+    public UnirsePartida(IEmisor emisorSolicitud) {
         this.emisorSolicitud = emisorSolicitud;
-        this.receptorSolicitud = receptorSolicitud;
     }
-    
+
     public void setSolicitudActual(SolicitudUnirse solicitudActual) {
         this.solicitudActual = solicitudActual;
     }
-    
-    public void setEmisorSolicitud(IEmisor emisorSolicitud) {
-        this.emisorSolicitud = emisorSolicitud;
-    }
-    
+
     public void setReceptorSolicitud(IReceptor receptorSolicitud) {
         this.receptorSolicitud = receptorSolicitud;
     }
-    
+
+    public void setEmisorSolicitud(IEmisor emisorSolicitud) {
+        this.emisorSolicitud = emisorSolicitud;
+    }
+
+    /**
+     * Solicita al EventBus que envíe la información del host de la partida.
+     *
+     * @param jugador El jugador que solicita el host
+     */
+    public void solicitarHost(JugadorSolicitanteDTO jugador) {
+        this.jugadorSolicitate = jugador;
+
+        PaqueteDTO paquete = new PaqueteDTO();
+        paquete.setContenido("SOLICITUD_HOST");
+        paquete.setTipoEvento("OBTENER_HOST");
+        paquete.setHost(this.jugadorSolicitate.getIp());
+        paquete.setPuertoOrigen(this.jugadorSolicitate.getPuerto());
+        paquete.setPuertoDestino(puertoDestino);
+
+        emisorSolicitud.enviarCambio(paquete);
+    }
+
+    /**
+     * Actualiza el jugador host cuando se recibe la respuesta del EventBus.
+     * Implementa INotificadorHostPartida.
+     *
+     * @param jugadorHost El jugador host recibido
+     */
+    @Override
+    public void actualizar(JugadorConfigDTO jugadorHost) {
+        System.out.println("[UnirsePartida] actualizar(JugadorConfigDTO) llamado. Host: " + (jugadorHost != null ? jugadorHost.getIp() : "NULL"));
+
+        this.jugadorHost = jugadorHost;
+        if (this.jugadorHost != null) {
+            this.jugadorHost.setEsHost(true);
+        }
+
+        // Notificar al modelo que se encontró (o no) un host
+        if (modeloArranque != null) {
+            System.out.println("[UnirsePartida] Notificando a modeloArranque...");
+            notificarHostEncontrado(jugadorHost);
+        } else {
+            System.err.println("[ERROR] [UnirsePartida] modeloArranque es NULL - no se puede notificar");
+        }
+    }
+
     @Override
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
-        // Validar que la partida esté en estado EN_ESPERA
-        if (!ESTADO_EN_ESPERA.equals(this.estadoPartida)) {
-            throw new IllegalStateException("No se puede crear una solicitud. La partida ya ha iniciado o finalizado.");
-        }
 
-        // Validar que haya espacio disponible
-        if (!validarEspacioJugador()) {
-            throw new IllegalStateException("No se puede crear una solicitud. La partida está llena (máximo 4 jugadores).");
-        }
-
-        // Validar que exista un jugador host
         if (this.jugadorHost == null) {
             throw new IllegalStateException("No existe un jugador host en la partida.");
         }
 
-        // Crear la solicitud con el jugador solicitante y el host
-        SolicitudUnirse solicitud = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorHost);
-        
-        return this.solicitudActual;
+        SolicitudUnirse solicitud
+                = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorHost);
+
+        this.solicitudActual = solicitud;
+
+        return solicitud;
     }
-    
+
     @Override
     public void enviarSolicitudJugadorHost(SolicitudUnirse solicitud) {
         // Enviar evento SOLICITAR_UNIRSE al EventBus
-        // Este evento solo será recibido por el Host (único suscrito)
+        // Este evento solo será recibido por el Hos
         PaqueteDTO paquete = new PaqueteDTO(solicitud, "SOLICITAR_UNIRSE");
 
-        // Configurar campos de red (igual que en Partida)
-        paquete.setHost(this.host);
+        paquete.setHost(solicitud.getJugadorSolicitante().getIp());
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(this.puertoDestino);
 
         emisorSolicitud.enviarCambio(paquete);
 
-        System.out.println("✓ Solicitud enviada al EventBus con evento SOLICITAR_UNIRSE");
-        System.out.println("  → Host: " + this.host + ", Puerto origen: " + this.puertoOrigen + ", Puerto destino: " + this.puertoDestino);
     }
 
     /**
-     * Envía la respuesta de la solicitud al solicitante. Este método es usado por el Host para responder.
+     * Envía la respuesta de una solicitud al cliente solicitante vía EventBus.
      *
      * @param solicitud La solicitud con el estado actualizado (aceptada/rechazada)
      */
@@ -115,33 +145,50 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
             throw new IllegalArgumentException("La solicitud no puede ser nula");
         }
 
+        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
+        System.out.println("[UnirsePartida] Enviando RESPUESTA_SOLICITUD al cliente. Estado: " + estado);
+        System.out.println("[UnirsePartida] Solicitante: " + solicitud.getJugadorSolicitante().getIp() + ":" + solicitud.getJugadorSolicitante().getPuerto());
+
         // Enviar evento RESPUESTA_SOLICITUD al EventBus
         // Este evento solo será recibido por el Solicitante (único suscrito)
         PaqueteDTO paquete = new PaqueteDTO(solicitud, "RESPUESTA_SOLICITUD");
 
         // Configurar campos de red (igual que en Partida)
-        paquete.setHost(this.host);
+        paquete.setHost(solicitud.getJugadorHost().getIp());
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(this.puertoDestino);
 
         emisorSolicitud.enviarCambio(paquete);
 
-        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
-        System.out.println("✓ Respuesta enviada al EventBus: " + estado);
-        System.out.println("  → Host: " + this.host + ", Puerto origen: " + this.puertoOrigen + ", Puerto destino: " + this.puertoDestino);
+        System.out.println("[UnirsePartida] Paquete RESPUESTA_SOLICITUD enviado al EventBus");
     }
-    
+
+    /**
+     * Cambia el estado de una solicitud y notifica a los observadores.
+     *
+     * @param solicitud La solicitud a actualizar
+     * @param aceptada true si se acepta, false si se rechaza
+     */
     @Override
     public void cambiarEstadoSolicitud(SolicitudUnirse solicitud, boolean aceptada) {
         if (solicitud == null) {
             throw new IllegalArgumentException("La solicitud no puede ser null");
         }
 
+        String estado = aceptada ? "ACEPTADA" : "RECHAZADA";
+        System.out.println("[UnirsePartida] cambiarEstadoSolicitud() - Estado: " + estado);
+
         // Cambiar el estado de la solicitud
         solicitud.setSolicitudEstado(aceptada);
-        
-        //observer para modeloJuego
-        notificar(solicitud);
+        //si la solicitud es false
+        if (!aceptada) {
+            solicitud.setTipoRechazo(solicitud.getTipoRechazo());
+            System.out.println("[UnirsePartida] Tipo de rechazo: " + solicitud.getTipoRechazo());
+        }
+
+        //observer para modeloJuego - Esto notifica a FrmSalaEspera
+        System.out.println("[UnirsePartida] Notificando cambio de estado a observadores...");
+        notificarSolicitud(solicitud);
     }
 
     /**
@@ -153,47 +200,34 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
     public SolicitudUnirse getSolicitudActual() {
         return solicitudActual;
     }
-    
-    public JugadorConfigDTO obtenerJugadorHost() {
-        if (this.jugadorHost == null) {
-            throw new IllegalStateException("No existe un jugador host configurado.");
-        }
-        return this.jugadorHost;
-    }
-    
+
     public boolean validarEspacioJugador() {
-        return this.numeroJugadores < MAX_JUGADORES;
+        if (this.partida == null) {
+            return false;
+        }
+        return !this.partida.isPartidaLlena();
     }
-    
+
     public String obtenerEstadoPartida() {
-        return this.estadoPartida;
+        if (this.partida == null) {
+            return null;
+        }
+        return this.partida.getEstadoPartida();
     }
-    
+
     public void setJugadorHost(JugadorConfigDTO jugadorHost) {
         this.jugadorHost = jugadorHost;
         if (this.jugadorHost != null) {
             this.jugadorHost.setEsHost(true);
         }
     }
-    
-    public void setNumeroJugadores(int numeroJugadores) {
-        if (numeroJugadores < 1) {
-            throw new IllegalArgumentException("El número de jugadores debe ser al menos 1.");
-        }
-        if (numeroJugadores > MAX_JUGADORES) {
-            throw new IllegalArgumentException("El número de jugadores no puede exceder " + MAX_JUGADORES + ".");
-        }
-        this.numeroJugadores = numeroJugadores;
+
+    public void setPartida(Fachada.Partida partida) {
+        this.partida = partida;
     }
-    
-    public void setEstadoPartida(String estado) {
-        // Validar que el estado sea válido
-        if (!ESTADO_EN_ESPERA.equals(estado)
-                && !ESTADO_INICIADA.equals(estado)
-                && !ESTADO_FINALIZADA.equals(estado)) {
-            throw new IllegalArgumentException("Estado inválido. Use: EN_ESPERA, INICIADA o FINALIZADA.");
-        }
-        this.estadoPartida = estado;
+
+    public Fachada.Partida getPartida() {
+        return this.partida;
     }
 
     // Getters adicionales
@@ -203,16 +237,22 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
      * @return Número de jugadores
      */
     public int getNumeroJugadores() {
-        return numeroJugadores;
+        if (this.partida == null) {
+            return 0;
+        }
+        return this.partida.getJugadores().size();
     }
 
     /**
-     * Verifica si la partida está llena (4 jugadores).
+     * Verifica si la partida está llena.
      *
      * @return true si está llena
      */
     public boolean isPartidaLlena() {
-        return this.numeroJugadores >= MAX_JUGADORES;
+        if (this.partida == null) {
+            return false;
+        }
+        return this.partida.isPartidaLlena();
     }
 
     /**
@@ -221,7 +261,22 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
      * @return true si ha iniciado
      */
     public boolean isPartidaIniciada() {
-        return ESTADO_INICIADA.equals(this.estadoPartida);
+        if (this.partida == null) {
+            return false;
+        }
+        return this.partida.isPartidaIniciada();
+    }
+
+    /**
+     * Verifica si la partida ha finalizado.
+     *
+     * @return true si ha finalizado
+     */
+    public boolean isPartidaFinalizada() {
+        if (this.partida == null) {
+            return false;
+        }
+        return this.partida.isPartidaFinalizada();
     }
 
     /**
@@ -229,26 +284,70 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
      *
      * @return Máximo de jugadores
      */
-    public static int getMaxJugadores() {
-        return MAX_JUGADORES;
+    public int getMaxJugadores() {
+        if (this.partida == null) {
+            return 0;
+        }
+        return this.partida.getMaxJugadores();
     }
-    
+
+    /**
+     * Determina el tipo de rechazo basado en el estado actual de la partida. Este método puede ser usado por el Host para determinar por qué rechazar una solicitud.
+     *
+     * @return String con el tipo de rechazo
+     */
+    public String asignarTipoRechazo() {
+        if (this.partida == null) {
+            return "RECHAZADO_POR_HOST"; // No hay partida configurada
+        }
+
+        // Verificar si la partida está llena
+        if (this.partida.isPartidaLlena()) {
+            return "PARTIDA_LLENA";
+        }
+
+        // Verificar si la partida ya ha iniciado
+        if (this.partida.isPartidaIniciada()) {
+            return "PARTIDA_INICIADA";
+        }
+
+        // Verificar si la partida ha finalizado
+        if (this.partida.isPartidaFinalizada()) {
+            return "PARTIDA_FINALIZADA";
+        }
+
+        // Rechazo genérico (por ejemplo, por decisión manual del host)
+        return "RECHAZADO_POR_HOST";
+    }
+
+    /**
+     * Rechaza una solicitud estableciendo su estado y tipo de rechazo.
+     *
+     * @param solicitud La solicitud a rechazar
+     */
+    public void rechazarSolicitud(SolicitudUnirse solicitud) {
+        if (solicitud == null) {
+            throw new IllegalArgumentException("La solicitud no puede ser nula");
+        }
+
+        String tipoRechazo = asignarTipoRechazo();
+        solicitud.setSolicitudEstado(false);
+        solicitud.setTipoRechazo(tipoRechazo);
+
+        System.out.println("[UnirsePartida] Solicitud rechazada - Tipo: " + tipoRechazo);
+    }
+
     @Override
-    public void agregarNotificador(INotificadorSolicitud notificador) {
+    public void agregarNotificadorSolicitud(INotificadorSolicitud notificador) {
         notificados.add(notificador);
     }
 
     @Override
-    public void notificar(SolicitudUnirse solicitud) {
+    public void notificarSolicitud(SolicitudUnirse solicitud) {
         for (INotificadorSolicitud notificado : notificados) {
             notificado.actualizar(solicitud);
 
         }
-    }
-
-    // Setters para configuración de red (igual que en Partida)
-    public void setHost(String host) {
-        this.host = host;
     }
 
     public void setPuertoOrigen(int puertoOrigen) {
@@ -259,16 +358,44 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud {
         this.puertoDestino = puertoDestino;
     }
 
-    public String getHost() {
-        return host;
-    }
-
     public int getPuertoOrigen() {
         return puertoOrigen;
     }
 
     public int getPuertoDestino() {
         return puertoDestino;
+    }
+
+    public JugadorSolicitanteDTO getJugadorSolicitate() {
+        return jugadorSolicitate;
+    }
+
+    public void setJugadorSolicitate(JugadorSolicitanteDTO jugadorSolicitate) {
+        this.jugadorSolicitate = jugadorSolicitate;
+    }
+
+    /**
+     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host.
+     * Implementa PublicadorHostEncontrado.
+     *
+     * @param notificador El notificador a registrar (ModeloArranque)
+     */
+    @Override
+    public void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador) {
+        System.out.println("[UnirsePartida] Registrando notificador host encontrado: " + (notificador != null ? notificador.getClass().getSimpleName() : "NULL"));
+        this.modeloArranque = notificador;
+    }
+
+    /**
+     * Notifica al ModeloArranque que se encontró (o no) un host.
+     * Implementa PublicadorHostEncontrado.
+     *
+     * @param jugador El jugador host encontrado (puede ser null)
+     */
+    @Override
+    public void notificarHostEncontrado(JugadorConfigDTO jugador) {
+        System.out.println("[UnirsePartida] notificarHostEncontrado() - Llamando a modeloArranque.actualizar(). Host: " + (jugador != null ? jugador.getIp() : "NULL"));
+        modeloArranque.actualizar(jugador);
     }
 
 }

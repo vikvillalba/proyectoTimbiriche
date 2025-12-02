@@ -4,7 +4,11 @@ C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\controlador\ControladorUnisePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\IModeloArranqueEscritura.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\IModeloArranqueLectura.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\INotificadorHostUnirsePartida.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\IPublicadorHostUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\modelo\ModeloArranque.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\observer\INotificadorUnirsePartida.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\observer\IPublicadorUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\observer\ObservableConfiguraciones.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\observer\ObservableInicioPartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\observer\ObservadorConfiguraciones.java
@@ -14,7 +18,7 @@ C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\FrmSalaEspera.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\PnlJugador.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgEnviarSolicitud.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgPartidaEnCurso.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgMostrarMensaje.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgSolicitudHost.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguracion\vista\unirsePartida\DlgUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\controlador\ControladorPartida.java

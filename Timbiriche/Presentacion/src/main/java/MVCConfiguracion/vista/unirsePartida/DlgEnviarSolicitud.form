@@ -92,6 +92,9 @@
                   <Image iconType="3" name="/botones/nuevaSolicitudHover.png"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarSolicitudActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnVolver">
               <Properties>
@@ -105,6 +108,9 @@
                   <Image iconType="3" name="/botones/volverHover.png"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVolverActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -34,7 +34,7 @@ public class EventBus {
     public void publicarEvento(PaqueteDTO paquete) {
         Servicio origen = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
         normalizarPaquete(paquete, origen);
-        
+
         if (paquete.getTipoEvento().equalsIgnoreCase("INICIAR_CONEXION")) {
             Servicio nuevoServicio = new Servicio(paquete.getPuertoOrigen(), paquete.getHost());
 
@@ -120,6 +120,34 @@ public class EventBus {
         if (paquete.getPuertoOrigen() == 0) {
             paquete.setPuertoOrigen(origen.getPuerto());
         }
+    }
+
+    //obtener el host de la partida
+    public Servicio obtenerHost() {
+        //el host es el unico suscriptor a este evento
+        List<Servicio> lista = servicios.get("SOLICITAR_UNIRSE");
+        if (lista == null || lista.isEmpty()) {
+            return null;
+        }
+        return lista.get(0);
+    }
+
+    public void enviarHost(PaqueteDTO paquete) {
+        Servicio host = obtenerHost();
+
+        PaqueteDTO respuesta = new PaqueteDTO();
+        respuesta.setTipoEvento("RESPUESTA_HOST");
+
+        respuesta.setHost(paquete.getHost()); // ip del solicitante
+
+        respuesta.setPuertoDestino(paquete.getPuertoOrigen()); // el solicitante va a recibir la respuesta
+
+        respuesta.setPuertoOrigen(host != null ? host.getPuerto() : 0);
+
+        respuesta.setContenido(host);
+
+        emisor.enviarCambio(respuesta);
+
     }
 
 }

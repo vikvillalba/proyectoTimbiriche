@@ -15,6 +15,10 @@ public class JugadorConfig {
     private boolean listo;
     public boolean esHost;
 
+    public JugadorConfig() {
+    }
+
+    
     public JugadorConfig(String nombre, Image avatar, Color color, boolean listo) {
         this.nombre = nombre;
         this.avatar = avatar;
@@ -54,5 +58,23 @@ public class JugadorConfig {
     public boolean isListo() {
         return listo;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setListo(boolean listo) {
+        this.listo = listo;
+    }
+    
+    
 
 }

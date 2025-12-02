@@ -19,4 +19,6 @@ public interface IModeloArranqueEscritura {
     public void enviarSolicitud(JugadorSolicitanteDTO jugadorsolicitante);
     public void setEstadoSolicitud(boolean estadoSolicitud);
     public void setSolicitudActual(SolicitudUnirse solicitud);
+    public void volverEnviarSolicitud(SolicitudUnirse solicitud);
+    public void buscarHostPartida(JugadorSolicitanteDTO jugadorSolicitante);
 }

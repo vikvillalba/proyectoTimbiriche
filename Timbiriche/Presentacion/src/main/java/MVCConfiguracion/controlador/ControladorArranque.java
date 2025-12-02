@@ -41,7 +41,6 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    // ========== IMPLEMENTACIÓN DE ControladorUnisePartida ==========
     /**
      * Envía una solicitud para unirse a una partida existente.
      *
@@ -50,7 +49,6 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
      */
     @Override
     public void enviarSolicitud(String ip, int puerto) {
-        // Validar parámetros
         if (ip == null || ip.trim().isEmpty()) {
             throw new IllegalArgumentException("La IP no puede estar vacía");
         }
@@ -69,7 +67,6 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
      * Acepta o rechaza una solicitud para unirse a la partida. Este método es ejecutado por el host.
      *
      * @param esAceptada true para aceptar, false para rechazar
-     * @return true si la operación fue exitosa
      */
     @Override
     public void aceptarSolicitud(boolean esAceptada) {
@@ -77,5 +74,19 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
         modelo.setEstadoSolicitud(esAceptada);
 
     }
+
+    @Override
+    public void enviarSolicitudExistente(SolicitudUnirse solicitud) {
+        modelo.volverEnviarSolicitud(solicitud);
+    }
+
+    @Override
+    public void buscarHostPartida(String ip, int puerto) {
+        //llamar a modelo que busque host partida
+        JugadorSolicitanteDTO jugadorSolicitante = new JugadorSolicitanteDTO(ip, puerto);
+        modelo.buscarHostPartida(jugadorSolicitante);
+    }
+    
+    
 
 }

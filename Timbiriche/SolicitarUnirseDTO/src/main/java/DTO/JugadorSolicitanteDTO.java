@@ -13,6 +13,9 @@ public class JugadorSolicitanteDTO {
     public String ip;
     public int puerto;
 
+    public JugadorSolicitanteDTO() {
+    }
+
     public JugadorSolicitanteDTO(String ip, int puerto) {
         this.ip = ip;
         this.puerto = puerto;
