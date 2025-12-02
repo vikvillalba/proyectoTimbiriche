@@ -10,8 +10,10 @@ import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
+import MVCJuegoEnCurso.observer.ObservableAbandonar;
 import MVCJuegoEnCurso.observer.ObservableMensaje;
 import MVCJuegoEnCurso.observer.ObservablePartida;
+import MVCJuegoEnCurso.observer.ObservadorAbandono;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import Observer.ObservadorTurnos;
@@ -29,6 +31,7 @@ import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import MVCJuegoEnCurso.observer.ObservadorMensaje;
+import Observer.ObservadorAbandonar;
 import Observer.ObservadorInicio;
 import excepciones.JugadaException;
 import excepciones.PartidaExcepcion;
@@ -46,7 +49,9 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         IModeloAbandonarEscritura,
         ObservablePartida,
         ObservableMensaje,
+        ObservableAbandonar,
         ObservadorInicio,
+        ObservadorAbandonar,
         ObservadorTurnos,
         Observer.ObservadorJugadores,
         Observer.ObservadorEventos {
@@ -56,6 +61,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     private ObservadorTablero observadorTablero;
     private ObservadorInicioPartida observadorInicioJuego;
     private ObservadorMensaje observadorMensaje;
+    private ObservadorAbandono observadorAbandonar;
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
@@ -118,7 +124,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         }
         return jugadoresVista;
     }
-
+    
     private Color obtenerColor(String colorEnum) {
         return COLORES.get(colorEnum.toLowerCase());
     }
@@ -290,6 +296,19 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     public void abandonarPartida() {
         Jugador sesion = partida.getJugadorSesion();
         partida.abandonarPartida(sesion);
-        actualizarTurnos();
+        if (sesion.isTurno()==true) {
+            actualizarTurnos();
+        }
     }
+
+    @Override
+    public void actualizarAbandono(String nombreJugador) {
+        observadorAbandonar.actualizarAbandono(nombreJugador);
+    }
+
+    @Override
+    public void agregarObservadorAbandonar(ObservadorAbandono ob) {
+        this.observadorAbandonar = ob;
+    }
+
 }

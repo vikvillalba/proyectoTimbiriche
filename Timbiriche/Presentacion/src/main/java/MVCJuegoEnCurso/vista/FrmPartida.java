@@ -3,6 +3,7 @@ package MVCJuegoEnCurso.vista;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
+import MVCJuegoEnCurso.observer.ObservadorAbandono;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
@@ -11,6 +12,7 @@ import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import MVCJuegoEnCurso.observer.ObservadorMensaje;
 import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
+import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objetosPresentables.JugadorPresentable;
 
@@ -30,6 +32,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     public FrmPartida(IModeloJugadoresLectura modeloJugadores, IModeloTableroLectura modeloTablero, ControladorPartida controlador) {
         initComponents();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         tablero = new PnlTablero(modeloTablero, controlador);
         jugadores = new PnlJugadores(modeloJugadores, controlador);
@@ -47,6 +50,14 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
         // Deshabilitar tablero si no es el turno del jugador sesion
         actualizarEstadoTablero();
+
+        //Lanza el evento de abandonar partida cuando se cierra la ventana
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                controlador.abandonarPartida();
+            }
+        });
     }
 
     private void actualizarEstadoTablero() {
@@ -91,6 +102,10 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     public ObservadorJugadores getObservadorJugadores() {
         return (ObservadorJugadores) jugadores;
+    }
+    
+    public ObservadorAbandono getObservadorAbandonar() {
+        return (ObservadorAbandono) jugadores;
     }
 
     /**

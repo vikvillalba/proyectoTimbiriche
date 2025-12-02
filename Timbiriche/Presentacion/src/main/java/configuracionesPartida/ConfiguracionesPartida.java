@@ -34,8 +34,10 @@ public class ConfiguracionesPartida {
 
         partida.agregarObservadorInicioJuego(modeloPartida);
         partida.agregarObservadorInicioJuego(modeloPartida);
+        partida.agregarObservadorAbandonarJuego(modeloPartida);
         modeloPartida.agregarObservadorJugadores(frmPartida.getObservadorJugadores());
         modeloPartida.agregarObservadorTablero(frmPartida.getObservadorTablero());
+        modeloPartida.agregarObservadorAbandonar(frmPartida.getObservadorAbandonar());
         modeloPartida.agregarObservadorInicioJuego(frmPartida);
         
         partida.notificarObservadorInicioJuego();

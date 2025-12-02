@@ -6,6 +6,7 @@ Mapper\MapperJugadores.class
 Observer\ObservadorEventos.class
 Observer\Observable.class
 excepciones\PartidaExcepcion.class
+Observer\ObservadorAbandonar.class
 org\itson\modelojuego\InicioJuego.class
 Entidades\Linea.class
 Entidades\Tablero.class

@@ -139,11 +139,14 @@ public class EnsambladorPartida {
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
         partida.agregarObservadorEventos(modelo);
+        partida.agregarObservadorAbandonarJuego(modelo);
 
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
+        modelo.agregarObservadorAbandonar(frm.getObservadorAbandonar());
         modelo.agregarObservadorInicioJuego(frm);
         modelo.agregarObservadorMensaje(frm);
+        
         partida.inicioPartida();
     }
 }

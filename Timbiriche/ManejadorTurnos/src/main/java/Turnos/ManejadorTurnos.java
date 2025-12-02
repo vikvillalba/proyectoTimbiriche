@@ -109,6 +109,9 @@ public class ManejadorTurnos implements IReceptor {
             if (eliminado) {
                 System.out.println("Se removió de los turnos al jugador: " + jugador);
             }
+            if (jugador.isTurno() == true) {
+                actualizarTurno();
+            }
         }
 
         PaqueteDTO paquetes = new PaqueteDTO(jugador, "PARTIDA_ABANDONADA");
@@ -117,7 +120,7 @@ public class ManejadorTurnos implements IReceptor {
         paquetes.setPuertoDestino(puertoDestino);
 
         emisor.enviarCambio(paquetes);
-        actualizarTurno();
+
     }
 
     private JugadorDTO convertirAJugadorDTO(Object contenido) {

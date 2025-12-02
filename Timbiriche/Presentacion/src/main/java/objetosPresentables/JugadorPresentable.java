@@ -26,12 +26,20 @@ public class JugadorPresentable {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Image getAvatar() {
         return avatar;
     }
 
     public Color getColor() {
         return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public int getScore() {

@@ -1,8 +1,10 @@
 package MVCJuegoEnCurso.vista;
 
+import Entidades.Jugador;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.observer.ObservableTurno;
+import MVCJuegoEnCurso.observer.ObservadorAbandono;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
@@ -13,9 +15,10 @@ import objetosPresentables.JugadorPresentable;
 
 /**
  * Representación gráfica de los jugadores de la partida.
+ *
  * @author victoria
  */
-public class PnlJugadores extends JPanel implements ObservadorJugadores, ObservableTurno {
+public class PnlJugadores extends JPanel implements ObservadorJugadores, ObservableTurno, ObservadorAbandono {
 
     private List<JugadorPresentable> jugadores;
     private List<PnlJugador> panelesJugadores = new ArrayList<>();
@@ -93,6 +96,24 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores, Observa
         observadorTurno.actualizar();
     }
 
+    @Override
+    public void actualizarAbandono(String Nombrejugador) {
+        for (JugadorPresentable jugadorActual : jugadores) {
+            if (jugadorActual.getNombre().equals(Nombrejugador)) {
+                jugadorActual.setColor(Color.BLACK);
+                jugadorActual.setNombre("Abandonó partida");
+            }
+        }
+
+        for (int i = 0; i < panelesJugadores.size(); i++) {
+            panelesJugadores.get(i).setJugador(jugadores.get(i));
+            panelesJugadores.get(i).cargarDatos();
+        }
+
+        revalidate();
+        repaint();
+        notificar();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

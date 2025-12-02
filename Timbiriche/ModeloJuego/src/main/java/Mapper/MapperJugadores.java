@@ -44,4 +44,16 @@ public class MapperJugadores {
         }
         return jugadoresDTO;
     }
+    
+    public Jugador toEntidad(JugadorDTO jugadordto){
+        Jugador jugador = new Jugador();
+        jugador.setNombre(jugadordto.getId());
+        jugador.setScore(jugadordto.getScore());
+        if (jugadordto.isTurno()!=true) {
+            jugador.setTurno(false);
+        }else{
+            jugador.setTurno(true);
+        }
+        return jugador;
+    }
 }

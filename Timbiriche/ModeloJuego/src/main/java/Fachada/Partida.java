@@ -9,6 +9,7 @@ import Entidades.TipoEvento;
 import static Entidades.TipoEvento.*;
 import Mapper.MapperJugadores;
 import Observer.ObservableEventos;
+import Observer.ObservadorAbandonar;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
@@ -33,6 +34,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private Tablero tablero;
 
     private ObservadorInicio observadorInicioJuego;
+    private ObservadorAbandonar observadorAbandonar;
     private List<Jugador> jugadores;
     private Jugador jugadorEnTurno;
     private Jugador jugadorSesion;
@@ -181,9 +183,10 @@ public class Partida implements PartidaFachada, ObservableEventos {
     
     @Override
     public void partidaAbandonada(PaqueteDTO paquete) {
-        JugadorDTO jugadorSesion = convertirAJugadorDTO(paquete.getContenido());
+        JugadorDTO jugador = convertirAJugadorDTO(paquete.getContenido());
         System.out.println("[PARTIDA]: Jugador que abandono partida: "+jugadorSesion);
-        //Se notifica el cambio a las pantallas
+        System.out.println("Nombre: "+jugador.getId());
+        notificarObservadorAbandonarJuego(jugador.getId());
     }
 
     @Override
@@ -298,15 +301,11 @@ public class Partida implements PartidaFachada, ObservableEventos {
         this.emisor = emisor;
     }
 
-    
-    
-
     @Override
     public void notificarEventoRecibido(Object evento) {
         for (ObservadorEventos ob : observadoresEventos) {
             ob.actualizar(evento);
         }
-
     }
 
     @Override
@@ -414,4 +413,13 @@ public class Partida implements PartidaFachada, ObservableEventos {
         return resultado;
     }
 
+    @Override
+    public void agregarObservadorAbandonarJuego(ObservadorAbandonar ob) {
+        this.observadorAbandonar = ob;
+    }
+
+    @Override
+    public void notificarObservadorAbandonarJuego(String Nombrejugador) {
+            observadorAbandonar.actualizarAbandono(Nombrejugador);
+    }
 }

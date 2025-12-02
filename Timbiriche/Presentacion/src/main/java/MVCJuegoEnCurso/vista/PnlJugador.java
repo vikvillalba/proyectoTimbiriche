@@ -1,5 +1,7 @@
 package MVCJuegoEnCurso.vista;
 
+import MVCJuegoEnCurso.observer.ObservadorAbandono;
+import java.awt.Color;
 import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.GrayFilter;
@@ -12,7 +14,7 @@ import objetosPresentables.JugadorPresentable;
  *
  * @author victoria
  */
-public class PnlJugador extends JPanel {
+public class PnlJugador extends JPanel{
 
     private JugadorPresentable jugador;
     private PnlJugadores panelJugadores;
@@ -57,7 +59,7 @@ public class PnlJugador extends JPanel {
     public void setJugador(JugadorPresentable jugador) {
         this.jugador = jugador;
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,4 +130,6 @@ public class PnlJugador extends JPanel {
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPuntos;
     // End of variables declaration//GEN-END:variables
+
+
 }

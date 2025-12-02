@@ -12,9 +12,11 @@ C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presenta
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloMensajeEscritura.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloPartidaEscritura.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\interfaces\IModeloTableroLectura.java
+C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservableAbandonar.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservableMensaje.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservablePartida.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservableTurno.java
+C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservadorAbandono.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservadorInicioPartida.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservadorJugadores.java
 C:\Users\pablo\OneDrive\Documentos\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\observer\ObservadorMensaje.java

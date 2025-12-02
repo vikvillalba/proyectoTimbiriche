@@ -1,5 +1,7 @@
 package Observer;
 
+import org.itson.dto.JugadorDTO;
+
 /**
  * Interfaz que permite que la partida pueda ser observada.
  *
@@ -14,4 +16,7 @@ public interface Observable {
     // Inicio de partida
     void agregarObservadorInicioJuego(ObservadorInicio ob);
     void notificarObservadorInicioJuego();
+    
+    void agregarObservadorAbandonarJuego(ObservadorAbandonar ob);
+    void notificarObservadorAbandonarJuego(String nombrejugador);
 }
