@@ -9,9 +9,9 @@ import MVCConfiguracion.observer.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservableConfiguraciones;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
+import ModeloUnirsePartida.IUnirsePartida;
 import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
-import ModeloUnirsePartida.UnirsePartida;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
 import java.awt.Image;
@@ -39,7 +39,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     //CU_UnirsePartida
     //modelo unirse partida LOGICA
-    private UnirsePartida unirsePartida;
+    private IUnirsePartida unirsePartida;
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
@@ -51,7 +51,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     private JugadorConfigDTO jugadorHost;
 
-    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, UnirsePartida unirsePartida) {
+    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, IUnirsePartida unirsePartida) {
         this.configuracionesPartida = configuracionesPartida;
         this.unirsePartida = unirsePartida;
     }
@@ -154,7 +154,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         }
 
         // Establecer el jugador solicitante
-        unirsePartida.setJugadorSolicitate(jugadorsolicitante);
+        unirsePartida.setJugadorSolicitante(jugadorsolicitante);
 
         // Obtener la solicitud actual si existe
         solicitud = obtenerSolicitud();

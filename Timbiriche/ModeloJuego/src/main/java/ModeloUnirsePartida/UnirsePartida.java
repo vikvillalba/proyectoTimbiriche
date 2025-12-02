@@ -30,7 +30,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     private static final String ESTADO_FINALIZADA = "FINALIZADA";
 
     private JugadorConfigDTO jugadorHost;
-    private JugadorSolicitanteDTO jugadorSolicitate;
+    private JugadorSolicitanteDTO jugadorSolicitante;
     private SolicitudUnirse solicitudActual;
     private Fachada.Partida partida; // Referencia a la partida real
 
@@ -41,7 +41,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     //enviar a MVC UnirsePartida cambio
     private List<INotificadorSolicitud> notificados = new ArrayList<>();
 
-    // Configuración de red para EventBus (igual que en Partida)
+    // Configuración de red para EventBus
     private int puertoOrigen;
     private int puertoDestino;
 
@@ -72,19 +72,19 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      *
      * @param jugador El jugador que solicita el host
      */
+    @Override
     public void solicitarHost(JugadorSolicitanteDTO jugador) {
-        this.jugadorSolicitate = jugador;
+        this.jugadorSolicitante = jugador;
 
         PaqueteDTO paquete = new PaqueteDTO();
         paquete.setContenido("SOLICITUD_HOST");
         paquete.setTipoEvento("OBTENER_HOST");
-        paquete.setHost(this.jugadorSolicitate.getIp());
-        paquete.setPuertoOrigen(this.jugadorSolicitate.getPuerto());
+        paquete.setHost(this.jugadorSolicitante.getIp());
+        paquete.setPuertoOrigen(this.jugadorSolicitante.getPuerto());
         paquete.setPuertoDestino(puertoDestino);
 
         emisorSolicitud.enviarCambio(paquete);
     }
-
 
     @Override
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
@@ -203,6 +203,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         }
     }
 
+    @Override
     public void setPartida(Fachada.Partida partida) {
         this.partida = partida;
     }
@@ -347,15 +348,15 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         return puertoDestino;
     }
 
-    public JugadorSolicitanteDTO getJugadorSolicitate() {
-        return jugadorSolicitate;
+    public JugadorSolicitanteDTO getJugadorSolicitante() {
+        return jugadorSolicitante;
     }
 
-    public void setJugadorSolicitate(JugadorSolicitanteDTO jugadorSolicitate) {
-        this.jugadorSolicitate = jugadorSolicitate;
+    @Override
+    public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante) {
+        this.jugadorSolicitante = jugadorSolicitante;
     }
 
-  
     //NOTIFICAR HOST A MODELO ARRANQUE
     @Override
     public void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador) {

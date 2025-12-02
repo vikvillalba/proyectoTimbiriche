@@ -5,6 +5,7 @@
 package ModeloUnirsePartida;
 
 import DTO.JugadorSolicitanteDTO;
+import Fachada.Partida;
 import SolicitudEntity.SolicitudUnirse;
 
 /**
@@ -25,5 +26,11 @@ public interface IUnirsePartida {
     public void enviarSolicitudJugadorHost(SolicitudUnirse solicitud);
 
     public void enviarRespuestaSolicitud(SolicitudUnirse solicitud);
+
+    public void solicitarHost(JugadorSolicitanteDTO jugador);
+
+    public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante);
+
+    public void setPartida(Partida partida);
 
 }
