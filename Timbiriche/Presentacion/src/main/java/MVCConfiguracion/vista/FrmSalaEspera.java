@@ -41,7 +41,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         this.setLocationRelativeTo(null);
         this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
         this.setBackground(COLOR_FONDO);
-        this.setSize(900, 760);
+        this.setSize(800, 510);
 
     }
 
@@ -100,24 +100,6 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
         pnlJugadores = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -155,7 +137,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         pnlFooterLayout.setHorizontalGroup(
             pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFooterLayout.createSequentialGroup()
-                .addGap(149, 149, 149)
+                .addGap(101, 101, 101)
                 .addComponent(btnRegresar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnIniciar)
@@ -177,144 +159,21 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         lblTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Sala de espera.png"))); // NOI18N
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel1.setText(".");
-
-        jLabel2.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel2.setText(".");
-
-        jLabel3.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel3.setText(".");
-
-        jLabel4.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel4.setText(".");
-
-        jLabel8.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel8.setText(".");
-
-        jLabel9.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel9.setText(".");
-
-        jLabel10.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel10.setText(".");
-
-        jLabel11.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel11.setText(".");
-
-        jLabel15.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel15.setText(".");
-
-        jLabel16.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel16.setText(".");
-
-        jLabel17.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel17.setText(".");
-
-        jLabel18.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel18.setText(".");
-
-        jLabel22.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel22.setText(".");
-
-        jLabel23.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel23.setText(".");
-
-        jLabel24.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel24.setText(".");
-
-        jLabel25.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-        jLabel25.setText(".");
-
-        jLabel29.setFont(new java.awt.Font("Hiragino Maru Gothic ProN", 1, 60)); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel22)
-                    .addComponent(jLabel29))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel23))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel24))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel25))
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(329, 329, 329)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
-                        .addComponent(lblTitulo)))
-                .addContainerGap(327, Short.MAX_VALUE))
+                .addGap(72, 72, 72)
+                .addComponent(lblTitulo)
+                .addContainerGap(398, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(lblTitulo)
-                .addGap(31, 31, 31)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 16, Short.MAX_VALUE))
+                .addGap(0, 25, Short.MAX_VALUE))
         );
 
         pnlJugadores.setBackground(new java.awt.Color(224, 233, 255));
@@ -329,8 +188,8 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(pnlJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -364,33 +223,14 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         setStatusSesion(true);
         cargarJugadores();
         controlador.solicitarInicioJuego(sesion);
-        this.dispose();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton btnRegresar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlJugadores;
