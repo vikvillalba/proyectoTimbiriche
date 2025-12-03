@@ -67,18 +67,18 @@ public class EnsambladorBus {
         receptorBus.setReceptor(publicador);
         colaRecibosBus.agregarObservador(receptorBus);
 
-        // configuraciones de la partida :P
-        JugadorDTO jugador1 = new JugadorDTO();
-        jugador1.setListo(true);
-        jugador1.setId("sol");
-        jugador1.setAvatar("TIBURON_MARTILLO");
-        jugador1.setColor("MORAS");
+//        // configuraciones de la partida :P
+//        JugadorDTO jugador1 = new JugadorDTO();
+//        jugador1.setListo(true);
+//        jugador1.setId("sol");
+//        jugador1.setAvatar("TIBURON_MARTILLO");
+//        jugador1.setColor("MORAS");
 
         TableroDTO tablero = new TableroDTO(10, 10);
         PaqueteDTO tableroConfig = new PaqueteDTO(tablero, "REGISTRAR_TABLERO");
-        PaqueteDTO configuraciones = new PaqueteDTO(jugador1, "REGISTRAR_JUGADOR");
+//        PaqueteDTO configuraciones = new PaqueteDTO(jugador1, "REGISTRAR_JUGADOR");
         
-        eventBus.setConfiguracionJugadores(configuraciones);
+//        eventBus.setConfiguracionJugadores(configuraciones);
         eventBus.setConfiguracionesTablero(tableroConfig);
 
 

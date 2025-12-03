@@ -1,5 +1,6 @@
 package org.itson.dto;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -74,5 +75,35 @@ public class PaqueteDTO<T> {
         return id;
     }
 
-    
+    @Override
+    public int hashCode() {
+        int result = tipoEvento.hashCode();
+        result = 31 * result + (contenido != null ? contenido.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PaqueteDTO that = (PaqueteDTO) o;
+
+        if (!tipoEvento.equals(that.tipoEvento)) {
+            return false;
+        }
+
+        if (contenido == null && that.contenido == null) {
+            return true;
+        }
+        if (contenido == null || that.contenido == null) {
+            return false;
+        }
+
+        return contenido.equals(that.contenido);
+    }
+
 }

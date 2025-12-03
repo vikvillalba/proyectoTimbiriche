@@ -21,6 +21,7 @@ import configuraciones.Configuraciones;
 import ConfiguracionesFachada.ConfiguracionesPartida;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
+import MVCConfiguracion.observer.ObservadorEnsamblador;
 import MVCConfiguracion.vista.DlgInicioJuego;
 import MVCConfiguracion.vista.FrmSalaEspera;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Maryr
  */
-public class EnsambladorPartida {
+public class EnsambladorPartida implements ObservadorEnsamblador {
 
     private static EnsambladorPartida instancia;
 
@@ -120,7 +121,8 @@ public class EnsambladorPartida {
                 "OBTENER_CONFIGURACIONES_PARTIDA",
                 "CONFIRMAR_INICIO_PARTIDA",
                 "SOLICITAR_INICIAR_PARTIDA",
-                "REGISTRAR_JUGADOR"
+                "REGISTRAR_JUGADOR",
+                "TURNOS_REPARTIDOS"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -134,6 +136,7 @@ public class EnsambladorPartida {
         registrarJugador.setPuertoDestino(puertoEntrada);
 
         modelo = new ModeloPartida(partida);
+        modelo.agregarObservadorEnsamblador(this);
 
         controlador = new ControladorPartida(modelo);
 
@@ -149,6 +152,8 @@ public class EnsambladorPartida {
         modeloConfig.agregarObservadorEventoInicio(controladorConfig);
         modeloConfig.agregarObservadorSolicitudes(dialogoInicio);
 
+        partidaComunicacion.setPartida(partida);
+
         new Thread(() -> servidorPartida.iniciar()).start();
         emisor.enviarCambio(solicitarConexion);
         emisor.enviarCambio(registrarJugador);
@@ -161,7 +166,7 @@ public class EnsambladorPartida {
      * el usuario.
      */
     public void iniciarPartida(List<Jugador> jugadores, int alto, int ancho, Jugador sesion) {
-
+     
         if (jugadores.size() > NUMERO_JUGADORES) {
             throw new IllegalArgumentException("Se ha alcanzado el limite de jugadores");
         }
@@ -174,30 +179,27 @@ public class EnsambladorPartida {
         partida.setHost(host);
         partida.setPuertoOrigen(puertoServidor);
         partida.setPuertoDestino(puertoEntrada);
-
-        partidaComunicacion.setPartida(partida);
         partida.setEmisor(emisor);
+
+        partida.agregarObservadorInicioJuego(modelo);
+        partida.agregarObservadorJugadores(modelo);
+        partida.agregarObservadorEventos(modelo);
 
         IModeloJugadoresLectura imjl = modelo;
         IModeloTableroLectura imtl = modelo;
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
-        partida.agregarObservadorInicioJuego(modelo);
-        partida.agregarObservadorJugadores(modelo);
-        partida.agregarObservadorEventos(modelo);
+
 
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
 
-        PaqueteDTO solicitarTurnos = new PaqueteDTO(jugadoresdto, "SOLICITAR_TURNOS");
-        solicitarTurnos.setHost(host);
-        solicitarTurnos.setPuertoOrigen(puertoServidor);
-        solicitarTurnos.setPuertoDestino(puertoEntrada);
-        // emisor.enviarCambio(solicitarTurnos);
-
-        //MVC de juego
-        partida.setJugadorSesion(sesion);
-
         partida.inicioPartida();
+
+    }
+
+    @Override
+    public void ensamblarPartida(List<Jugador> jugadores, int altoTablero, int anchoTablero, Jugador sesion) {
+        iniciarPartida(jugadores, altoTablero, anchoTablero, sesion);
     }
 }

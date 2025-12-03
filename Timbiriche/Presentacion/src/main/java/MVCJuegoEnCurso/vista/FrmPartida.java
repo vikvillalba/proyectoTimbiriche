@@ -1,6 +1,5 @@
 package MVCJuegoEnCurso.vista;
 
-
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
@@ -11,11 +10,13 @@ import javax.swing.JFrame;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
+import java.util.List;
 import objetosPresentables.JugadorPresentable;
 
 /**
- * Vista que engloba una partida en curso.
- * contiene a los jugadores y al tablero.
+ * Vista que engloba una partida en curso. contiene a los jugadores y al
+ * tablero.
+ *
  * @author victoria
  */
 public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno {
@@ -41,22 +42,37 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         this.setLocationRelativeTo(null);
         setSize(1050, 740);
 
+        setTitle("Partida en curso - Sesión de " + sesion.getNombre());
         // Deshabilitar tablero si no es el turno del jugador sesion
         actualizarEstadoTablero();
+
+        actualizarJugadoresIniciales(modeloJugadores);
+    }
+
+    private void actualizarJugadoresIniciales(IModeloJugadoresLectura modeloJugadores) {
+
+        List<JugadorPresentable> jugadoresIniciales = modeloJugadores.getJugadores();
+        if (jugadoresIniciales != null && !jugadoresIniciales.isEmpty()) {
+            jugadores.actualizar(jugadoresIniciales);
+            for (JugadorPresentable jugadoresIniciale : jugadoresIniciales) {
+                System.out.println(jugadoresIniciale.toString());
+            }
+        }
     }
 
     private void actualizarEstadoTablero() {
         JugadorPresentable jugadorEnTurno = jugadores.getJugadorEnTurno();
-        boolean estaEnTurno = jugadorEnTurno != null &&
-                           jugadorEnTurno.getNombre().equals(sesion.getNombre());
+        boolean estaEnTurno = jugadorEnTurno != null
+                && sesion != null
+                && jugadorEnTurno.getNombre().equals(sesion.getNombre());
+
         tablero.setInteraccionHabilitada(estaEnTurno);
 
-        //jesus en moto
         if (estaEnTurno) {
-            System.out.println("[" + sesion.getNombre() + "] Es tu turno");
+            System.out.println("[" + sesion.getNombre() + "] Es tu turno bro");
         } else {
-            System.out.println("[" + sesion.getNombre() + "] Esperando turno de: " +
-                             (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
+            System.out.println("[" + sesion.getNombre() + "] Esperando turno de: "
+                    + (jugadorEnTurno != null ? jugadorEnTurno.getNombre() : "???"));
         }
     }
 
@@ -64,9 +80,10 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
         return (ObservadorTablero) tablero;
     }
 
-    public ObservadorJugadores getObservadorJugadores(){
+    public ObservadorJugadores getObservadorJugadores() {
         return (ObservadorJugadores) jugadores;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -124,11 +141,9 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
     // recibe notificacion del modelo de que el juego ya inicia
     @Override
     public void mostrarJuego() {
-       this.setVisible(true);
+        this.setVisible(true);
     }
 
- 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbandonarPartida;

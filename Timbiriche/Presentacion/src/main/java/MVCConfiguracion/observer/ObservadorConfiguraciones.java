@@ -8,6 +8,6 @@ import objetosPresentables.PartidaPresentable;
  */
 public interface ObservadorConfiguraciones {
     void actualizar(PartidaPresentable configuraciones);
-    void iniciarJuego();
     void mostrarVista();
+    void ocultarVista();
 }

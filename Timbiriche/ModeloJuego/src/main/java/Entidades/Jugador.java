@@ -79,4 +79,11 @@ public class Jugador {
     public void sumarScore() {
         this.score++;
     }
+
+    @Override
+    public String toString() {
+        return "Jugador{" + "nombre=" + nombre + ", avatar=" + avatar + ", color=" + color + ", score=" + score + ", turno=" + turno + '}';
+    }
+    
+    
 }

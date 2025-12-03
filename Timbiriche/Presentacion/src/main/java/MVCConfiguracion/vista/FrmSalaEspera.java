@@ -41,7 +41,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         this.setLocationRelativeTo(null);
         this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
         this.setBackground(COLOR_FONDO);
-        this.setSize(1000, 940);
+        this.setSize(900, 760);
 
     }
 
@@ -68,10 +68,6 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         }
     }
 
-    @Override
-    public void iniciarJuego() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     @Override
     public void mostrarVista() {
@@ -86,6 +82,12 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
                 jugador.setListo(sesion.isListo());
             }
         }
+    }
+    
+    
+    @Override
+    public void ocultarVista() {
+        this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -153,7 +155,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         pnlFooterLayout.setHorizontalGroup(
             pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFooterLayout.createSequentialGroup()
-                .addGap(229, 229, 229)
+                .addGap(149, 149, 149)
                 .addComponent(btnRegresar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnIniciar)
@@ -171,7 +173,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         jPanel1.setBackground(new java.awt.Color(224, 233, 255));
 
         jPanel2.setBackground(new java.awt.Color(224, 233, 255));
-        jPanel2.setPreferredSize(new java.awt.Dimension(1000, 800));
+        jPanel2.setPreferredSize(new java.awt.Dimension(700, 755));
 
         lblTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Sala de espera.png"))); // NOI18N
 
@@ -298,12 +300,12 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(411, 411, 411)
+                        .addGap(329, 329, 329)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(193, 193, 193)
+                        .addGap(143, 143, 143)
                         .addComponent(lblTitulo)))
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addContainerGap(327, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,7 +330,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(pnlJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -362,6 +364,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         setStatusSesion(true);
         cargarJugadores();
         controlador.solicitarInicioJuego(sesion);
+        this.dispose();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
 
@@ -392,5 +395,6 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlJugadores;
     // End of variables declaration//GEN-END:variables
+
 
 }

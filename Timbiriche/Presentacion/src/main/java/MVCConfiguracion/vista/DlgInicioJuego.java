@@ -3,6 +3,7 @@ package MVCConfiguracion.vista;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.IModeloArranqueLectura;
 import MVCConfiguracion.observer.ObservadorSolicitudes;
+import java.awt.Color;
 import objetosPresentables.JugadorConfig;
 
 /**
@@ -23,9 +24,10 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
         this.modelo = modelo;
         this.jugador = modelo.getSesion();
         this.controlador = controlador;
-        setSize(695, 300);
+        setSize(695, 232);
         setLocationRelativeTo(frm);
         setTitle("Solicitud de incio - Sesión de " + jugador.getNombre());
+        lblJugador1.setForeground(new Color(73, 68, 139));
     }
 
     /**
@@ -87,30 +89,29 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
                         .addContainerGap()
                         .addComponent(lblJugador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(7, 7, 7)
-                                .addComponent(btnMasTiempo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnIniciar))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(166, 166, 166)
-                                .addComponent(lblJugador1)))
+                        .addGap(7, 7, 7)
+                        .addComponent(btnMasTiempo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnIniciar)
                         .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(169, 169, 169)
+                .addComponent(lblJugador1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addContainerGap()
                 .addComponent(lblJugador)
-                .addGap(27, 27, 27)
+                .addGap(40, 40, 40)
                 .addComponent(lblJugador1)
-                .addGap(67, 67, 67)
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnMasTiempo)
                     .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -121,7 +122,7 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

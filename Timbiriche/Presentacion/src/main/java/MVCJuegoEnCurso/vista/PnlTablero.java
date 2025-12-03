@@ -16,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import objetosPresentables.CuadroPresentable;
@@ -30,6 +31,7 @@ import objetosPresentables.TableroPresentable;
  */
 public class PnlTablero extends JPanel implements ObservadorTablero {
 
+    private final Color COLOR_FONDO = new Color(162, 167, 212);
     private TableroPresentable tablero;
     private IModeloTableroLectura modelo;
     private ControladorPartida controlador;
@@ -43,6 +45,9 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
         this.controlador = controlador;
         this.tablero = modelo.getTablero();
 
+        setBackground(Color.WHITE);
+
+         this.setBorder(BorderFactory.createLineBorder(COLOR_FONDO, 2));
         this.setMinimumSize(new Dimension(600, 600));
         this.setPreferredSize(new Dimension(600, 600));
 

@@ -15,6 +15,9 @@ public class PartidaDTO {
         this.jugadores = jugadores;
     }
 
+    public PartidaDTO() {
+    }
+
     public TableroDTO getTablero() {
         return tablero;
     }
@@ -22,5 +25,14 @@ public class PartidaDTO {
     public List<JugadorDTO> getJugadores() {
         return jugadores;
     }
+
+    public void setTablero(TableroDTO tablero) {
+        this.tablero = tablero;
+    }
+
+    public void setJugadores(List<JugadorDTO> jugadores) {
+        this.jugadores = jugadores;
+    }
+    
     
 }

@@ -23,21 +23,118 @@ import org.itson.dto.TableroDTO;
 public class ConfiguracionesPartida implements ConfiguracionesFachada, ObservableEventos {
 
     private IEmisor emisor;
-    private ObservadorEventos<PartidaDTO> observadorConfiguraciones;
+    private ObservadorEventos<PartidaDTO> observadorEventos; // vista
     private ObservadorSolicitudInicio observadorSolicitudInicio;
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
     private PartidaDTO partida;
 
+    private boolean juegoIniciado = false;
+
+    private List<JugadorDTO> jugadoresTurnos;
+
+    public void turnosRepartidos(PaqueteDTO paquete) {
+        this.jugadoresTurnos = convertirAListaJugadoresDTO(paquete);
+
+        this.partida.setJugadores(jugadoresTurnos);
+       
+        iniciarPartida();
+    }
+
+    public void partidaIniciada(PaqueteDTO paquete) {
+        PartidaDTO partidaDTO = PaqueteDTOAPartida(paquete);
+        this.partida = partidaDTO;
+        this.partida.setJugadores(jugadoresTurnos);
+   
+        notificarInicioJuego();
+
+    }
+
     public void configuracionesRecibidas(PaqueteDTO paquete) {
-        PartidaDTO partida = PaqueteDTOAPartida(paquete);
-        this.partida = partida;
-        observadorConfiguraciones.actualizar(partida);
-        if(validarEstadoJugadores()){
-            System.out.println("k ya inicia el juego");
+        PartidaDTO partidaDTO = PaqueteDTOAPartida(paquete);
+        this.partida = partidaDTO;
+        observadorEventos.actualizar(partida);
+        if (validarEstadoJugadores() && !juegoIniciado) {
+            System.out.println("inicia el juego");
+            solicitarTurnos();
+
         }
 
+    }
+
+    public void iniciarPartida() {
+        if (juegoIniciado) {
+            return;
+        }
+        if (!validarEstadoJugadores()) {
+            return;
+        }
+        juegoIniciado = true;
+
+        PaqueteDTO solicitud = new PaqueteDTO(partida, TipoEvento.INICIO_PARTIDA.toString());
+        solicitud.setHost(host);
+        solicitud.setPuertoOrigen(puertoOrigen);
+        solicitud.setPuertoDestino(puertoDestino);
+        emisor.enviarCambio(solicitud);
+    }
+
+    public void solicitarTurnos() {
+        PaqueteDTO turnos = new PaqueteDTO(partida.getJugadores(), "SOLICITAR_TURNOS");
+        turnos.setHost(host);
+        turnos.setPuertoOrigen(puertoOrigen);
+        turnos.setPuertoDestino(puertoDestino);
+        emisor.enviarCambio(turnos);
+
+    }
+
+    @Override
+    public void notificarInicioJuego() {
+        observadorEventos.iniciarJuego(partida);
+    }
+
+    private List<JugadorDTO> convertirAListaJugadoresDTO(Object contenido) {
+        List<JugadorDTO> resultado = new ArrayList<>();
+
+        if (contenido instanceof List) {
+            List<?> lista = (List<?>) contenido;
+
+            for (Object item : lista) {
+                JugadorDTO dto = null;
+
+                if (item instanceof JugadorDTO) {
+                    dto = (JugadorDTO) item;
+
+                } else if (item instanceof Map) {
+                    Map<?, ?> map = (Map<?, ?>) item;
+
+                    String id = (String) map.get("id");
+                    boolean turno = map.get("turno") != null && (Boolean) map.get("turno");
+
+                    dto = new JugadorDTO(id, turno);
+
+                    if (map.containsKey("score")) {
+                        dto.setScore(((Number) map.get("score")).intValue());
+                    }
+
+                    if (map.containsKey("listo")) {
+                        dto.setListo(map.get("listo") != null && (Boolean) map.get("listo"));
+                    }
+
+                    if (map.containsKey("avatar")) {
+                        dto.setAvatar((String) map.get("avatar"));
+                    }
+
+                    if (map.containsKey("color")) {
+                        dto.setColor((String) map.get("color"));
+                    }
+                }
+
+                resultado.add(dto);
+            }
+        }
+
+        return resultado;
     }
 
     @Override
@@ -48,11 +145,6 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
         solicitud.setPuertoDestino(puertoDestino);
 
         emisor.enviarCambio(solicitud);
-    }
-
-    @Override
-    public void iniciarConexion(List<Jugador> jugadores, TableroDTO tablero, Jugador sesion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private boolean validarEstadoJugadores() {
@@ -75,8 +167,10 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     @Override
     public void solicitarInicioJuego(JugadorDTO jugador) {
 
-        if (validarEstadoJugadores()) {
+        if (validarEstadoJugadores() && !juegoIniciado) {
             System.out.println("JUEGO INICIAO");
+            solicitarTurnos();
+
             return;
         }
 
@@ -95,7 +189,6 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
         notificarSolictudInicio(partida);
 
     }
-    
 
     @Override
     public void confirmarIncioJuego(JugadorDTO jugador) {
@@ -110,7 +203,7 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
 
     @Override
     public void notificarEventoRecibido(PartidaDTO evento) {
-        this.observadorConfiguraciones.actualizar(evento);
+        this.observadorEventos.actualizar(evento);
     }
 
     private PartidaDTO PaqueteDTOAPartida(PaqueteDTO<?> paquete) {
@@ -128,29 +221,40 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
             return new PartidaDTO(config.getTablero(), config.getJugadores());
         }
 
-        if (contenido instanceof Map<?, ?> mapa) {
-            Map<?, ?> tableroMap = (Map<?, ?>) mapa.get("tablero");
-            List<?> jugadoresList = (List<?>) mapa.get("jugadores");
+        if (contenido instanceof Map mapa) {
+            PartidaDTO partidaDTO = new PartidaDTO();
 
-            TableroDTO tablero = new TableroDTO(
-                    ((Number) tableroMap.get("alto")).intValue(),
-                    ((Number) tableroMap.get("ancho")).intValue()
-            );
-
-            List<JugadorDTO> jugadores = new ArrayList<>();
-            for (Object jObj : jugadoresList) {
-                Map<?, ?> j = (Map<?, ?>) jObj;
-                JugadorDTO dto = new JugadorDTO();
-                dto.setId((String) j.get("id"));
-                dto.setTurno(j.get("turno") != null && (Boolean) j.get("turno"));
-                dto.setScore(j.get("score") != null ? ((Number) j.get("score")).intValue() : 0);
-                dto.setListo(j.get("listo") != null && (Boolean) j.get("listo"));
-                dto.setAvatar((String) j.get("avatar"));
-                dto.setColor((String) j.get("color"));
-                jugadores.add(dto);
+            Map<String, Object> tableroMap = (Map<String, Object>) mapa.get("tablero");
+            if (tableroMap != null) {
+                TableroDTO tablero = new TableroDTO();
+                tablero.setAlto(((Number) tableroMap.get("alto")).intValue());
+                tablero.setAncho(((Number) tableroMap.get("ancho")).intValue());
+                partidaDTO.setTablero(tablero);
             }
 
-            return new PartidaDTO(tablero, jugadores);
+            List<Map<String, Object>> jugadoresMap = (List<Map<String, Object>>) mapa.get("jugadores");
+            List<JugadorDTO> jugadores = new ArrayList<>();
+
+            if (jugadoresMap != null && !jugadoresMap.isEmpty()) {
+                for (Map<String, Object> jMap : jugadoresMap) {
+                    JugadorDTO jugador = new JugadorDTO();
+                    jugador.setId((String) jMap.get("id"));
+                    jugador.setTurno(jMap.get("turno") != null && (Boolean) jMap.get("turno"));
+                    jugador.setScore(jMap.get("score") != null ? ((Number) jMap.get("score")).intValue() : 0);
+                    jugador.setListo(jMap.get("listo") != null && (Boolean) jMap.get("listo"));
+                    jugador.setAvatar((String) jMap.get("avatar"));
+                    jugador.setColor((String) jMap.get("color"));
+                    jugadores.add(jugador);
+                  
+                    
+                }
+                partidaDTO.setJugadores(jugadores);
+                this.jugadoresTurnos = jugadores;
+            } else {
+                partidaDTO.setJugadores(jugadoresTurnos);
+            }
+
+            return partidaDTO;
         }
 
         throw new IllegalArgumentException(
@@ -193,12 +297,7 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
 
     @Override
     public void agregarObservador(ObservadorEventos ob) {
-        this.observadorConfiguraciones = ob;
-    }
-
-    @Override
-    public void notificarInicioJuego(PartidaDTO partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.observadorEventos = ob;
     }
 
     @Override
@@ -210,4 +309,5 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
     public void notificarSolictudInicio(PartidaDTO partida) {
         observadorSolicitudInicio.actualizar(partida);
     }
+
 }

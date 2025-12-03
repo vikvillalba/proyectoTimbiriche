@@ -13,6 +13,7 @@ import objetosPresentables.JugadorPresentable;
 
 /**
  * Representación gráfica de los jugadores de la partida.
+ *
  * @author victoria
  */
 public class PnlJugadores extends JPanel implements ObservadorJugadores, ObservableTurno {
@@ -51,22 +52,28 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores, Observa
     public void actualizar(List<JugadorPresentable> jugadores) {
         this.jugadores = jugadores;
 
-        for (int i = 0; i < panelesJugadores.size(); i++) {
-            panelesJugadores.get(i).setJugador(jugadores.get(i));
-            panelesJugadores.get(i).cargarDatos();
-        }
+            for (int i = 0; i < panelesJugadores.size(); i++) {
+                if (i < jugadores.size()) {
+                    panelesJugadores.get(i).setJugador(jugadores.get(i));
+                    panelesJugadores.get(i).cargarDatos();
+                }
+            }
+        
 
         revalidate();
         repaint();
         notificar();
+
     }
 
     public JugadorPresentable getJugadorEnTurno() {
+     
         for (JugadorPresentable jugador : jugadores) {
             if (jugador.isTurno()) {
                 return jugador;
             }
         }
+
         return null;
     }
 

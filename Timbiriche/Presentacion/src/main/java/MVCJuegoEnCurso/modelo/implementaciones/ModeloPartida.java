@@ -1,11 +1,14 @@
 package MVCJuegoEnCurso.modelo.implementaciones;
 
+import Entidades.AvatarEnum;
+import Entidades.ColorEnum;
 import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
 import Fachada.PartidaFachada;
-import MVCConfiguracion.observer.ObservableInicioPartida;
+import MVCConfiguracion.observer.ObservableEnsambladorInicio;
+import MVCConfiguracion.observer.ObservadorEnsamblador;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
@@ -26,12 +29,16 @@ import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import Mapper.MapperJugadores;
 import Observer.ObservadorInicio;
 import excepciones.JugadaException;
 import excepciones.PartidaExcepcion;
 import java.util.stream.Collectors;
 import objetosPresentables.CuadroPresentable;
 import objetosPresentables.JugadorConfig;
+import objetosPresentables.PartidaPresentable;
+import org.itson.dto.JugadorDTO;
+import org.itson.dto.PartidaDTO;
 
 /**
  *
@@ -45,13 +52,13 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservadorTurnos,
         Observer.ObservadorJugadores,
         Observer.ObservadorEventos,
-        ObservableInicioPartida
-        {
+        ObservableEnsambladorInicio {
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
     private ObservadorTablero observadorTablero;
     private ObservadorInicioPartida observadorInicioJuego;
+    private ObservadorEnsamblador observadorEnsamblador;
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
@@ -123,6 +130,73 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         return AVATARES.get(avatarEnum.toLowerCase());
     }
 
+    private ColorEnum getColorEnum(Color color) {
+        for (Map.Entry<String, Color> entry : COLORES.entrySet()) {
+            if (entry.getValue().equals(color)) {
+                return ColorEnum.valueOf(entry.getKey().toUpperCase());
+            }
+        }
+        return null;
+    }
+
+    private AvatarEnum getAvatarEnum(String avatarName) {
+        if (avatarName == null) {
+            return AvatarEnum.TIBURON_SMILE_GRAY;
+        }
+
+        try {
+            return AvatarEnum.valueOf(avatarName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return AvatarEnum.TIBURON_SMILE_GRAY; // valor x defecto
+        }
+    }
+
+    private ColorEnum getColorEnum(String colorName) {
+        if (colorName == null) {
+            return ColorEnum.AZUL_PASTEL;
+        }
+        try {
+            return ColorEnum.valueOf(colorName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+
+            return ColorEnum.AZUL_PASTEL; // valor x defecto
+        }
+    }
+
+    private List<Jugador> jugadoresDTOAEntidad(List<JugadorDTO> jugadoresDTO) {
+        List<Jugador> jugadores = new ArrayList<>();
+
+        for (JugadorDTO config : jugadoresDTO) {
+
+            AvatarEnum avatar = getAvatarEnum(config.getAvatar());
+            ColorEnum color = getColorEnum(config.getColor());
+
+            Jugador jugador = new Jugador();
+            jugador.setNombre(config.getId());
+            jugador.setTurno(config.isTurno());
+            jugador.setAvatar(avatar);
+            jugador.setColor(color);
+            jugador.setScore(config.getScore());
+            jugadores.add(jugador);
+        }
+
+        return jugadores;
+    }
+
+    private Jugador jugadorDTOAEntidad(JugadorDTO config) {
+        AvatarEnum avatar = getAvatarEnum(config.getAvatar());
+        ColorEnum color = getColorEnum(config.getColor());
+
+        Jugador jugador = new Jugador();
+        jugador.setNombre(config.getId());
+        jugador.setTurno(config.isTurno());
+        jugador.setAvatar(avatar);
+        jugador.setColor(color);
+        jugador.setScore(config.getScore());
+
+        return jugador;
+    }
+
     // traduce a entidad y llama al validar de fachada
     @Override
     public boolean unirPuntos(PuntoPresentable[] puntos) throws JugadaException {
@@ -132,7 +206,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         } catch (PartidaExcepcion ex) {
             throw new JugadaException(ex.getMessage());
         }
-        
+
         notificarObservadorTablero();
 
         if (jugada) {
@@ -222,7 +296,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         List<JugadorPresentable> jugadoresVista = jugadoresEntidadAPresentable(jugadores);
         observadorJugadores.actualizar(jugadoresVista);
     }
-    
+
     @Override
     public void agregarObservadorTablero(ObservadorTablero ob) {
         this.observadorTablero = ob;
@@ -268,13 +342,37 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     }
 
     @Override
-    public void agregarObservadorInicioPartida(ObservableInicioPartida ob) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void iniciarPartida(PartidaDTO partidaDTO, JugadorDTO sesion) {
+
+        List<JugadorDTO> jugadoresDTO = partidaDTO.getJugadores();
+        List<Jugador> jugadoresEntidad = jugadoresDTOAEntidad(partidaDTO.getJugadores());
+        Jugador sesionEntidad = jugadorDTOAEntidad(sesion);
+
+        Jugador jugadorConTurno = null;
+        for (Jugador j : jugadoresEntidad) {
+            if (j.isTurno()) {
+                jugadorConTurno = j;
+                break;
+            }
+        }
+        notificarEnsamblador(
+                jugadoresEntidad,
+                partidaDTO.getTablero().getAlto(),
+                partidaDTO.getTablero().getAncho(),
+                sesionEntidad
+        );
+
+        notificarObservadorJugadores(jugadoresEntidad);
     }
 
     @Override
-    public void notificarInicio(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void agregarObservadorEnsamblador(ObservadorEnsamblador ob) {
+        observadorEnsamblador = ob;
+    }
+
+    @Override
+    public void notificarEnsamblador(List<Jugador> jugadores, int altoTablero, int anchoTablero, Jugador sesion) {
+        observadorEnsamblador.ensamblarPartida(jugadores, altoTablero, anchoTablero, sesion);
     }
 
 }

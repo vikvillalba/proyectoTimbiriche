@@ -45,8 +45,6 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private int puertoOrigen;
     private int puertoDestino;
 
-
-
     public Partida() {
         this.mapperJugadores = new MapperJugadores();
     }
@@ -55,12 +53,10 @@ public class Partida implements PartidaFachada, ObservableEventos {
         this.jugadores = jugadores;
     }
 
-    public void setTablero(int alto, int ancho){
-         this.tablero = new Tablero(alto, ancho);
+    public void setTablero(int alto, int ancho) {
+        this.tablero = new Tablero(alto, ancho);
     }
-    
-    
-    
+
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
         return new Punto[]{origen, destino};
@@ -201,10 +197,8 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void turnoActualizado(PaqueteDTO paquete) {
-        // Convertir contenido a JugadorDTO
-        JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
 
-        System.out.println("[Partida] Jugador en turno segun DTO: " + jugadorTurnoDTO.getId());
+        JugadorDTO jugadorTurnoDTO = convertirAJugadorDTO(paquete.getContenido());
 
         boolean turnoCambio = false;
         for (Jugador j : jugadores) {
@@ -230,34 +224,28 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-      
+
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
+        obtenerJugadorTurno();
+        notificarObservadorJugadores();
     }
 
-    public void obtenerJugadorTurno(PaqueteDTO paquete) {
-          // Convertir contenido a List<JugadorDTO>
-        List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
+    public void obtenerJugadorTurno() {
 
-        for (JugadorDTO dto : jugadoresDTO) {
-            for (Jugador j : jugadores) {
-                if (j.getNombre().equals(dto.getId())) {
-                    if (dto.isTurno()) {
-                        j.setTurno(true);
-                        this.jugadorEnTurno = j;
-                    } else {
-                        j.setTurno(false);
-                    }
-                }
+        for (Jugador j : jugadores) {
+            if (j.isTurno()) {
+                this.jugadorEnTurno = j;
             }
         }
+
     }
 
     @Override
     public void actualizarPuntos(PaqueteDTO paquete) {
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
-        System.out.println("[Partida] Puntos actualizados question mark");
+        
 
         for (JugadorDTO dto : jugadoresDTO) {
             for (Jugador j : jugadores) {
@@ -277,9 +265,6 @@ public class Partida implements PartidaFachada, ObservableEventos {
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
-
-   
-
 
     @Override
     public void notificarEventoRecibido(Object evento) {
@@ -394,7 +379,4 @@ public class Partida implements PartidaFachada, ObservableEventos {
         return resultado;
     }
 
-
-    
-    
 }

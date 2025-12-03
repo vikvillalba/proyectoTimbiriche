@@ -12,7 +12,7 @@ public interface ObservableEventos {
 
     void notificarEventoRecibido(PartidaDTO evento);
 
-    void notificarInicioJuego(PartidaDTO partida);
+    void notificarInicioJuego();
     
     void agregarObservadorSolicitudInicio(ObservadorSolicitudInicio ob);
     void notificarSolictudInicio(PartidaDTO partida);

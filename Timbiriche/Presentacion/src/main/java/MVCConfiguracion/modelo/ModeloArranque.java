@@ -32,7 +32,7 @@ import org.itson.dto.TableroDTO;
 public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones, ObservadorEventos<Object>, ObservadorSolicitudInicio {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
-    private ObservadorEventoInicio observadorInicio;
+    private ObservadorEventoInicio observadorInicio; // controlador
     private ObservadorSolicitudes observadorSolicitudes;
     private ConfiguracionesFachada configuracionesPartida;
     private JugadorDTO sesion;
@@ -144,11 +144,6 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         return jugador;
     }
 
-    @Override
-    public void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     private JugadorDTO presentableADTO(JugadorConfig jugador) {
         JugadorDTO jugadorDTO = new JugadorDTO();
         jugadorDTO.setId(jugador.getNombre());
@@ -180,11 +175,6 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     @Override
     public void agregarObservadorEventoInicio(ObservadorEventoInicio ob) {
         this.observadorInicio = ob;
-    }
-
-    @Override
-    public void notificarInicioPartida(PartidaPresentable partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -230,6 +220,21 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         this.configuraciones = configuracionesPartida;
         notificarConfiguraciones(getConfiguracionesPartida());
         notificarObservadorSolicitudes();
+    }
+
+    @Override
+    public void iniciarJuego(PartidaDTO partida) {
+        //notifica al controlador
+        this.configuraciones = partida;
+        notificarInicioPartida();
+
+    }
+
+    @Override
+    public void notificarInicioPartida() {
+        observadorConfiguraciones.ocultarVista();
+        observadorInicio.iniciar(configuraciones, sesion);
+
     }
 
 }

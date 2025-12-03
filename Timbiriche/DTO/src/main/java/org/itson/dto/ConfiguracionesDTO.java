@@ -45,7 +45,7 @@ public class ConfiguracionesDTO {
                     j.setListo(Boolean.TRUE.equals(mapa.get("listo")));
                     j.setAvatar((String) mapa.get("avatar"));
                     j.setColor((String) mapa.get("color"));
-                    return; 
+                    return;
                 }
 
                 jugadorAGregar = new JugadorDTO();
@@ -80,6 +80,62 @@ public class ConfiguracionesDTO {
                 this.tablero = new TableroDTO(alto, ancho);
             }
         }
+    }
+
+    public void setJugadores(Object contenido) {
+        jugadores.clear();
+
+        List<JugadorDTO> nuevos = convertirAListaJugadoresDTO(contenido);
+
+        if (nuevos != null) {
+            jugadores.addAll(nuevos);
+        }
+    }
+
+    private List<JugadorDTO> convertirAListaJugadoresDTO(Object contenido) {
+        List<JugadorDTO> resultado = new ArrayList<>();
+
+        if (contenido instanceof List<?> lista) {
+            for (Object item : lista) {
+                JugadorDTO dto = mapToJugadorDTO(item);
+                if (dto != null) {
+                    resultado.add(dto);
+                }
+            }
+
+        } else if (contenido instanceof PaqueteDTO<?> paquete) {
+            return convertirAListaJugadoresDTO(paquete.getContenido());
+
+        } else {
+            // Caso único: un jugador solo
+            JugadorDTO dto = mapToJugadorDTO(contenido);
+            if (dto != null) {
+                resultado.add(dto);
+            }
+        }
+
+        return resultado;
+    }
+
+    private JugadorDTO mapToJugadorDTO(Object item) {
+        if (item instanceof JugadorDTO jugador) {
+            return jugador;
+        }
+
+        if (item instanceof Map<?, ?> mapa) {
+            JugadorDTO dto = new JugadorDTO();
+
+            dto.setId((String) mapa.get("id"));
+            dto.setTurno(Boolean.TRUE.equals(mapa.get("turno")));
+            dto.setScore(mapa.get("score") != null ? ((Number) mapa.get("score")).intValue() : 0);
+            dto.setListo(Boolean.TRUE.equals(mapa.get("listo")));
+            dto.setAvatar((String) mapa.get("avatar"));
+            dto.setColor((String) mapa.get("color"));
+
+            return dto;
+        }
+
+        return null;
     }
 
 }

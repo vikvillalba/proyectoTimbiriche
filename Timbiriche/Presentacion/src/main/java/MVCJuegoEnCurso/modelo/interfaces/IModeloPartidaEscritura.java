@@ -1,7 +1,13 @@
 package MVCJuegoEnCurso.modelo.interfaces;
 
 import excepciones.JugadaException;
+import java.util.List;
+import objetosPresentables.JugadorConfig;
+import objetosPresentables.JugadorPresentable;
+import objetosPresentables.PartidaPresentable;
 import objetosPresentables.PuntoPresentable;
+import org.itson.dto.JugadorDTO;
+import org.itson.dto.PartidaDTO;
 
 /**
  * Interfaz que da acceso a métodos de solo escritura relacionados a una
@@ -24,4 +30,6 @@ public interface IModeloPartidaEscritura {
      * Llama a la fachada para que actualice al jugador en turno.
      */
     void actualizarTurnos();
+    
+    void iniciarPartida(PartidaDTO partida, JugadorDTO sesion);
 }

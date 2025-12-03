@@ -22,6 +22,7 @@ public class EventBus {
     private Map<String, List<Servicio>> servicios;
     private IEmisor emisor;
     private ConfiguracionesDTO configuraciones;
+    private Map<String, List<PaqueteDTO>> historialPaquetes = new ConcurrentHashMap<>();
 
     public EventBus() {
         this.servicios = new ConcurrentHashMap<>();
@@ -53,6 +54,7 @@ public class EventBus {
             }
 
             System.out.println("[EventBus] Servicio registrado: " + nuevoServicio);
+            return;
         }
         if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_CONFIGURACIONES_PARTIDA")) {
             paquete.setContenido(configuraciones);
@@ -65,17 +67,33 @@ public class EventBus {
             paquete.setContenido(configuraciones);
             paquete.setTipoEvento("OBTENER_CONFIGURACIONES_PARTIDA");
             notificarServicios(paquete);
+            return;
         }
 
+        if (paquete.getTipoEvento().equalsIgnoreCase("TURNOS_REPARTIDOS")) {
+            configuraciones.setJugadores(paquete);
+            paquete.setContenido(configuraciones);
+            notificarServicios(paquete);
+            return;
+
+        }
         if (paquete.getTipoEvento().equalsIgnoreCase("SOLICITAR_INICIAR_PARTIDA")) {
             configuraciones.agregarJugador(paquete);
             paquete.setContenido(configuraciones);
             notificarServicios(paquete);
+            return;
         }
         if (paquete.getTipoEvento().equalsIgnoreCase("REGISTRAR_TABLERO")) {
             configuraciones.setTablero(paquete);
             System.out.println("Tablero registrado");
             return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("INICIO_PARTIDA")) {
+            // Crear un nuevo paquete con contenido correcto
+            PaqueteDTO inicioPartida = new PaqueteDTO(configuraciones,"INICIO_PARTIDA");
+            notificarServicios(inicioPartida); 
+            return; 
         }
 
         notificarServicios(paquete);
@@ -100,12 +118,22 @@ public class EventBus {
         }
     }
 
-    //notificar servicios por red
     public void notificarServicios(PaqueteDTO paquete) {
         List<Servicio> lista = servicios.get(paquete.getTipoEvento());
-
         if (lista == null) {
             return;
+        }
+
+        if (paquete.getTipoEvento().equalsIgnoreCase("INICIO_PARTIDA")
+                || paquete.getTipoEvento().equalsIgnoreCase("TURNOS_REPARTIDOS")) {
+
+            List<PaqueteDTO> historial = historialPaquetes.computeIfAbsent(paquete.getTipoEvento(), k -> new ArrayList<>());
+
+            if (historial.contains(paquete)) {
+                return;
+            }
+
+            historial.add(paquete);
         }
 
         for (Servicio servicio : lista) {

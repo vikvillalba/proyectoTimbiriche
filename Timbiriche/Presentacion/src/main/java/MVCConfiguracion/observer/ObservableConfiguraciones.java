@@ -1,6 +1,7 @@
 package MVCConfiguracion.observer;
 
 import objetosPresentables.PartidaPresentable;
+import org.itson.dto.PartidaDTO;
 
 /**
  *
@@ -9,7 +10,7 @@ import objetosPresentables.PartidaPresentable;
 public interface ObservableConfiguraciones {
     void agregarObservadorConfiguraciones(ObservadorConfiguraciones ob);
     void agregarObservadorEventoInicio(ObservadorEventoInicio ob);
-    void notificarInicioPartida(PartidaPresentable partida);
+    void notificarInicioPartida();
     void notificarConfiguraciones(PartidaPresentable partida);
     void agregarObservadorSolicitudes(ObservadorSolicitudes ob);
     void notificarObservadorSolicitudes();

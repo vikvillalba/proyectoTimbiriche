@@ -2,7 +2,10 @@ package MVCJuegoEnCurso.controlador;
 
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import excepciones.JugadaException;
+import objetosPresentables.PartidaPresentable;
 import objetosPresentables.PuntoPresentable;
+import org.itson.dto.JugadorDTO;
+import org.itson.dto.PartidaDTO;
 
 /**
  * Controlador que maneja los eventos durante una partida en curso
@@ -49,6 +52,10 @@ public class ControladorPartida {
         return false;
     }
 
+    public void iniciarPartida(PartidaDTO partida, JugadorDTO sesion){
+        modelo.iniciarPartida(partida, sesion);
+       
+    }
     /**
      * Llamada al modelo para que actualice los turnos de la partida.
      */

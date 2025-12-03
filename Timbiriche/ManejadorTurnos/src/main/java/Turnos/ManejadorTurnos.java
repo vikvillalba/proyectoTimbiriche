@@ -39,6 +39,9 @@ public class ManejadorTurnos implements IReceptor {
         for (JugadorDTO j : jugadores) {
             JugadorDTO copia = new JugadorDTO(j.getId());
             copia.setTurno(false);
+            copia.setAvatar(j.getAvatar());
+            copia.setColor(j.getColor());
+            copia.setListo(j.isListo());
             turnos.add(copia);
         }
 
@@ -47,7 +50,7 @@ public class ManejadorTurnos implements IReceptor {
         jugadorEnTurno = turnos.get(indiceActual);
         jugadorEnTurno.setTurno(true);
 
-        PaqueteDTO paqueteInicial = new PaqueteDTO(turnos, TipoEvento.INICIO_PARTIDA.toString());
+        PaqueteDTO paqueteInicial = new PaqueteDTO(turnos, TipoEvento.TURNOS_REPARTIDOS.toString());
         paqueteInicial.setHost(host);
         paqueteInicial.setPuertoOrigen(puertoOrigen);
         paqueteInicial.setPuertoDestino(puertoDestino);
@@ -91,6 +94,8 @@ public class ManejadorTurnos implements IReceptor {
             LinkedTreeMap<?, ?> map = (LinkedTreeMap<?, ?>) o;
             JugadorDTO j = new JugadorDTO((String) map.get("id"));
             Object turno = map.get("turno");
+            j.setAvatar((String) map.get("avatar"));
+            j.setColor((String) map.get("color"));
             if (turno != null) {
                 j.setTurno((Boolean) turno);
             }

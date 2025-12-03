@@ -3,10 +3,10 @@ package MVCConfiguracion.controlador;
 import MVCConfiguracion.modelo.IModeloArranqueEscritura;
 import MVCConfiguracion.observer.ObservadorEventoInicio;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
-import java.util.List;
 import objetosPresentables.JugadorConfig;
 import objetosPresentables.PartidaPresentable;
 import org.itson.dto.JugadorDTO;
+import org.itson.dto.PartidaDTO;
 
 /**
  *
@@ -30,9 +30,6 @@ public class ControladorArranque implements ObservadorEventoInicio {
         modelo.solicitarInicioConexion(jugador);
     }
 
-    public void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
-    }
-
     /**
      * El jugador de sesión acepta la solicitud de inicio de juego.
      */
@@ -45,7 +42,9 @@ public class ControladorArranque implements ObservadorEventoInicio {
     }
 
     @Override
-    public void iniciar(PartidaPresentable partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void iniciar(PartidaDTO partida, JugadorDTO sesion) {
+        // llama al otro controlador
+        controladorPartida.iniciarPartida(partida, sesion);
+        
     }
 }

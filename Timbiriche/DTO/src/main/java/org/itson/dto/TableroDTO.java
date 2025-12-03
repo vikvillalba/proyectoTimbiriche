@@ -21,6 +21,17 @@ public class TableroDTO {
     public int getAncho() {
         return ancho;
     }
+
+    public TableroDTO() {
+    }
+
+    public void setAlto(int alto) {
+        this.alto = alto;
+    }
+
+    public void setAncho(int ancho) {
+        this.ancho = ancho;
+    }
     
     
 }

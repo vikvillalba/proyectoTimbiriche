@@ -73,6 +73,11 @@ public class JugadorDTO {
         this.color = color;
     }
 
+    @Override
+    public String toString() {
+        return "JugadorDTO{" + "id=" + id + ", turno=" + turno + ", score=" + score + ", listo=" + listo + ", avatar=" + avatar + ", color=" + color + '}';
+    }
+
     
     
 }
