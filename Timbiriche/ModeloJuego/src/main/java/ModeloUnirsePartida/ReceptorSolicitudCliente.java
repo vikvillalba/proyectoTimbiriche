@@ -49,18 +49,11 @@ public class ReceptorSolicitudCliente implements IReceptor {
             }
 
             boolean aceptada = respuesta.isSolicitudEstado();
-            String estadoTexto = aceptada ? "ACEPTADA ✓" : "RECHAZADA ✗";
+            String estadoTexto = aceptada ? "ACEPTADA" : "RECHAZADA";
 
-            System.out.println("✓ Respuesta recibida del host: " + estadoTexto);
+            System.out.println("Respuesta recibida del host: " + estadoTexto);
 
             unirsePartida.cambiarEstadoSolicitud(respuesta, aceptada);
-
-            if (aceptada) {
-                System.out.println("✓ ¡Tu solicitud fue aceptada! Entrando a la sala de espera...");
-            } else {
-                String mensajeRechazo = obtenerMensajeRechazo(respuesta.getTipoRechazo());
-                System.out.println("✗ Tu solicitud fue rechazada. Motivo: " + mensajeRechazo);
-            }
 
         } catch (Exception e) {
             System.err.println("ERROR al manejar respuesta de solicitud: " + e.getMessage());
@@ -69,7 +62,7 @@ public class ReceptorSolicitudCliente implements IReceptor {
     }
 
     /**
-     * Manejar respuesta del host (cuando solicitamos OBTENER_HOST)
+     * Manejar respuesta del host cuando solicita OBTENER_HOST
      */
     private void manejarRespuestaHost(PaqueteDTO paquete) {
         try {
@@ -79,34 +72,10 @@ public class ReceptorSolicitudCliente implements IReceptor {
             unirsePartida.modeloArranque.actualizar(jugadorHost);
             unirsePartida.setJugadorHost(jugadorHost);
 
-            if (jugadorHost != null) {
-                System.out.println("✓ Host encontrado: " + jugadorHost.getIp() + ":" + jugadorHost.getPuerto());
-            } else {
-                System.out.println("✗ No se encontró un host disponible");
-            }
-
         } catch (Exception e) {
             System.err.println("ERROR al manejar RESPUESTA_HOST: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private String obtenerMensajeRechazo(String tipoRechazo) {
-        if (tipoRechazo == null) {
-            return "Rechazado por el host";
-        }
-
-        switch (tipoRechazo) {
-            case "PARTIDA_LLENA":
-                return "La partida está llena";
-            case "PARTIDA_INICIADA":
-                return "La partida ya inició";
-            case "PARTIDA_FINALIZADA":
-                return "La partida ha finalizado";
-            case "RECHAZADO_POR_HOST":
-                return "Rechazado por el host";
-            default:
-                return "Rechazado - " + tipoRechazo;
-        }
-    }
 }

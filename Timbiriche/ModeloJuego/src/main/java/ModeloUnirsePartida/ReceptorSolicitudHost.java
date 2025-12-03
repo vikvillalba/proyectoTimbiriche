@@ -51,16 +51,15 @@ public class ReceptorSolicitudHost implements IReceptor {
                 ((UnirsePartida) unirsePartida).setSolicitudActual(solicitud);
             }
 
-            System.out.println("✓ Solicitud recibida de: "
+            System.out.println("Solicitud recibida de: "
                 + solicitud.getJugadorSolicitante().getIp() + ":"
                 + solicitud.getJugadorSolicitante().getPuerto());
 
-            // Notificar al modelo (que a su vez notificará a la vista HOST)
+            // Notificar al modelo que a su vez notifica a la vista HOST
             // para que se muestre el diálogo de aceptar/rechazar
             unirsePartida.cambiarEstadoSolicitud(solicitud, solicitud.isSolicitudEstado());
 
         } catch (Exception e) {
-            System.err.println("ERROR al manejar solicitud de unirse: " + e.getMessage());
             e.printStackTrace();
         }
     }

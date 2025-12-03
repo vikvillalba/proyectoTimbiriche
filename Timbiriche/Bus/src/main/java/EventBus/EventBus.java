@@ -123,7 +123,7 @@ public class EventBus {
     }
 
     //obtener el host de la partida
-    public Servicio obtenerHost() {
+    public Servicio obtenerHostPartida() {
         //el host es el unico suscriptor a este evento
         List<Servicio> lista = servicios.get("SOLICITAR_UNIRSE");
         if (lista == null || lista.isEmpty()) {
@@ -133,7 +133,7 @@ public class EventBus {
     }
 
     public void enviarHost(PaqueteDTO paquete) {
-        Servicio host = obtenerHost();
+        Servicio host = obtenerHostPartida();
 
         PaqueteDTO respuesta = new PaqueteDTO();
         respuesta.setTipoEvento("RESPUESTA_HOST");
