@@ -77,62 +77,21 @@ public class PartidaComunicacion implements IReceptor {
                 break;
             }
             case INICIO_PARTIDA:
-                if (!inicioRecibido && paquete.getContenido() != null) {
-                    PartidaDTO partidaDTO = null;
-                    Object contenido = paquete.getContenido();
+                if (!inicioRecibido) {
 
-                    if (contenido instanceof PartidaDTO pdto) {
-                        partidaDTO = pdto;
-                    } else if (contenido instanceof Map mapa) {
-                        partidaDTO = new PartidaDTO();
+                    configuraciones.partidaIniciada(paquete);
+                    inicioRecibido = true;
 
-                        Map<String, Object> tableroMap = (Map<String, Object>) mapa.get("tablero");
-                        if (tableroMap != null) {
-                            TableroDTO tablero = new TableroDTO();
-                            tablero.setAlto(((Number) tableroMap.get("alto")).intValue());
-                            tablero.setAncho(((Number) tableroMap.get("ancho")).intValue());
-                            partidaDTO.setTablero(tablero);
-                        }
-
-                        List<Map<String, Object>> jugadoresMap = (List<Map<String, Object>>) mapa.get("jugadores");
-                        List<JugadorDTO> jugadores = new ArrayList<>();
-
-
-                        if (jugadoresMap != null && !jugadoresMap.isEmpty()) {
-                            for (Map<String, Object> jMap : jugadoresMap) {
-                                JugadorDTO jugador = new JugadorDTO();
-                                jugador.setId((String) jMap.get("id"));
-                                jugador.setTurno(jMap.get("turno") != null && (Boolean) jMap.get("turno"));
-                                jugador.setScore(jMap.get("score") != null ? ((Number) jMap.get("score")).intValue() : 0);
-                                jugador.setListo(jMap.get("listo") != null && (Boolean) jMap.get("listo"));
-                                jugador.setAvatar((String) jMap.get("avatar"));
-                                jugador.setColor((String) jMap.get("color"));
-                                jugadores.add(jugador);
-                              
-                            }
-                            partidaDTO.setJugadores(jugadores);
-                            this.jugadores = jugadores;
-                            
-
-                        } else {
-                            partidaDTO.setJugadores(new ArrayList<>());
-                        }
-                    }
-
-                    if (partidaDTO != null) {
-                        configuraciones.partidaIniciada(paquete);
-                        inicioRecibido = true;
-                    }
                 }
                 break;
 
             case TURNOS_REPARTIDOS:
-//                if (!turnosRecibidos) {
-                    configuraciones.turnosRepartidos(paquete);
-//                    turnosRecibidos = true;   
-//                } 
+                if (!turnosRecibidos) {
+                configuraciones.turnosRepartidos(paquete);
+                    turnosRecibidos = true;   
+                } 
                 break;
-                
+
             case UNIRSE_PARTIDA:
                 partida.notificarEventoRecibido("Un jugador se unio a la partida");
                 break;
