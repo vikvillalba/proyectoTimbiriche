@@ -41,7 +41,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         this.setLocationRelativeTo(null);
         this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
         this.setBackground(COLOR_FONDO);
-        this.setSize(800, 510);
+        this.setSize(1000, 600);
 
     }
 
@@ -50,7 +50,6 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         for (JugadorConfig jugador : jugadores) {
             tamanoPanel ++;
             pnlJugadores.add(new PnlJugador(jugador));
-            pnlJugadores.add(Box.createHorizontalGlue());
         }
         pnlJugadores.setSize((250 * tamanoPanel), 261);
         pnlJugadores.revalidate();
@@ -137,7 +136,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         pnlFooterLayout.setHorizontalGroup(
             pnlFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFooterLayout.createSequentialGroup()
-                .addGap(101, 101, 101)
+                .addGap(230, 230, 230)
                 .addComponent(btnRegresar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnIniciar)
@@ -164,9 +163,9 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(72, 72, 72)
+                .addGap(180, 180, 180)
                 .addComponent(lblTitulo)
-                .addContainerGap(398, Short.MAX_VALUE))
+                .addContainerGap(290, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
