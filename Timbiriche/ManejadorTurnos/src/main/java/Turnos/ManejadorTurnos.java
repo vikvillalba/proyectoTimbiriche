@@ -17,7 +17,7 @@ import org.itson.dto.PaqueteDTO;
 public class ManejadorTurnos implements IReceptor {
 
     private List<JugadorDTO> turnos = new ArrayList<>();
-    ;
+
     private JugadorDTO jugadorEnTurno;
     private IEmisor emisor;
     private int indiceActual = 0; // en que turno va
@@ -109,8 +109,18 @@ public class ManejadorTurnos implements IReceptor {
             if (eliminado) {
                 System.out.println("Se removió de los turnos al jugador: " + jugador);
             }
+
             if (jugador.isTurno() == true) {
                 actualizarTurno();
+            }
+
+            if (turnos.size() < 2) {
+                PaqueteDTO paquetes = new PaqueteDTO(jugador, "NUM_JUGADORES_INSUFICIENTE");
+                paquetes.setHost(host);
+                paquetes.setPuertoOrigen(puertoOrigen);
+                paquetes.setPuertoDestino(puertoDestino);
+
+                emisor.enviarCambio(paquetes);
             }
         }
 

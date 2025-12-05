@@ -310,5 +310,4 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     public void agregarObservadorAbandonar(ObservadorAbandono ob) {
         this.observadorAbandonar = ob;
     }
-
 }

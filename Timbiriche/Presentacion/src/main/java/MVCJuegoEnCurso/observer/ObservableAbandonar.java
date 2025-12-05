@@ -10,5 +10,4 @@ package MVCJuegoEnCurso.observer;
  */
 public interface ObservableAbandonar {
     void agregarObservadorAbandonar(ObservadorAbandono ob);
-    void notificar();
 }
