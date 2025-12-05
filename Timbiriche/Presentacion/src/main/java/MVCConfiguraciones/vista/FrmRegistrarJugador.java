@@ -9,15 +9,21 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -30,7 +36,7 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
     private JPanel panelAvatares;
     private ButtonGroup grupoAvatares;
     private String avatarSeleccionado = null;
-    private Map<String, Image> avatares;
+    private Map<String, Image> avatars;
     private Map<String, Color> colores;
 
     /**
@@ -39,18 +45,17 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
     public FrmRegistrarJugador(IModeloArranqueLectura modelo) {
         initComponents();
         this.modelo = modelo;
-        this.avatares = modelo.getAvatares();
+        this.avatars = modelo.getAvatares();
         this.colores = modelo.getColores();
         cargarColores();
+        crearPanelAvatares();
     }
 
     private void cargarColores() {
         DefaultComboBoxModel<String> modeloCombo = new DefaultComboBoxModel<>();
-
         for (String colorKey : colores.keySet()) {
             modeloCombo.addElement(colorKey);
         }
-
         cbBoxColor.setModel(modeloCombo);
         cbBoxColor.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -60,22 +65,56 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
                     String colorKey = value.toString();
                     Color color = colores.get(colorKey);
                     if (color != null) {
-                        JPanel colorPanel = new JPanel();
-                        colorPanel.setBackground(color);
-                        colorPanel.setPreferredSize(new Dimension(60, 20));
-                        label.setIcon(new ColorIcon(color, 60, 20));
+                        label.setIcon(new ColorIcon(color, 560, 30));
+                        label.setText("");
+                        label.setHorizontalAlignment(SwingConstants.CENTER);
                     }
-                    label.setText(formatearNombreColor(colorKey));
                 }
                 return label;
             }
         });
     }
 
-    private String formatearNombreColor(String colorKey) {
-        return colorKey.replace("_", " ")
-                .substring(0, 1).toUpperCase()
-                + colorKey.replace("_", " ").substring(1);
+    private void crearPanelAvatares() {
+        panelAvatares = new JPanel();
+        panelAvatares.setLayout(new GridLayout(2, 5, 10, 10));
+        panelAvatares.setBounds(151, 260, 700, 200);
+        grupoAvatares = new ButtonGroup();
+
+        for (Map.Entry<String, Image> entry : avatars.entrySet()) {
+            String avatarKey = entry.getKey();
+            Image imagen = entry.getValue();
+            if (imagen != null) {
+                JToggleButton btnAvatar = new JToggleButton() {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        if (isSelected()) {
+                            Graphics2D g2 = (Graphics2D) g.create();
+                            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                            g2.setColor(new Color(7, 55, 127));
+                            g2.setStroke(new java.awt.BasicStroke(5));
+                            g2.drawOval(26, 8, getHeight() - 18, getHeight() - 18);
+                            g2.dispose();
+                        }
+                    }
+                };
+                btnAvatar.setIcon(new ImageIcon(entry.getValue()));
+                btnAvatar.setPreferredSize(new Dimension(100, 120));
+                btnAvatar.setBorderPainted(false);
+                btnAvatar.setFocusPainted(false);
+                btnAvatar.setContentAreaFilled(false);
+                btnAvatar.addActionListener(e -> {
+                    avatarSeleccionado = avatarKey;
+                    for (Component comp : panelAvatares.getComponents()) {
+                        comp.repaint();
+                    }
+                });
+                grupoAvatares.add(btnAvatar);
+                panelAvatares.add(btnAvatar);
+            }
+        }
+        getContentPane().add(panelAvatares);
     }
 
     /**
@@ -118,6 +157,11 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
 
         cbBoxColor.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         cbBoxColor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbBoxColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbBoxColorActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(7, 55, 127));
@@ -199,8 +243,12 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
-        // TODO add your handling code here:
+        System.out.println("nombre: " + txtName.getText() + " color: " + cbBoxColor.getSelectedItem().toString() + " avatarr: " + avatarSeleccionado);
     }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void cbBoxColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBoxColorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbBoxColorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
