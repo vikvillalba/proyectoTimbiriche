@@ -5,12 +5,13 @@
 package MVCConfiguraciones.vista;
 
 import MVCConfiguraciones.controlador.ControladorArranque;
+import MVCConfiguraciones.observer.Observador;
 
 /**
  *
  * @author erika
  */
-public class frmConfigurarPartida extends javax.swing.JFrame {
+public class frmConfigurarPartida extends javax.swing.JFrame implements Observador{
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmConfigurarPartida.class.getName());
 
@@ -165,4 +166,9 @@ public class frmConfigurarPartida extends javax.swing.JFrame {
     private javax.swing.JLabel lblNumeroJugadores;
     private javax.swing.JLabel lblTamanio;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actualizar() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

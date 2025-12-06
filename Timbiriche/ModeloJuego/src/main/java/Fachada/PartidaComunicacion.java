@@ -23,6 +23,8 @@ public class PartidaComunicacion implements IReceptor{
     public void setPartida(Partida partida) {
         this.partida = partida;
     }
+    
+    
 
 
   @Override
