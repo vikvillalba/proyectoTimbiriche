@@ -4,7 +4,9 @@
  */
 package MVCConfiguraciones.vista;
 
+import MVCConfiguraciones.controlador.ControladorArranque;
 import MVCConfiguraciones.modelo.IModeloArranqueLectura;
+import MVCConfiguraciones.observer.ObserverRegistro;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,6 +15,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -29,10 +33,11 @@ import javax.swing.SwingConstants;
  *
  * @author Maryr
  */
-public class FrmRegistrarJugador extends javax.swing.JFrame {
+public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverRegistro {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmRegistrarJugador.class.getName());
     private IModeloArranqueLectura modelo;
+    private ControladorArranque controlador;
     private JPanel panelAvatares;
     private ButtonGroup grupoAvatares;
     private String avatarSeleccionado = null;
@@ -42,13 +47,15 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
     /**
      * Creates new form FrmRegistrarJugador
      */
-    public FrmRegistrarJugador(IModeloArranqueLectura modelo) {
+    public FrmRegistrarJugador(IModeloArranqueLectura modelo, ControladorArranque control) {
         initComponents();
         this.modelo = modelo;
+        this.controlador = control;
         this.avatars = modelo.getAvatares();
         this.colores = modelo.getColores();
         cargarColores();
         crearPanelAvatares();
+        setLocationRelativeTo(null);
     }
 
     private void cargarColores() {
@@ -65,7 +72,7 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
                     String colorKey = value.toString();
                     Color color = colores.get(colorKey);
                     if (color != null) {
-                        label.setIcon(new ColorIcon(color, 560, 30));
+                        label.setIcon(new ColorIcon(color, 580, 30));
                         label.setText("");
                         label.setHorizontalAlignment(SwingConstants.CENTER);
                     }
@@ -117,6 +124,20 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
         getContentPane().add(panelAvatares);
     }
 
+    private List<Boolean> verificarElementos(List<String> usados) {
+        List<Boolean> verificado = new ArrayList<>();
+        return verificado;
+    }
+
+    @Override
+    public void validarJugador(List<String> usados) {
+        verificarElementos(usados);
+    }
+
+    private void continuar() {
+        controlador.solicitarElementosUso();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,7 +159,6 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1040, 638));
         setMinimumSize(new java.awt.Dimension(1040, 638));
-        setPreferredSize(new java.awt.Dimension(1040, 638));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Monospaced", 1, 36)); // NOI18N
@@ -243,6 +263,7 @@ public class FrmRegistrarJugador extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
+        continuar();
         System.out.println("nombre: " + txtName.getText() + " color: " + cbBoxColor.getSelectedItem().toString() + " avatarr: " + avatarSeleccionado);
     }//GEN-LAST:event_btnContinuarActionPerformed
 

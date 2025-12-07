@@ -4,10 +4,15 @@
  */
 package MVCConfiguraciones.modelo;
 
+import org.itson.dto.JugadorDTO;
+
 /**
  *
  * @author Maryr
  */
 public interface IModeloArranqueEscritura {
-    
+
+    void registrarJugador(JugadorDTO jugador);
+
+    void solicitarElementosUso();
 }

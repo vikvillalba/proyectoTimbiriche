@@ -1,20 +1,27 @@
 package MVCConfiguraciones.modelo;
 
+import ConfiguracionesFachada.ConfiguracionesFachada;
+import MVCConfiguraciones.observer.ObservableRegistro;
+import MVCConfiguraciones.observer.ObserverRegistro;
 import java.awt.Color;
 import java.awt.Image;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
+import org.itson.dto.JugadorDTO;
 
 /**
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableRegistro {
 
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
+    private ObserverRegistro observerRegistro;
+    private ConfiguracionesFachada configuracion;
 
     public ModeloArranque() {
     }
@@ -59,5 +66,25 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     @Override
     public Map<String, Image> getAvatares() {
         return new HashMap<>(AVATARES);
+    }
+
+    @Override
+    public void registrarJugador(JugadorDTO jugador) {
+
+    }
+
+    @Override
+    public void agregarObserver(ObserverRegistro o) {
+        this.observerRegistro = o;
+    }
+
+    @Override
+    public void notificarObserver(List<String> usados) {
+        observerRegistro.validarJugador(usados);
+    }
+
+    @Override
+    public void solicitarElementosUso() {
+        
     }
 }

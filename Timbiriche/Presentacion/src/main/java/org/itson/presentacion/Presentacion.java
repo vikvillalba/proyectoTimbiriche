@@ -3,6 +3,8 @@
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
+import MVCConfiguraciones.controlador.ControladorArranque;
+import MVCConfiguraciones.modelo.IModeloArranqueEscritura;
 import MVCConfiguraciones.modelo.IModeloArranqueLectura;
 import MVCConfiguraciones.modelo.ModeloArranque;
 import MVCConfiguraciones.vista.FrmRegistrarJugador;
@@ -26,7 +28,9 @@ public class Presentacion {
 //        ConfiguracionesPartida.iniciarPartida(jugadores, alto, ancho);
 
         IModeloArranqueLectura modelo = new ModeloArranque();
-        FrmRegistrarJugador frm = new FrmRegistrarJugador(modelo);
+        IModeloArranqueEscritura modeloE = new ModeloArranque();
+        ControladorArranque control = new ControladorArranque(modeloE);
+        FrmRegistrarJugador frm = new FrmRegistrarJugador(modelo, control);
         frm.setVisible(true);
     }
 }
