@@ -4,21 +4,21 @@
  */
 package ensambladorPartida;
 
-import ensambladorGeneral.EnsambladorRegistro;
+import ensambladorGeneral.EnsambladorEsperaFake;
 
 /**
  *
  * @author Maryr
  */
-public class EnsambladorRegistroJugador {
+public class EnsambladorEsperaPrueba {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        EnsambladorRegistro
-                .getInstancia("config_partida1.properties")
-                .registrarJugador();
+        EnsambladorEsperaFake
+                .getInstancia("config_partida2.properties")
+                .iniciarEsperaFake();
     }
     
 }

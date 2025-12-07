@@ -4,6 +4,7 @@
  */
 package ConfiguracionesFachada;
 
+import java.util.List;
 import org.itson.dto.JugadorNuevoDTO;
 import org.itson.dto.PaqueteDTO;
 
@@ -18,5 +19,10 @@ public interface ConfiguracionesFachada {
     void solicitarElementosUso();
 
     void recibirUsados(PaqueteDTO paquete);
+
+    //solo para prueba
+    void enviarElementos(List<String> usados);
+
+    void recibirJugador(PaqueteDTO paquete);
 
 }

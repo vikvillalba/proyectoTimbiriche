@@ -4,22 +4,120 @@
  */
 package MVCConfiguraciones.vista;
 
+import Configuraciones.Observer.ObserverPrueba;
+import MVCConfiguraciones.controlador.ControladorArranque;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import org.itson.dto.JugadorDTO;
 import org.itson.dto.JugadorNuevoDTO;
 
 /**
  *
  * @author Maryr
  */
-public class FrmSalaEsperaFake extends javax.swing.JFrame {
-    
+public class FrmSalaEsperaFake extends javax.swing.JFrame implements ObserverPrueba {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmSalaEsperaFake.class.getName());
+    private List<JugadorNuevoDTO> jugadores;
+    private ControladorArranque controlador;
 
     /**
      * Creates new form FrmSalaEsperaFake
      */
-    public FrmSalaEsperaFake(JugadorNuevoDTO j) {
+    public FrmSalaEsperaFake(ControladorArranque controlador) {
+        this.controlador = controlador;
+        this.jugadores = new ArrayList<>();
         initComponents();
-        
+        panelJugador.setLayout(new BoxLayout(panelJugador, BoxLayout.Y_AXIS));
+        JugadorNuevoDTO jugadorMock = new JugadorNuevoDTO("sol", "magenta", "tiburon_ballena");
+        agregarJugador(jugadorMock);
+        actualizarContador();
+        setLocationRelativeTo(null);
+    }
+
+    public void agregarJugador(JugadorNuevoDTO jugador) {
+        jugadores.add(jugador);
+        System.out.println("[FrmSalaEsperaFake] Jugador agregado: " + jugador.getNombre());
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            agregarJugadorAPanel(jugador);
+            actualizarContador();
+        });
+    }
+
+    private void agregarJugadorAPanel(JugadorNuevoDTO jugador) {
+        JPanel panelJugadorIndividual = new JPanel();
+        panelJugadorIndividual.setLayout(new BoxLayout(panelJugadorIndividual, BoxLayout.Y_AXIS));
+        panelJugadorIndividual.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+        panelJugadorIndividual.setBackground(Color.WHITE);
+        panelJugadorIndividual.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        JLabel lblNombre = new JLabel("Nombre: " + jugador.getNombre());
+        lblNombre.setFont(new Font("Monospaced", Font.BOLD, 16));
+        lblNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblColor = new JLabel("Color: " + jugador.getColor());
+        lblColor.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        lblColor.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblAvatar = new JLabel("Avatar: " + jugador.getAvatar());
+        lblAvatar.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        lblAvatar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panelJugadorIndividual.add(Box.createRigidArea(new Dimension(0, 5)));
+        panelJugadorIndividual.add(lblNombre);
+        panelJugadorIndividual.add(lblColor);
+        panelJugadorIndividual.add(lblAvatar);
+        panelJugadorIndividual.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        panelJugador.add(panelJugadorIndividual);
+        panelJugador.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        panelJugador.revalidate();
+        panelJugador.repaint();
+    }
+
+    private void actualizarContador() {
+        lblContador.setText("Jugadores registrados: " + jugadores.size());
+    }
+
+    /**
+     * Obtiene los elementos usados por los jugadores registrados.
+     */
+    private List<String> obtenerElementosUsados() {
+        List<String> elementosUsados = new ArrayList<>();
+        for (JugadorNuevoDTO j : jugadores) {
+            elementosUsados.add(j.getNombre());
+            elementosUsados.add(j.getColor());
+            elementosUsados.add(j.getAvatar());
+        }
+        return elementosUsados;
+    }
+
+    @Override
+    public void solicitarElementos() {
+        System.out.println("[FrmSalaEsperaFake] Solicitud de elementos recibida");
+        List<String> usados = obtenerElementosUsados();
+        System.out.println("[FrmSalaEsperaFake] Enviando elementos: " + usados);
+        controlador.enviarElementosUsados(usados);
+    }
+
+    private void limpiarSala() {
+        jugadores.clear();
+        panelJugador.removeAll();
+        panelJugador.revalidate();
+        panelJugador.repaint();
+        actualizarContador();
+        System.out.println("[FrmSalaEsperaFake] Sala limpiada");
     }
 
     /**
@@ -31,22 +129,78 @@ public class FrmSalaEsperaFake extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblContador = new javax.swing.JLabel();
+        panelJugador = new javax.swing.JPanel();
+        btnLimpiar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblContador.setText("jLabel1");
+
+        javax.swing.GroupLayout panelJugadorLayout = new javax.swing.GroupLayout(panelJugador);
+        panelJugador.setLayout(panelJugadorLayout);
+        panelJugadorLayout.setHorizontalGroup(
+            panelJugadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 747, Short.MAX_VALUE)
+        );
+        panelJugadorLayout.setVerticalGroup(
+            panelJugadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 229, Short.MAX_VALUE)
+        );
+
+        btnLimpiar.setText("limpiar");
+        btnLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLimpiarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnLimpiar)
+                .addGap(63, 63, 63))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(lblContador, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblContador)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLimpiar)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLimpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLimpiarMouseClicked
+        limpiarSala();
+    }//GEN-LAST:event_btnLimpiarMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JLabel lblContador;
+    private javax.swing.JPanel panelJugador;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void recibirJugador(JugadorNuevoDTO j) {
+        agregarJugador(j);
+    }
+
 }

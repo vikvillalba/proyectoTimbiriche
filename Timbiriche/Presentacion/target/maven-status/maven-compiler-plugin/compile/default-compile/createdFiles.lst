@@ -14,6 +14,7 @@ MVCConfiguraciones\vista\FrmSalaEsperaFake.class
 MVCConfiguraciones\vista\FrmRegistrarJugador$1.class
 objetosPresentables\TableroPresentable.class
 MVCConfiguraciones\vista\FrmRegistrarJugador.class
+MVCConfiguraciones\vista\FrmSalaEsperaFake$1.class
 MVCConfiguraciones\controlador\ControladorArranque.class
 MVCJuegoEnCurso\observer\ObservadorTurno.class
 MVCJuegoEnCurso\observer\ObservadorTablero.class

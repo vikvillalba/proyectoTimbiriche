@@ -1,6 +1,7 @@
 package MVCConfiguraciones.controlador;
 
 import MVCConfiguraciones.modelo.IModeloArranqueEscritura;
+import java.util.List;
 import org.itson.dto.JugadorNuevoDTO;
 
 /**
@@ -23,5 +24,10 @@ public class ControladorArranque {
     
     public void solicitarElementosUso() {
         modelo.solicitarElementosUso();
+    }
+    
+    //solo para prueba
+    public void enviarElementosUsados(List<String> usados) {
+        modelo.enviarElementosUsados(usados);
     }
 }

@@ -14,7 +14,7 @@ import MVCConfiguraciones.controlador.ControladorArranque;
 import MVCConfiguraciones.modelo.IModeloArranqueEscritura;
 import MVCConfiguraciones.modelo.IModeloArranqueLectura;
 import MVCConfiguraciones.modelo.ModeloArranque;
-import MVCConfiguraciones.vista.FrmRegistrarJugador;
+import MVCConfiguraciones.vista.FrmSalaEsperaFake;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
@@ -28,32 +28,31 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Maryr
  */
-public class EnsambladorRegistro {
+public class EnsambladorEsperaFake {
 
-    private static EnsambladorRegistro instancia;
+    private static EnsambladorEsperaFake instancia;
 
-    // Config
     private String host;
     private int puertoEntrada;
     private int puertoServidor;
 
-    public EnsambladorRegistro(Configuraciones config) {
+    private EnsambladorEsperaFake(Configuraciones config) {
         this.host = config.getString("host");
         this.puertoEntrada = config.getInt("puerto.entrada");
         this.puertoServidor = config.getInt("puerto.servidor");
     }
 
-    public static EnsambladorRegistro getInstancia(String configName) {
+    public static EnsambladorEsperaFake getInstancia(String configName) {
         try {
             Configuraciones loader = new Configuraciones(configName);
-            instancia = new EnsambladorRegistro(loader);
+            instancia = new EnsambladorEsperaFake(loader);
             return instancia;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void registrarJugador() {
+    public void iniciarEsperaFake() {
         ConfiguracionesPartida configPartida = new ConfiguracionesPartida();
         configPartida.setHost(host);
         configPartida.setPuertoOrigen(puertoServidor);
@@ -67,34 +66,34 @@ public class EnsambladorRegistro {
         colaEnvios.agregarObservador(cliente);
 
         ColaRecibos colaRecibos = new ColaRecibos();
-        ServidorTCP servidorPartida = new ServidorTCP(colaRecibos, puertoServidor);
+        ServidorTCP servidor = new ServidorTCP(colaRecibos, puertoServidor);
         configPartida.setEmisor(emisor);
 
-        Receptor receptorPartida = new Receptor();
-        receptorPartida.setCola(colaRecibos);
-        receptorPartida.setReceptor(partidaComunicacion);
+        Receptor receptorServidor = new Receptor();
+        receptorServidor.setCola(colaRecibos);
+        receptorServidor.setReceptor(partidaComunicacion);
         partidaComunicacion.setConfig(configPartida);
-        colaRecibos.agregarObservador(receptorPartida);
+        colaRecibos.agregarObservador(receptorServidor);
         List<String> eventos = Arrays.asList(
-                "RESPUESTA_ELEMENTOS_USADOS"
+                "REGISTRAR_JUGADOR",
+                "SOLICITAR_ELEMENTOS_USADOS"
         );
+
+        ModeloArranque modelo = new ModeloArranque(configPartida);
+        IModeloArranqueEscritura ime = modelo;
+
+        ControladorArranque controlador = new ControladorArranque(ime);
+        FrmSalaEsperaFake frm = new FrmSalaEsperaFake(controlador);
+
+        configPartida.agregarObserverPrueba(frm);
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
         solicitarConexion.setHost(host);
         solicitarConexion.setPuertoOrigen(puertoServidor);
         solicitarConexion.setPuertoDestino(puertoEntrada);
         emisor.enviarCambio(solicitarConexion);
-        ModeloArranque modelo = new ModeloArranque(configPartida);
-        IModeloArranqueLectura iml = modelo;
-        IModeloArranqueEscritura ime = modelo;
-
-        ControladorArranque controlador = new ControladorArranque(ime);
-        FrmRegistrarJugador frm = new FrmRegistrarJugador(iml, controlador);
-
-        configPartida.agregarObserver(modelo);
-        modelo.agregarObserver(frm);
-        new Thread(() -> servidorPartida.iniciar()).start();
-
+        new Thread(() -> servidor.iniciar()).start();
         frm.setVisible(true);
+
     }
 }

@@ -96,4 +96,10 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     public void notificarObserver(List<String> usados) {
         observerRegistro.validarJugador(usados);
     }
+
+    //solo para prueba
+    @Override
+    public void enviarElementosUsados(List<String> usados) {
+        configuracion.enviarElementos(usados);
+    }
 }

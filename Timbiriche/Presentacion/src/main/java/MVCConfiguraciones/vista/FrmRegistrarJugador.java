@@ -132,30 +132,32 @@ public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverR
         String color = cbBoxColor.getSelectedItem().toString();
         String avatar = avatarSeleccionado;
 
-        List<String> errores = new ArrayList<>();
-
-        if (usados.contains(nombre)) {
-            errores.add("El nombre ya está en uso");
+        if (usados != null && !usados.isEmpty()) {
+            List<String> errores = new ArrayList<>();
+            if (usados.contains(nombre)) {
+                errores.add("El nombre ya está en uso");
+            }
+            if (usados.contains(color)) {
+                errores.add("El color ya está en uso");
+            }
+            if (usados.contains(avatar)) {
+                errores.add("El avatar ya está en uso");
+            }
+            if (!errores.isEmpty()) {
+                String mensaje = String.join("\n", errores);
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        mensaje,
+                        "Datos repetidos",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
         }
-        if (usados.contains(color)) {
-            errores.add("El color ya está en uso");
-        }
-        if (usados.contains(avatar)) {
-            errores.add("El avatar ya está en uso");
-        }
-
-        if (!errores.isEmpty()) {
-            String mensaje = String.join("\n", errores);
-
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    mensaje,
-                    "Datos repetidos",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-        controlador.registrarJugador(new JugadorNuevoDTO(nombre, color, avatar));
+        JugadorNuevoDTO jugador = new JugadorNuevoDTO(nombre, color, avatar);
+        System.out.println("[FrmRegistrarJugador] Registrando jugador: " + jugador.getNombre());
+        controlador.registrarJugador(jugador);
+        this.dispose();
     }
 
     @Override
@@ -168,15 +170,37 @@ public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverR
     }
 
     private void continuar() {
-        controlador.solicitarElementosUso();
-        timerValidacion = new javax.swing.Timer(900, e -> {
+        String nombre = txtName.getText().trim();
+        if (nombre.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Por favor ingrese un nombre",
+                    "Campo requerido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
+        if (avatarSeleccionado == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Por favor seleccione un avatar",
+                    "Campo requerido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+        respuestaRecibida = false;
+        controlador.solicitarElementosUso();
+
+        timerValidacion = new javax.swing.Timer(10000, e -> {
             if (!respuestaRecibida) {
                 System.out.println("[vista] No llegó respuesta, asumiendo primer jugador.");
 
                 JugadorNuevoDTO j = new JugadorNuevoDTO(txtName.getText().trim(), cbBoxColor.getSelectedItem().toString(), avatarSeleccionado);
-                FrmSalaEsperaFake frmEspera = new FrmSalaEsperaFake(j);
+                FrmSalaEsperaFake frmEspera = new FrmSalaEsperaFake(controlador);
                 controlador.registrarJugador(j);
+                frmEspera.setVisible(true);
                 this.dispose();
             }
 

@@ -5,11 +5,15 @@
 package ConfiguracionesFachada;
 
 import Configuraciones.Observer.ObservableEvento;
+import Configuraciones.Observer.ObservablePrueba;
 import Configuraciones.Observer.ObserverEvento;
+import Configuraciones.Observer.ObserverPrueba;
 import Entidades.TipoEvento;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.dto.JugadorDTO;
 import org.itson.dto.JugadorNuevoDTO;
 import org.itson.dto.PaqueteDTO;
 
@@ -17,13 +21,14 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Maryr
  */
-public class ConfiguracionesPartida implements ConfiguracionesFachada, ObservableEvento {
+public class ConfiguracionesPartida implements ConfiguracionesFachada, ObservableEvento, ObservablePrueba {
 
     private IEmisor emisor;
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
     private ObserverEvento observer;
+    private ObserverPrueba obPrueba;
 
     public ConfiguracionesPartida() {
     }
@@ -50,9 +55,35 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
 
     @Override
     public void recibirUsados(PaqueteDTO paquete) {
-        List<String> usados = convertirAListaStrings(paquete);
-        System.out.println("usados recibidos: " + usados);
+        List<String> usados = convertirAListaStrings(paquete.getContenido());
+        System.out.println("usados recibidos: " + usados.getFirst());
         notificarObserver(usados);
+    }
+
+    //solo para prueba
+    @Override
+    public void recibirJugador(PaqueteDTO paquete) {
+        JugadorNuevoDTO jugador = convertirAJugadorNuevoDTO(paquete);
+        if (jugador != null) {
+            System.out.println("[configPartida] Jugador nuevo recibido: "
+                    + jugador.getNombre() + " "
+                    + jugador.getColor() + " "
+                    + jugador.getAvatar());
+            obPrueba.recibirJugador(jugador);
+        } else {
+            System.err.println("[configPartida] Error: No se pudo procesar el jugador nuevo");
+        }
+    }
+
+    //solo para prueba
+    @Override
+    public void enviarElementos(List<String> usados) {
+        PaqueteDTO elementos = new PaqueteDTO(usados, TipoEvento.RESPUESTA_ELEMENTOS_USADOS.toString());
+        elementos.setHost(host);
+        elementos.setPuertoOrigen(puertoOrigen);
+        elementos.setPuertoDestino(puertoDestino);
+        emisor.enviarCambio(elementos);
+        System.out.println("[configP] elementos enviados: " + usados);
     }
 
     public IEmisor getEmisor() {
@@ -125,6 +156,50 @@ public class ConfiguracionesPartida implements ConfiguracionesFachada, Observabl
             return l;
         }
         return java.util.Collections.singletonList(String.valueOf(contenido));
+    }
+
+    private JugadorNuevoDTO convertirAJugadorNuevoDTO(PaqueteDTO paquete) {
+        if (paquete == null || paquete.getContenido() == null) {
+            System.err.println("[ConfiguracionesPartida] Paquete null o sin contenido");
+            return null;
+        }
+        Object contenido = paquete.getContenido();
+        if (contenido instanceof JugadorNuevoDTO) {
+            return (JugadorNuevoDTO) contenido;
+        }
+        if (contenido instanceof Map) {
+            try {
+                Map<?, ?> map = (Map<?, ?>) contenido;
+                String nombre = (String) map.get("nombre");
+                String color = (String) map.get("color");
+                String avatar = (String) map.get("avatar");
+                return new JugadorNuevoDTO(nombre, color, avatar);
+            } catch (Exception e) {
+                System.err.println("[ConfiguracionesPartida] Error al convertir Map a JugadorNuevoDTO: " + e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+        System.err.println("[ConfiguracionesPartida] Contenido no es JugadorNuevoDTO ni Map. Tipo: " + contenido.getClass().getName());
+        return null;
+    }
+
+    //pruebita
+    @Override
+    public void agregarObserverPrueba(ObserverPrueba o) {
+        this.obPrueba = o;
+    }
+
+    @Override
+    public void notificarObserverPrueba() {
+        System.out.println("[configP]oslicitando elementos");
+        obPrueba.solicitarElementos();
+    }
+
+    @Override
+    public void notificarObserverNuevoJugador(JugadorNuevoDTO j) {
+        System.out.println("[configP]jugador recibido: " + j.getNombre());
+        obPrueba.recibirJugador(j);
     }
 
 }

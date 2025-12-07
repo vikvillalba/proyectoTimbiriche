@@ -82,11 +82,18 @@ public class PartidaComunicacion implements IReceptor {
             case ACTUALIZAR_PUNTOS:
                 partida.actualizarPuntos(paquete);
                 break;
-            case RESPONDER_ELEMENTOS_USADOS:
+            case SOLICITAR_ELEMENTOS_USADOS:
+                System.out.println("[PartidaComunicacion] elementos pedidos plis");
+                config.notificarObserverPrueba();
+                break;
+            case RESPUESTA_ELEMENTOS_USADOS:
+                System.out.println("[PartidaComunicacion] Cosas q no autorizo pipipi");
                 config.recibirUsados(paquete);
                 break;
             case REGISTRAR_JUGADOR:
-                System.out.println("[pasrtidaComunicacion] jugador nuevo yay");
+                System.out.println("[PartidaComunicacion] Jugador nuevo recibio: " + paquete.getContenido().toString());
+                config.recibirJugador(paquete);
+                break;
             default:
                 partida.notificarEventoRecibido("Evento no manejado: " + tipo);
         }

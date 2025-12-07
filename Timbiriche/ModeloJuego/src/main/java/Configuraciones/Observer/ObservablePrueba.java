@@ -2,21 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package MVCConfiguraciones.modelo;
+package Configuraciones.Observer;
 
-import java.util.List;
 import org.itson.dto.JugadorNuevoDTO;
 
 /**
+ * Solo para prueba
  *
  * @author Maryr
  */
-public interface IModeloArranqueEscritura {
+public interface ObservablePrueba {
 
-    void registrarJugador(JugadorNuevoDTO jugador);
+    void agregarObserverPrueba(ObserverPrueba o);
 
-    void solicitarElementosUso();
-    
-    //solo para prueba
-    void enviarElementosUsados(List<String> usados);
+    void notificarObserverPrueba();
+
+    void notificarObserverNuevoJugador(JugadorNuevoDTO j);
 }

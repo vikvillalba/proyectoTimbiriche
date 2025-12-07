@@ -9,6 +9,7 @@ Entidades\Tablero.class
 Entidades\ManejadorTurnos.class
 Fachada\PartidaComunicacion.class
 ConfiguracionesFachada\ConfiguracionesFachada.class
+Configuraciones\Observer\ObservablePrueba.class
 Observer\ObservadorJugadores.class
 Configuraciones\Observer\ObservableEvento.class
 Fachada\PartidaComunicacion$1.class
@@ -17,6 +18,7 @@ Observer\ObservadorEventos.class
 org\itson\modelojuego\InicioJuego.class
 Entidades\Cuadro.class
 Fachada\PartidaFachada.class
+Configuraciones\Observer\ObserverPrueba.class
 Entidades\Jugador.class
 Entidades\AvatarEnum.class
 Configuraciones\Observer\ObserverEvento.class
