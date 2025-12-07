@@ -1,5 +1,6 @@
 package Fachada;
 
+import ConfiguracionesFachada.ConfiguracionesPartida;
 import Entidades.TipoEvento;
 import static Entidades.TipoEvento.ABANDONAR_PARTIDA;
 import static Entidades.TipoEvento.ACTUALIZAR_PUNTOS;
@@ -17,15 +18,20 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author victoria
  */
-public class PartidaComunicacion implements IReceptor{
+public class PartidaComunicacion implements IReceptor {
+
     private Partida partida;
+    private ConfiguracionesPartida config;
 
     public void setPartida(Partida partida) {
         this.partida = partida;
     }
 
+    public void setConfig(ConfiguracionesPartida config) {
+        this.config = config;
+    }
 
-  @Override
+    @Override
     public void recibirCambio(PaqueteDTO paquete) {
         System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
         TipoEvento tipo;
@@ -51,7 +57,7 @@ public class PartidaComunicacion implements IReceptor{
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                
+
                 partida.inicioPartida();
                 partida.obtenerJugadorTurno(paquete);
                 break;
@@ -76,9 +82,15 @@ public class PartidaComunicacion implements IReceptor{
             case ACTUALIZAR_PUNTOS:
                 partida.actualizarPuntos(paquete);
                 break;
-
+            case RESPONDER_ELEMENTOS_USADOS:
+                config.recibirUsados(paquete);
+                break;
+            case REGISTRAR_JUGADOR:
+                System.out.println("[pasrtidaComunicacion] jugador nuevo yay");
             default:
-               partida.notificarEventoRecibido("Evento no manejado: " + tipo);
+                partida.notificarEventoRecibido("Evento no manejado: " + tipo);
         }
+
     }
+
 }

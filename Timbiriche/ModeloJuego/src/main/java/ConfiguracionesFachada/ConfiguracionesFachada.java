@@ -4,10 +4,19 @@
  */
 package ConfiguracionesFachada;
 
+import org.itson.dto.JugadorNuevoDTO;
+import org.itson.dto.PaqueteDTO;
+
 /**
  *
  * @author Maryr
  */
 public interface ConfiguracionesFachada {
-    
+
+    void registrarJugador(JugadorNuevoDTO jugador);
+
+    void solicitarElementosUso();
+
+    void recibirUsados(PaqueteDTO paquete);
+
 }

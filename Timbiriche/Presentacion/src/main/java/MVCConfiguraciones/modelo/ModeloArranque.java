@@ -1,5 +1,6 @@
 package MVCConfiguraciones.modelo;
 
+import Configuraciones.Observer.ObserverEvento;
 import ConfiguracionesFachada.ConfiguracionesFachada;
 import MVCConfiguraciones.observer.ObservableRegistro;
 import MVCConfiguraciones.observer.ObserverRegistro;
@@ -10,20 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
-import org.itson.dto.JugadorDTO;
+import org.itson.dto.JugadorNuevoDTO;
 
 /**
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableRegistro {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableRegistro, ObserverEvento {
 
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
     private ObserverRegistro observerRegistro;
     private ConfiguracionesFachada configuracion;
 
-    public ModeloArranque() {
+    public ModeloArranque(ConfiguracionesFachada configuracion) {
+        this.configuracion = configuracion;
     }
 
     static {
@@ -69,8 +71,20 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     @Override
-    public void registrarJugador(JugadorDTO jugador) {
+    public void registrarJugador(JugadorNuevoDTO jugador) {
+        System.out.println("[Modelo] registrar jugador: " + jugador.getNombre());
+        configuracion.registrarJugador(jugador);
+    }
 
+    @Override
+    public void solicitarElementosUso() {
+        System.out.println("[Modelo] solicitar asuntos");
+        configuracion.solicitarElementosUso();
+    }
+
+    @Override
+    public void validarJugador(List<String> usados) {
+        observerRegistro.validarJugador(usados);
     }
 
     @Override
@@ -81,10 +95,5 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     @Override
     public void notificarObserver(List<String> usados) {
         observerRegistro.validarJugador(usados);
-    }
-
-    @Override
-    public void solicitarElementosUso() {
-        
     }
 }

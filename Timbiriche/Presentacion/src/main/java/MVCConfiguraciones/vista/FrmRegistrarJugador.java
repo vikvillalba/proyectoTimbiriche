@@ -28,6 +28,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
+import org.itson.dto.JugadorNuevoDTO;
 
 /**
  *
@@ -43,6 +44,8 @@ public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverR
     private String avatarSeleccionado = null;
     private Map<String, Image> avatars;
     private Map<String, Color> colores;
+    private boolean respuestaRecibida = false;
+    private javax.swing.Timer timerValidacion;
 
     /**
      * Creates new form FrmRegistrarJugador
@@ -124,18 +127,63 @@ public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverR
         getContentPane().add(panelAvatares);
     }
 
-    private List<Boolean> verificarElementos(List<String> usados) {
-        List<Boolean> verificado = new ArrayList<>();
-        return verificado;
+    private void verificarElementos(List<String> usados) {
+        String nombre = txtName.getText().trim();
+        String color = cbBoxColor.getSelectedItem().toString();
+        String avatar = avatarSeleccionado;
+
+        List<String> errores = new ArrayList<>();
+
+        if (usados.contains(nombre)) {
+            errores.add("El nombre ya está en uso");
+        }
+        if (usados.contains(color)) {
+            errores.add("El color ya está en uso");
+        }
+        if (usados.contains(avatar)) {
+            errores.add("El avatar ya está en uso");
+        }
+
+        if (!errores.isEmpty()) {
+            String mensaje = String.join("\n", errores);
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    mensaje,
+                    "Datos repetidos",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        controlador.registrarJugador(new JugadorNuevoDTO(nombre, color, avatar));
     }
 
     @Override
     public void validarJugador(List<String> usados) {
+        respuestaRecibida = true;
+        if (timerValidacion != null) {
+            timerValidacion.stop();
+        }
         verificarElementos(usados);
     }
 
     private void continuar() {
         controlador.solicitarElementosUso();
+        timerValidacion = new javax.swing.Timer(900, e -> {
+
+            if (!respuestaRecibida) {
+                System.out.println("[vista] No llegó respuesta, asumiendo primer jugador.");
+
+                JugadorNuevoDTO j = new JugadorNuevoDTO(txtName.getText().trim(), cbBoxColor.getSelectedItem().toString(), avatarSeleccionado);
+                FrmSalaEsperaFake frmEspera = new FrmSalaEsperaFake(j);
+                controlador.registrarJugador(j);
+                this.dispose();
+            }
+
+        });
+
+        timerValidacion.setRepeats(false);
+        timerValidacion.start();
     }
 
     /**

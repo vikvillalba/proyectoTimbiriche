@@ -1,7 +1,7 @@
 package MVCConfiguraciones.controlador;
 
 import MVCConfiguraciones.modelo.IModeloArranqueEscritura;
-import org.itson.dto.JugadorDTO;
+import org.itson.dto.JugadorNuevoDTO;
 
 /**
  *
@@ -16,7 +16,8 @@ public class ControladorArranque {
         this.modelo = modelo;
     }
 
-    public void registrarJugador(JugadorDTO jugador) {
+    public void registrarJugador(JugadorNuevoDTO jugador) {
+        System.out.println("[controlador] registrar jugador: " + jugador.getNombre() + " " + jugador.getColor() + " " + jugador.getAvatar());
         modelo.registrarJugador(jugador);
     }
     

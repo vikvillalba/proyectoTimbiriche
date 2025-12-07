@@ -4,7 +4,7 @@
  */
 package MVCConfiguraciones.modelo;
 
-import org.itson.dto.JugadorDTO;
+import org.itson.dto.JugadorNuevoDTO;
 
 /**
  *
@@ -12,7 +12,7 @@ import org.itson.dto.JugadorDTO;
  */
 public interface IModeloArranqueEscritura {
 
-    void registrarJugador(JugadorDTO jugador);
+    void registrarJugador(JugadorNuevoDTO jugador);
 
     void solicitarElementosUso();
 }

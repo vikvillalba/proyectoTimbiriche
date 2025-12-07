@@ -10,6 +10,7 @@ objetosPresentables\PuntoPresentable.class
 MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.class
 objetosPresentables\JugadorPresentable.class
 MVCJuegoEnCurso\observer\ObservablePartida.class
+MVCConfiguraciones\vista\FrmSalaEsperaFake.class
 MVCConfiguraciones\vista\FrmRegistrarJugador$1.class
 objetosPresentables\TableroPresentable.class
 MVCConfiguraciones\vista\FrmRegistrarJugador.class

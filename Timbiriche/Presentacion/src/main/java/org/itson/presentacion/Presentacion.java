@@ -1,5 +1,6 @@
     package org.itson.presentacion;
 
+import ConfiguracionesFachada.ConfiguracionesFachada;
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
@@ -26,11 +27,10 @@ public class Presentacion {
 //        int alto = 10;
 //        int ancho = 10;
 //        ConfiguracionesPartida.iniciarPartida(jugadores, alto, ancho);
-
-        IModeloArranqueLectura modelo = new ModeloArranque();
-        IModeloArranqueEscritura modeloE = new ModeloArranque();
-        ControladorArranque control = new ControladorArranque(modeloE);
-        FrmRegistrarJugador frm = new FrmRegistrarJugador(modelo, control);
-        frm.setVisible(true);
+//        IModeloArranqueLectura modelo = new ModeloArranque();
+//        IModeloArranqueEscritura modeloE = new ModeloArranque();
+//        ControladorArranque control = new ControladorArranque(modeloE);
+//        FrmRegistrarJugador frm = new FrmRegistrarJugador(modelo, control);
+//        frm.setVisible(true);
     }
 }
