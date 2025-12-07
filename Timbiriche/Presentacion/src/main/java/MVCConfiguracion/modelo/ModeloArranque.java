@@ -234,7 +234,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     public void notificar(SolicitudUnirse solicitud) {
         for (INotificadorUnirsePartida notificado : notificadosUnirsePartida) {
             //se le puede pasar un param
-            notificado.actualizar(solicitud);
+            notificado.actualizarSolicitudUnirse(solicitud);
 
         }
 

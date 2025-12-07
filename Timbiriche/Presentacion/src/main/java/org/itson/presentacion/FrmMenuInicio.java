@@ -82,7 +82,7 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
      * @param solicitud La solicitud con la respuesta del host
      */
     @Override
-    public void actualizar(SolicitudUnirse solicitud) {
+    public void actualizarSolicitudUnirse(SolicitudUnirse solicitud) {
         // Cerrar cualquier diálogo activo antes de mostrar uno nuevo
         cerrarDialogosActivos();
         boolean estadoSolicitud = solicitud.isSolicitudEstado();

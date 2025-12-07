@@ -7,8 +7,10 @@ import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.vista.unirsePartida.DlgSolicitudHost;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.util.List;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import objetosPresentables.JugadorConfig;
 import objetosPresentables.PartidaPresentable;
 import objetosPresentables.TableroConfig;
@@ -24,16 +26,47 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     private TableroConfig tablero;
     private JugadorConfig sesion;
 
+    private int tamanoPanel = 0;
+
     private IModeloArranqueLectura modelo;
     private ControladorArranque controlador;
+    //dialogo cuando se manda solicitud 
     private DlgSolicitudHost dlgSolicitudHost;
+
+    public FrmSalaEspera(IModeloArranqueLectura modelo, ControladorArranque controlador) {
+        initComponents();
+        this.modelo = modelo;
+        this.controlador = controlador;
+        //this.sesion = modelo.getSesion();
+
+        pnlJugadores.setLayout(new BoxLayout(pnlJugadores, BoxLayout.X_AXIS));
+        pnlJugadores.setAlignmentX(CENTER_ALIGNMENT);
+
+        this.setLocationRelativeTo(null);
+        // Inicializar título genérico si sesion es null
+        if (sesion != null) {
+            this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
+        } else {
+            this.setTitle("Sala de espera");
+        }
+        this.setBackground(COLOR_FONDO);
+        this.setSize(1000, 600);
+
+    }
 
     public FrmSalaEspera(List<JugadorConfig> jugadores, TableroConfig tablero, JugadorConfig sesion) {
         initComponents();
-        pnlJugadores.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         this.jugadores = jugadores;
         this.tablero = tablero;
         this.sesion = sesion;
+        pnlJugadores.setLayout(new BoxLayout(pnlJugadores, BoxLayout.X_AXIS));
+        pnlJugadores.setAlignmentX(CENTER_ALIGNMENT);
+
+        this.setLocationRelativeTo(null);
+        this.setTitle("Sala de espera - Sesión de " + sesion.getNombre());
+        this.setBackground(COLOR_FONDO);
+        this.setSize(1000, 600);
+
         cargarJugadores();
 
     }
@@ -43,6 +76,20 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
     }
 
+    public void cargarJugadores() {
+        pnlJugadores.removeAll();
+        if (jugadores != null) {
+            for (JugadorConfig jugador : jugadores) {
+                tamanoPanel++;
+                pnlJugadores.add(new PnlJugador(jugador));
+            }
+        }
+        pnlJugadores.setSize((250 * tamanoPanel), 261);
+        pnlJugadores.revalidate();
+        pnlJugadores.repaint();
+    }
+
+    //CU_UNIRSEPARTIDA
     /**
      * Cierra cualquier diálogo activo antes de mostrar uno nuevo
      */
@@ -57,7 +104,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
      * Método llamado cuando se recibe una nueva solicitud de unirse a la partida. Solo muestra el diálogo si la solicitud NO ha sido procesada aún (estado = false y sin tipo de rechazo). Esto evita que el diálogo se muestre múltiples veces después de que el host ya respondió.
      */
     @Override
-    public void actualizar(SolicitudUnirse solicitud) {
+    public void actualizarSolicitudUnirse(SolicitudUnirse solicitud) {
         System.out.println("[FrmSalaEspera] actualizar() llamado. Estado: " + solicitud.isSolicitudEstado() + ", TipoRechazo: " + solicitud.getTipoRechazo());
 
         // Solo mostrar el diálogo si la solicitud está PENDIENTE (no procesada)
@@ -86,26 +133,40 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         dlgSolicitudHost.setVisible(true);
     }
 
-    private void cargarJugadores() {
-        for (JugadorConfig jugador : jugadores) {
-            PnlJugador pnl = new PnlJugador(jugador);
-            this.pnlJugadores.add(pnl);
-        }
-    }
-
-    @Override
-    public void actualizar(PartidaPresentable configuraciones) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
+    //CU_VIKI
     @Override
     public void iniciarJuego() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
+    public void actualiarPartidaPresentable(PartidaPresentable configuraciones) {
+        this.tablero = configuraciones.getTablero();
+        this.jugadores = configuraciones.getJugadores();
+
+//        if (modelo.isVista()) {
+//            cargarJugadores();
+//            mostrarVista();
+//        }
+    }
+
+    @Override
     public void mostrarVista() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.setVisible(true);
+    }
+
+    public void setStatusSesion(boolean status) {
+        if (this.sesion != null) {
+            this.sesion.setListo(status);
+
+            if (jugadores != null) {
+                for (JugadorConfig jugador : jugadores) {
+                    if (jugador.getNombre().equals(sesion.getNombre())) {
+                        jugador.setListo(sesion.isListo());
+                    }
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -490,6 +551,17 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        // comunicar que el jugador que solicita iniciar está listo :P
+        setStatusSesion(true);
+        cargarJugadores();
+        controlador.solicitarInicioJuego(sesion);
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

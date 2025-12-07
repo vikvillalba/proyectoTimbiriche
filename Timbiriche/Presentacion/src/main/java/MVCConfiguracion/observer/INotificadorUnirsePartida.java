@@ -12,6 +12,6 @@ import SolicitudEntity.SolicitudUnirse;
  */
 public interface INotificadorUnirsePartida {
     
-    public void actualizar(SolicitudUnirse solicitud);
+    public void actualizarSolicitudUnirse(SolicitudUnirse solicitud);
     
 }

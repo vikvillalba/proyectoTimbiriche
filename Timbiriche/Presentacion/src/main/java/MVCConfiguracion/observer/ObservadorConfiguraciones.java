@@ -7,7 +7,8 @@ import objetosPresentables.PartidaPresentable;
  * @author victoria
  */
 public interface ObservadorConfiguraciones {
-    void actualizar(PartidaPresentable configuraciones);
+    //CU_VIKI
+    void actualiarPartidaPresentable(PartidaPresentable configuraciones);
     void iniciarJuego();
     void mostrarVista();
 }
