@@ -1,6 +1,7 @@
 MVCJuegoEnCurso/modelo/interfaces/IModeloPartidaEscritura.class
 MVCJuegoEnCurso/modelo/interfaces/IModeloTableroLectura.class
 org/itson/presentacion/FrmMenuInicio.class
+MVCConfiguracion/observer/ObservableInicioPartida.class
 MVCJuegoEnCurso/vista/PnlTablero.class
 MVCConfiguracion/observer/ObservadorSolicitudes.class
 org/itson/presentacion/Presentacion.class
@@ -45,3 +46,4 @@ MVCConfiguracion/vista/PnlJugador.class
 MVCJuegoEnCurso/vista/PnlTablero$1.class
 objetosPresentables/PuntoPresentable.class
 objetosPresentables/TableroPresentable.class
+MVCConfiguracion/observer/ObservadorInicioPartida.class
