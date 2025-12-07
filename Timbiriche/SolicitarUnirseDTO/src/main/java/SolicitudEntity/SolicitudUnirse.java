@@ -22,7 +22,7 @@ public class SolicitudUnirse {
 
     // Estado de la solicitud: true = aceptada, false = rechazada/pendiente
     private boolean solicitudEstado;
-    
+
     private String tipoRechazo;
 
     /**
@@ -30,6 +30,7 @@ public class SolicitudUnirse {
      */
     public SolicitudUnirse() {
     }
+
 
     /**
      * Constructor completo para crear una solicitud de unirse.
@@ -76,6 +77,7 @@ public class SolicitudUnirse {
     public void setSolicitudEstado(boolean solicitudEstado) {
         this.solicitudEstado = solicitudEstado;
     }
+    
 
     @Override
     public String toString() {

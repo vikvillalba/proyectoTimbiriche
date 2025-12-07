@@ -165,7 +165,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         }
 
         // Enviar la solicitud al host
-        unirsePartida.enviarSolicitudJugadorHost(solicitud);
+        unirsePartida.enviarSolicitudSalaEspera(solicitud);
     }
 
     /**
@@ -213,7 +213,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
             // Verificar que UnirsePartida tenga el método
             if (unirsePartida instanceof ModeloUnirsePartida.UnirsePartida) {
                 ModeloUnirsePartida.UnirsePartida unirse = (ModeloUnirsePartida.UnirsePartida) unirsePartida;
-                unirse.enviarRespuestaSolicitud(solicitud);
+                unirse.enviarVotoSolicitud(solicitud);
 
                 String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
                 System.out.println("✓ Respuesta " + estado + " enviada al solicitante");
@@ -260,6 +260,11 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     public void actualizar(SolicitudUnirse solicitud) {
         // Actualizar la solicitud en el modelo
         this.solicitud = solicitud;
+        
+        //envia eventos que ahora escucha el jugadr que se unioo
+        if(solicitud.isSolicitudEstado()){
+            unirsePartida.suscribirseASalaEspera();
+        }
 
         // Notificar a los diálogos registrados para que actualicen su vista
         // Los diálogos decidirán si mostrarse según su propósito:
@@ -273,7 +278,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         this.solicitud = solicitud;
         this.solicitud.setSolicitudEstado(false);
         this.solicitud.setTipoRechazo("");
-        unirsePartida.enviarSolicitudJugadorHost(solicitud);
+        unirsePartida.enviarSolicitudSalaEspera(solicitud);
     }
 
     /**

@@ -11,8 +11,11 @@ package Entidades;
 public enum TipoEvento {
     NUEVA_LINEA,
     INICIAR_CONEXION,
-    SOLICITAR_UNIRSE,           // Evento enviado por solicitante recibido por host
-    RESPUESTA_SOLICITUD,        // Evento enviado por host recibido por solicitante
+    EN_SALA_ESPERA,             // Evento para jugadores que están en sala de espera
+    SOLICITAR_UNIRSE,           // Evento enviado por solicitante a TODOS los jugadores en sala
+    VOTAR_SOLICITUD,            // Evento enviado por cada jugador en sala (aceptar/rechazar)
+    RESULTADO_CONSENSO,         // Evento enviado por EventBus al solicitante con resultado final
+    RESPUESTA_SOLICITUD,        // Evento enviado por host recibido por solicitante (legacy)
     CONFIGURAR_PARTIDA,
     SOLICITAR_INICIAR_PARTIDA,
     SOLICITAR_FINALIZAR_PARTIDA,

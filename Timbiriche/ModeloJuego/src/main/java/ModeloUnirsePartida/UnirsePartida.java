@@ -12,6 +12,7 @@ import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import SolicitudEntity.SolicitudUnirse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
@@ -102,17 +103,43 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     }
 
     @Override
-    public void enviarSolicitudJugadorHost(SolicitudUnirse solicitud) {
+    public void enviarSolicitudSalaEspera(SolicitudUnirse solicitud) {
         // Enviar evento SOLICITAR_UNIRSE al EventBus
-        // Este evento solo será recibido por el Hos
+        // Este evento será recibido por TODOS los jugadores en sala de espera
         PaqueteDTO paquete = new PaqueteDTO(solicitud, "SOLICITAR_UNIRSE");
 
         paquete.setHost(solicitud.getJugadorSolicitante().getIp());
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(this.puertoDestino);
 
+        System.out.println("[UnirsePartida] Enviando SOLICITAR_UNIRSE a todos los jugadores en sala");
+        emisorSolicitud.enviarCambio(paquete);
+    }
+
+    /**
+     * Envía un voto (aceptar/rechazar) para una solicitud al EventBus. Este método es llamado por cada jugador en sala de espera.
+     *
+     * @param solicitud La solicitud con el voto (aceptada/rechazada)
+     */
+    @Override
+    public void enviarVotoSolicitud(SolicitudUnirse solicitud) {
+        if (solicitud == null) {
+            throw new IllegalArgumentException("La solicitud no puede ser nula");
+        }
+
+        String estadoVoto = solicitud.isSolicitudEstado() ? "ACEPTADO" : "RECHAZADO";
+        System.out.println("[UnirsePartida] Enviando voto: " + estadoVoto);
+
+        // Enviar evento VOTAR_SOLICITUD al EventBus
+        PaqueteDTO paquete = new PaqueteDTO(solicitud, "VOTAR_SOLICITUD");
+
+        paquete.setHost(this.jugadorHost != null ? this.jugadorHost.getIp() : "localhost");
+        paquete.setPuertoOrigen(this.puertoOrigen);
+        paquete.setPuertoDestino(this.puertoDestino);
+
         emisorSolicitud.enviarCambio(paquete);
 
+        System.out.println("[UnirsePartida] Voto enviado al EventBus");
     }
 
     /**
@@ -120,30 +147,29 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      *
      * @param solicitud La solicitud con el estado actualizado (aceptada/rechazada)
      */
-    @Override
-    public void enviarRespuestaSolicitud(SolicitudUnirse solicitud) {
-        if (solicitud == null) {
-            throw new IllegalArgumentException("La solicitud no puede ser nula");
-        }
-
-        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
-        System.out.println("[UnirsePartida] Enviando RESPUESTA_SOLICITUD al cliente. Estado: " + estado);
-        System.out.println("[UnirsePartida] Solicitante: " + solicitud.getJugadorSolicitante().getIp() + ":" + solicitud.getJugadorSolicitante().getPuerto());
-
-        // Enviar evento RESPUESTA_SOLICITUD al EventBus
-        // Este evento solo será recibido por el Solicitante (único suscrito)
-        PaqueteDTO paquete = new PaqueteDTO(solicitud, "RESPUESTA_SOLICITUD");
-
-        // Configurar campos de red (igual que en Partida)
-        paquete.setHost(solicitud.getJugadorHost().getIp());
-        paquete.setPuertoOrigen(this.puertoOrigen);
-        paquete.setPuertoDestino(this.puertoDestino);
-
-        emisorSolicitud.enviarCambio(paquete);
-
-        System.out.println("[UnirsePartida] Paquete RESPUESTA_SOLICITUD enviado al EventBus");
-    }
-
+//    @Override
+//    public void enviarRespuestaSolicitud(SolicitudUnirse solicitud) {
+//        if (solicitud == null) {
+//            throw new IllegalArgumentException("La solicitud no puede ser nula");
+//        }
+//
+//        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
+//        System.out.println("[UnirsePartida] Enviando RESPUESTA_SOLICITUD al cliente. Estado: " + estado);
+//        System.out.println("[UnirsePartida] Solicitante: " + solicitud.getJugadorSolicitante().getIp() + ":" + solicitud.getJugadorSolicitante().getPuerto());
+//
+//        // Enviar evento RESPUESTA_SOLICITUD al EventBus
+//        // Este evento solo será recibido por el Solicitante (único suscrito)
+//        PaqueteDTO paquete = new PaqueteDTO(solicitud, "RESPUESTA_SOLICITUD");
+//
+//        // Configurar campos de red (igual que en Partida)
+//        paquete.setHost(solicitud.getJugadorHost().getIp());
+//        paquete.setPuertoOrigen(this.puertoOrigen);
+//        paquete.setPuertoDestino(this.puertoDestino);
+//
+//        emisorSolicitud.enviarCambio(paquete);
+//
+//        System.out.println("[UnirsePartida] Paquete RESPUESTA_SOLICITUD enviado al EventBus");
+//    }
     /**
      * Cambia el estado de una solicitud y notifica a los observadores.
      *
@@ -372,5 +398,35 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     public void notificarHostEncontrado(JugadorConfigDTO jugador) {
         modeloArranque.actualizar(jugador);
     }
+
+    /**
+     * Suscribe a un jugador a los eventos de sala de espera. Debe llamarse cuando un jugador se une exitosamente a una partida. Esto permite que reciba solicitudes de nuevos jugadores y pueda votar.
+     */
+    @Override
+    public void suscribirseASalaEspera() {
+        List<String> eventosNuevos = Arrays.asList(
+                "EN_SALA_ESPERA",
+                "SOLICITAR_UNIRSE"
+        );
+
+        PaqueteDTO registroEventBus = new PaqueteDTO(eventosNuevos, "INICIAR_CONEXION");
+        registroEventBus.setHost(this.jugadorSolicitante != null
+                ? this.jugadorSolicitante.getIp()
+                : "localhost");
+        registroEventBus.setPuertoOrigen(this.puertoOrigen);
+        registroEventBus.setPuertoDestino(this.puertoDestino);
+
+        System.out.println("[UnirsePartida] Suscribiéndose a eventos de sala de espera: " + eventosNuevos);
+        emisorSolicitud.enviarCambio(registroEventBus);
+    }
+//
+//    /**
+//     * Desuscribe a un jugador de los eventos de sala de espera.
+//     * Debe llamarse cuando un jugador abandona la sala o cuando inicia la partida.
+//     */
+//    public void desuscribirseASalaEspera() {
+//        // TODO: Implementar lógica de desuscripción si es necesaria
+//        System.out.println("[UnirsePartida] Jugador se desuscribe de sala de espera");
+//    }
 
 }

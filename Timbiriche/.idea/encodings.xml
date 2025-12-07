@@ -11,6 +11,8 @@
     <file url="file://$PROJECT_DIR$/ComponenteReceptor/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ComponenteRedEventBus/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ComponenteRedEventBus/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Configuraciones/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Configuraciones/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DTO/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DTO/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DTOEventBus/src/main/java" charset="UTF-8" />
@@ -31,6 +33,8 @@
     <file url="file://$PROJECT_DIR$/Presentacion/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Red/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Red/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SolicitarUnirseDTO/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SolicitarUnirseDTO/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

@@ -10,8 +10,10 @@
         <module name="Bus" />
         <module name="DTOEventBus" />
         <module name="Presentacion" />
+        <module name="SolicitarUnirseDTO" />
         <module name="EnzambladorRed" />
         <module name="IServicio" />
+        <module name="Configuraciones" />
         <module name="Red" />
         <module name="ComponenteEmisor" />
         <module name="ComponenteRedEventBus" />

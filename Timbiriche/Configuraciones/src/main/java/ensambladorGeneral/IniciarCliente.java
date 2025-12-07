@@ -6,7 +6,7 @@ import Emisor.Emisor;
 import Entidades.TipoEvento;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
-import ModeloUnirsePartida.ReceptorSolicitudCliente;
+import ModeloUnirsePartida.ReceptorUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
@@ -54,7 +54,7 @@ public class IniciarCliente {
 
         System.out.println("[✓] UnirsePartida creado");
 
-        IReceptor receptorCliente = new ReceptorSolicitudCliente(unirsePartida);
+        IReceptor receptorCliente = new ReceptorUnirsePartida(unirsePartida);
         unirsePartida.setReceptorSolicitud(receptorCliente);
 
         System.out.println("[✓] ReceptorSolicitudCliente configurado");
@@ -81,9 +81,11 @@ public class IniciarCliente {
 
         System.out.println("[✓] UnirsePartida conectado con ModeloArranque");
 
+        // El cliente se suscribe inicialmente solo a eventos de respuesta
+        // Cuando se una a una sala, se suscribirá a EN_SALA_ESPERA y SOLICITAR_UNIRSE
         List<String> eventos = Arrays.asList(
-                "RESPUESTA_SOLICITUD",
-                "RESPUESTA_HOST"
+                "RESPUESTA_HOST",        // Para obtener info del host
+                "RESULTADO_CONSENSO"     // Para recibir resultado del consenso de votación
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());

@@ -23,14 +23,18 @@ public interface IUnirsePartida {
     public SolicitudUnirse getSolicitudActual();
 
     //envia la solicitud por el Iemisor
-    public void enviarSolicitudJugadorHost(SolicitudUnirse solicitud);
+    public void enviarSolicitudSalaEspera(SolicitudUnirse solicitud);
 
-    public void enviarRespuestaSolicitud(SolicitudUnirse solicitud);
+    //respuesta de un jugador en la sala de espera true o false
+    public void enviarVotoSolicitud(SolicitudUnirse solicitud);
 
     public void solicitarHost(JugadorSolicitanteDTO jugador);
 
     public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante);
 
     public void setPartida(Partida partida);
+
+    //cuando un jugador se una a la sala espera podra votar para futuras solicitudes
+    public void suscribirseASalaEspera();
 
 }

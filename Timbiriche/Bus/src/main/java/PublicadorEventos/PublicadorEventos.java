@@ -22,13 +22,30 @@ public class PublicadorEventos implements IReceptor {
 
     @Override
     public void recibirCambio(PaqueteDTO paquete) {
-        if (paquete.getTipoEvento().equalsIgnoreCase("OBTENER_HOST")) {
-            eventBus.enviarHost(paquete);
-            return;
-        }
+        String tipoEvento = paquete.getTipoEvento();
 
-        System.out.println("[PublicadorEventos] Evento recibido:" + paquete.getTipoEvento());
-        eventBus.publicarEvento(paquete);
+        System.out.println("[PublicadorEventos] Evento recibido: " + tipoEvento);
+
+        // Manejar eventos especiales
+        switch (tipoEvento) {
+            case "OBTENER_HOST":
+                eventBus.enviarHost(paquete);
+                return;
+
+            case "SOLICITAR_UNIRSE":
+                // Iniciar proceso de consenso
+                eventBus.iniciarConsensoSolicitud(paquete);
+                return;
+
+            case "VOTAR_SOLICITUD":
+                // Procesar voto de un jugador
+                eventBus.procesarVotoSolicitud(paquete);
+                return;
+
+            default:
+                // Para otros eventos, usar el flujo normal
+                eventBus.publicarEvento(paquete);
+        }
     }
 
     public int getPuerto() {

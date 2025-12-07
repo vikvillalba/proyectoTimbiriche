@@ -8,7 +8,7 @@ import Entidades.TipoEvento;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
 import MVCConfiguracion.vista.FrmSalaEspera;
-import ModeloUnirsePartida.ReceptorSolicitudHost;
+import ModeloUnirsePartida.ReceptorUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
@@ -61,7 +61,7 @@ public class IniciarHost {
 
         System.out.println("UnirsePartida creado");
 
-        IReceptor receptorHost = new ReceptorSolicitudHost(unirsePartida);
+        IReceptor receptorHost = new ReceptorUnirsePartida(unirsePartida);
         unirsePartida.setReceptorSolicitud(receptorHost);
 
         System.out.println("ReceptorSolicitudHost configurado");
@@ -96,9 +96,10 @@ public class IniciarHost {
         jugadorHostDTO.setPuerto(PUERTO_HOST);
 
         // Configurar el host en UnirsePartida
+        // El host se suscribe a EN_SALA_ESPERA y SOLICITAR_UNIRSE
         List<String> eventos = Arrays.asList(
-                "SOLICITAR_UNIRSE",
-                "RESPUESTA_SOLICITUD"
+                "EN_SALA_ESPERA",        // Indica que está en sala de espera
+                "SOLICITAR_UNIRSE"     // Recibe solicitudes de nuevos jugadores
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
