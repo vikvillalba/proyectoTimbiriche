@@ -4,6 +4,7 @@ import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.observer.ObservadorAbandono;
+import MVCJuegoEnCurso.observer.ObservadorCierrePantalla;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import java.awt.BorderLayout;
@@ -22,7 +23,7 @@ import objetosPresentables.JugadorPresentable;
  *
  * @author victoria
  */
-public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno, ObservadorMensaje {
+public class FrmPartida extends JFrame implements ObservadorInicioPartida, ObservadorTurno, ObservadorMensaje,ObservadorCierrePantalla {
 
     private PnlTablero tablero;
     private PnlJugadores jugadores;
@@ -187,5 +188,10 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
     @Override
     public void actualizar() {
         actualizarEstadoTablero();
+    }
+
+    @Override
+    public void cerrarPantalla() {
+        this.setVisible(false);
     }
 }

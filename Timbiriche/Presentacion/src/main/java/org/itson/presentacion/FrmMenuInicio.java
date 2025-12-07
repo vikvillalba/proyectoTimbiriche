@@ -1,12 +1,13 @@
 package org.itson.presentacion;
 
+import MVCJuegoEnCurso.observer.ObservadorMostrarMenu;
 import java.awt.Color;
 
 /**
  *
  * @author victoria
  */
-public class FrmMenuInicio extends javax.swing.JFrame {
+public class FrmMenuInicio extends javax.swing.JFrame implements ObservadorMostrarMenu{
 
     private final Color COLOR_FONDO = new Color(224, 233, 255);
 
@@ -94,4 +95,9 @@ public class FrmMenuInicio extends javax.swing.JFrame {
     private javax.swing.JButton btnUnirsePartida;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mostrarMenu() {
+        this.setVisible(true);
+    }
 }

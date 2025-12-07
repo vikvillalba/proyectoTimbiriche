@@ -25,6 +25,7 @@ import java.util.List;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
+import org.itson.presentacion.FrmMenuInicio;
 
 /**
  * Ensamblador general para iniciar partidas del juego.
@@ -136,6 +137,7 @@ public class EnsambladorPartida {
 
         ControladorPartida controlador = new ControladorPartida(impe,imme,imap);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
+        FrmMenuInicio frmInicio = new FrmMenuInicio();
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
         partida.agregarObservadorEventos(modelo);
@@ -146,6 +148,8 @@ public class EnsambladorPartida {
         modelo.agregarObservadorAbandonar(frm.getObservadorAbandonar());
         modelo.agregarObservadorInicioJuego(frm);
         modelo.agregarObservadorMensaje(frm);
+        modelo.agregarObservadorCierrePantalla(frm);
+        modelo.agregarObservadorMostrarMenu(frmInicio);
         
         partida.inicioPartida();
     }

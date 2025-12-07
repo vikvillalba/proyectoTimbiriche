@@ -11,9 +11,12 @@ import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.observer.ObservableAbandonar;
+import MVCJuegoEnCurso.observer.ObservableCierrePantalla;
 import MVCJuegoEnCurso.observer.ObservableMensaje;
+import MVCJuegoEnCurso.observer.ObservableMostrarMenu;
 import MVCJuegoEnCurso.observer.ObservablePartida;
 import MVCJuegoEnCurso.observer.ObservadorAbandono;
+import MVCJuegoEnCurso.observer.ObservadorCierrePantalla;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
 import Observer.ObservadorTurnos;
@@ -31,6 +34,7 @@ import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import MVCJuegoEnCurso.observer.ObservadorMensaje;
+import MVCJuegoEnCurso.observer.ObservadorMostrarMenu;
 import Observer.ObservadorAbandonar;
 import Observer.ObservadorInicio;
 import excepciones.JugadaException;
@@ -50,6 +54,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservablePartida,
         ObservableMensaje,
         ObservableAbandonar,
+        ObservableCierrePantalla,
+        ObservableMostrarMenu,
         ObservadorInicio,
         ObservadorAbandonar,
         ObservadorTurnos,
@@ -62,6 +68,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     private ObservadorInicioPartida observadorInicioJuego;
     private ObservadorMensaje observadorMensaje;
     private ObservadorAbandono observadorAbandonar;
+    private ObservadorCierrePantalla observadorCierrePantalla;
+    private ObservadorMostrarMenu observadorMostrarMenu;
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
@@ -299,6 +307,8 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         if (sesion.isTurno()==true) {
             actualizarTurnos();
         }
+        notificarObservadorCierrePantalla();
+        notificarMostrarMenu();
     }
 
     @Override
@@ -309,5 +319,25 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     @Override
     public void agregarObservadorAbandonar(ObservadorAbandono ob) {
         this.observadorAbandonar = ob;
+    }
+
+    @Override
+    public void agregarObservadorCierrePantalla(ObservadorCierrePantalla ob) {
+        this.observadorCierrePantalla = ob;
+    }
+
+    @Override
+    public void notificarObservadorCierrePantalla() {
+        this.observadorCierrePantalla.cerrarPantalla();
+    }
+
+    @Override
+    public void agregarObservadorMostrarMenu(ObservadorMostrarMenu ob) {
+        this.observadorMostrarMenu = ob;
+    }
+
+    @Override
+    public void notificarMostrarMenu() {
+        this.observadorMostrarMenu.mostrarMenu();
     }
 }

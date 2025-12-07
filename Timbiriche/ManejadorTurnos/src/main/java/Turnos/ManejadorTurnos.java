@@ -114,14 +114,14 @@ public class ManejadorTurnos implements IReceptor {
                 actualizarTurno();
             }
 
-            if (turnos.size() < 2) {
-                PaqueteDTO paquetes = new PaqueteDTO(jugador, "NUM_JUGADORES_INSUFICIENTE");
-                paquetes.setHost(host);
-                paquetes.setPuertoOrigen(puertoOrigen);
-                paquetes.setPuertoDestino(puertoDestino);
-
-                emisor.enviarCambio(paquetes);
-            }
+//            if (turnos.size() < 2) {
+//                PaqueteDTO paquetes = new PaqueteDTO(jugador, "NUM_JUGADORES_INSUFICIENTE");
+//                paquetes.setHost(host);
+//                paquetes.setPuertoOrigen(puertoOrigen);
+//                paquetes.setPuertoDestino(puertoDestino);
+//
+//                emisor.enviarCambio(paquetes);
+//            }
         }
 
         PaqueteDTO paquetes = new PaqueteDTO(jugador, "PARTIDA_ABANDONADA");
