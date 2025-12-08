@@ -26,19 +26,15 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="277" max="-2" attributes="0"/>
-              <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="278" max="32767" attributes="0"/>
-          </Group>
+          <Component id="lblTitulo" alignment="1" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace pref="353" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnNuevaPartida" min="-2" pref="480" max="-2" attributes="0"/>
-                  <Component id="btnUnirsePartida" min="-2" pref="484" max="-2" attributes="0"/>
+                  <Component id="btnNuevaPartida" alignment="1" min="-2" pref="464" max="-2" attributes="0"/>
+                  <Component id="btnUnirsePartida" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSalir" alignment="1" min="-2" pref="469" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="349" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="351" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -61,6 +57,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="lblTitulo">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/titulo.png"/>
         </Property>

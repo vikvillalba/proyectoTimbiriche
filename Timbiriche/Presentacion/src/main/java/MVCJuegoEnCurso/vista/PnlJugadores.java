@@ -102,15 +102,11 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores, Observa
 
     @Override
     public void actualizarAbandono(String Nombrejugador) {
-        for (JugadorPresentable jugadorActual : jugadores) {
-            if (jugadorActual.getNombre().equals(Nombrejugador)) {
-                jugadorActual.setColor(Color.BLACK);
-                jugadorActual.setNombre("Abandonó partida");
-            }
-        }
-
         for (int i = 0; i < panelesJugadores.size(); i++) {
             panelesJugadores.get(i).setJugador(jugadores.get(i));
+            if (Nombrejugador.equals(jugadores.get(i).getNombre())) {
+                panelesJugadores.get(i).setTextoAbandono("Abandonó partida");
+            }
             panelesJugadores.get(i).cargarDatos();
         }
 

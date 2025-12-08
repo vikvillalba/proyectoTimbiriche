@@ -60,6 +60,10 @@ public class PnlJugador extends JPanel{
         this.jugador = jugador;
     }
     
+    public void setTextoAbandono(String texto){
+        this.lbAbandonarPartida.setText(texto);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,10 +77,10 @@ public class PnlJugador extends JPanel{
         lblPuntos = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         lblAvatar = new javax.swing.JLabel();
+        lbAbandonarPartida = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(451, 124));
         setMinimumSize(new java.awt.Dimension(451, 124));
-        setSize(new java.awt.Dimension(451, 124));
 
         lblNombre.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lblNombre.setText("NombreJugador");
@@ -88,6 +92,8 @@ public class PnlJugador extends JPanel{
         jLabel3.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         jLabel3.setText("puntos");
 
+        lbAbandonarPartida.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,8 +102,10 @@ public class PnlJugador extends JPanel{
                 .addGap(18, 18, 18)
                 .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lblNombre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombre)
+                    .addComponent(lbAbandonarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -117,8 +125,10 @@ public class PnlJugador extends JPanel{
                         .addComponent(lblPuntos))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(45, 45, 45)
-                        .addComponent(lblNombre)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addComponent(lblNombre)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbAbandonarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
             .addComponent(lblAvatar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -126,6 +136,7 @@ public class PnlJugador extends JPanel{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lbAbandonarPartida;
     private javax.swing.JLabel lblAvatar;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPuntos;
