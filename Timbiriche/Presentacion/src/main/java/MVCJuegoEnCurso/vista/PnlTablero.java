@@ -38,6 +38,7 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
 
     public PnlTablero(IModeloTableroLectura modelo, ControladorPartida controlador) {
         initComponents();
+        this.setLayout(null);
 
         this.modelo = modelo;
         this.controlador = controlador;
@@ -96,6 +97,9 @@ public class PnlTablero extends JPanel implements ObservadorTablero {
     @Override
     public void actualizar(TableroPresentable tablero) {
         this.tablero = tablero;
+        this.removeAll();
+        cargarPuntos();
+        this.revalidate();
         repaint(); // pinta el tablero
 //        controlador.actualizarTurno(); // cambia de turno ya que se realiza la jugada
     }

@@ -44,9 +44,15 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
 
+    private int puertoTurnos;
+
     private String host;
     private int puertoOrigen;
     private int puertoDestino;
+
+    public void setPuertoTurnos(int puertoTurnos) {
+        this.puertoTurnos = puertoTurnos;
+    }
 
     /**
      * Constructor de partida.
@@ -61,21 +67,19 @@ public class Partida implements PartidaFachada, ObservableEventos {
     public Partida(List<Jugador> jugadores, int alto, int ancho) {
         // tablero mock
         this.jugadores = jugadores;
-        this.tablero = null;
+        this.tablero = new Tablero(alto, ancho);
         this.mapperJugadores = new MapperJugadores();
         this.jugadorEnTurno = jugadores.get(0);
     }
 
     public Partida() {
-        
-        this.tablero = new Tablero(5, 5); 
-        this.jugadores = new ArrayList<>(); 
+
+        this.tablero = new Tablero(5, 5);
+        this.jugadores = new ArrayList<>();
         this.mapperJugadores = new MapperJugadores();
-        
+
         System.out.println("[Partida] Instancia creada con tablero mock 5x5.");
     }
-    
-    
 
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
@@ -250,6 +254,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
+        notificarEventoRecibido(this.tablero);
     }
 
     public void obtenerJugadorTurno(PaqueteDTO paquete) {
@@ -432,33 +437,35 @@ public class Partida implements PartidaFachada, ObservableEventos {
         this.tablero = new Tablero(alto, ancho);
         System.out.println("[Partida] Tablero creado: " + alto + "x" + ancho);
 
-        // --- B. Lógica del Número de Jugadores ---
-        int numJugadores = configuracion.getNumJugadores();
-        this.jugadores = crearJugadoresPorDefecto(numJugadores);
-        this.jugadorEnTurno = this.jugadores.get(0); // Establecer el primer turno
+        int numJugadores = this.jugadores != null ? this.jugadores.size() : 0;
 
+        
         System.out.println("[Partida] Creados " + numJugadores + " jugadores.");
 
         notificarEventoRecibido("Configuración interna completada.");
+
+        if (this.jugadorSesion != null && this.jugadorSesion.getNombre().equals("sol")) {
+            solicitarInicioTurnos();
+        }
     }
 
-    private List<Jugador> crearJugadoresPorDefecto(int numJugadores) {
-        List<Jugador> lista = new ArrayList<>();
+    public void solicitarInicioTurnos() {
 
-        if (numJugadores >= 1) {
-            lista.add(new Jugador("Jugador1 (Local)", AvatarEnum.TIBURON_MARTILLO, ColorEnum.VERDE_PASTEL, 0, true));
-        }
-        if (numJugadores >= 2) {
-            lista.add(new Jugador("Jugador2 (Remoto)", AvatarEnum.TIBURON_JUMP_BLUE, ColorEnum.AZUL_MARINO, 0, false));
-        }
-        if (numJugadores >= 3) {
-            lista.add(new Jugador("Jugador3 (Remoto)", AvatarEnum.TIBURON_BLANCO, ColorEnum.MORAS, 0, false));
-        }
-        if (numJugadores >= 4) {
-            lista.add(new Jugador("Jugador4 (Remoto)", AvatarEnum.TIBURON_STILL_BLUE, ColorEnum.MAGENTA, 0, false));
+        if (this.jugadores == null || this.jugadores.isEmpty()) {
+            System.err.println("[Partida] Advertencia: La lista de jugadores es nula/vacía.");
+            return;
         }
 
-        return lista;
+        List<JugadorDTO> jugadoresdto = mapperJugadores.toListaDTO(this.jugadores);
+
+        PaqueteDTO solicitarTurnos = new PaqueteDTO(jugadoresdto, "SOLICITAR_TURNOS");
+        solicitarTurnos.setHost(this.host);
+        solicitarTurnos.setPuertoOrigen(this.puertoOrigen);
+
+        solicitarTurnos.setPuertoDestino(this.puertoTurnos);
+
+        this.emisor.enviarCambio(solicitarTurnos);
+        System.out.println("[Partida] Paquete SOLICITAR_TURNOS enviado con " + this.jugadores.size() + " jugadores.");
     }
 
 }

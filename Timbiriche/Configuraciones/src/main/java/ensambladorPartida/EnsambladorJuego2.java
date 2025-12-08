@@ -4,12 +4,13 @@ import ensambladorGeneral.EnsambladorPartida;
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
+import configuraciones.EnsambladorJuegoConfig;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Ensamblador para el Jugador 2 - Segunda ventana/cliente.
- * Usa config_partida2.properties (puerto.servidor=6002)
+ * Ensamblador para el Jugador 2 - Segunda ventana/cliente. Usa
+ * config_partida2.properties (puerto.servidor=6002)
  *
  * @author Maryr
  */
@@ -23,39 +24,16 @@ public class EnsambladorJuego2 {
                 0,
                 false
         );
-
         Jugador jugador2 = new Jugador(
-                "pablo",
-                AvatarEnum.TIBURON_JUMP_BLUE,
-                ColorEnum.AZUL_MARINO,
+                "lusia",
+                AvatarEnum.TIBURON_STILL_BLUE,
+                ColorEnum.MAGENTA,
                 0,
                 false
         );
-//
-//        Jugador jugador3 = new Jugador(
-//                "biki",
-//                AvatarEnum.TIBURON_BLANCO,
-//                ColorEnum.MORAS,
-//                0,
-//                false
-//        );
-//
-//        Jugador jugador4 = new Jugador(
-//                "lusia",
-//                AvatarEnum.TIBURON_STILL_BLUE,
-//                ColorEnum.MAGENTA,
-//                0,
-//                false
-//        );
-
         List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
 
-        int alto = 10;
-        int ancho = 10;
+        EnsambladorJuegoConfig.iniciarPartidaCompleta(jugador2, "config_partida2.properties", jugadores);
 
-        // Jugador 2 es la sesion de esta ventana
-        EnsambladorPartida
-                .getInstancia("config_partida2.properties")
-                .iniciarPartida(jugadores, alto, ancho, jugador2);
     }
 }

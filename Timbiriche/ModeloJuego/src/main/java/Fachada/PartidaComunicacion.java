@@ -56,9 +56,9 @@ public class PartidaComunicacion implements IReceptor, ObservadorConfiguracionLo
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-
-                partida.inicioPartida();
                 partida.obtenerJugadorTurno(paquete);
+                partida.inicioPartida();
+                
                 break;
             }
 
@@ -76,19 +76,17 @@ public class PartidaComunicacion implements IReceptor, ObservadorConfiguracionLo
                 if (paquete.getContenido() instanceof ConfiguracionesDTO) {
                     ConfiguracionesDTO configuracion = (ConfiguracionesDTO) paquete.getContenido();
                     partida.recibirConfiguracionInicial(configuracion);
-                } 
-                else if (paquete.getContenido() instanceof Map) {
+                } else if (paquete.getContenido() instanceof Map) {
 
                     Map<?, ?> mapContenido = (Map<?, ?>) paquete.getContenido();
 
-
                     Gson gson = new Gson();
-                    String jsonConfig = gson.toJson(mapContenido); 
+                    String jsonConfig = gson.toJson(mapContenido);
 
                     recibirConfiguracionDesdeJSON(jsonConfig);
 
                 } else {
-   
+
                     partida.notificarEventoRecibido("ERROR: Contenido de CONFIGURAR_PARTIDA no es un DTO/Map esperado.");
                 }
                 break;

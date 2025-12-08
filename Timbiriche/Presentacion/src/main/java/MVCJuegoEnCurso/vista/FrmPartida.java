@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
 import MVCJuegoEnCurso.observer.ObservadorTurno;
 import java.awt.Color;
+import java.awt.GridLayout;
 import objetosPresentables.JugadorPresentable;
 
 /**
@@ -139,5 +140,6 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
     @Override
     public void actualizar() {
         actualizarEstadoTablero();
+
     }
 }

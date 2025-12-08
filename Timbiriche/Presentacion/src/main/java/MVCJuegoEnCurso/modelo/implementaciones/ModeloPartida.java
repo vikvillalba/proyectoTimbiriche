@@ -4,6 +4,7 @@ import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
 import Entidades.Punto;
+import Entidades.Tablero;
 import Fachada.PartidaFachada;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
@@ -128,7 +129,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         } catch (PartidaExcepcion ex) {
             throw new JugadaException(ex.getMessage());
         }
-        
+
         notificarObservadorTablero();
 
         if (jugada) {
@@ -218,7 +219,7 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         List<JugadorPresentable> jugadoresVista = jugadoresEntidadAPresentable(jugadores);
         observadorJugadores.actualizar(jugadoresVista);
     }
-    
+
     @Override
     public void agregarObservadorTablero(ObservadorTablero ob) {
         this.observadorTablero = ob;
@@ -259,7 +260,13 @@ public class ModeloPartida implements IModeloJugadoresLectura,
     @Override
     public void actualizar(Object cambio) {
         System.out.println("[ModeloPartida] Evento recibido: " + cambio.toString());
-        // notificar a vista CAMBIO TABLEROO
+
+        if (cambio instanceof Tablero) {
+            System.out.println("[ModeloPartida] Detectado nuevo objeto Tablero. Notificando a la vista.");
+
+            notificarObservadorTablero();
+        }
+
         notificarObservadorTablero();
     }
 
