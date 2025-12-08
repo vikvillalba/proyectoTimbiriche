@@ -1,9 +1,13 @@
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\configuracionesPartida\ConfiguracionesPartida.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\excepciones\JugadaException.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\controlador\ControladorArranque.java
+C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\modelo\IModeloArranqueExcritura.java
+C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\modelo\IModeloArranqueLectura.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\modelo\ModeloArranque.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\observer\Observable.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\observer\Observador.java
+C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\vista\frmConfigurarPartida.java
+C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\vista\frmInicio.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCConfiguraciones\vista\FrmSalaEspera.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\controlador\ControladorPartida.java
 C:\Users\erika\Documents\GitHub\proyectoTimbiriche\Timbiriche\Presentacion\src\main\java\MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.java

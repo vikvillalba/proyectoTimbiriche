@@ -14,9 +14,11 @@ Entidades\ManejadorTurnos.class
 Fachada\PartidaComunicacion.class
 Fachada\PartidaFachada.class
 Entidades\Jugador.class
+Fachada\ConfiguracionesFachada.class
 Entidades\AvatarEnum.class
 Observer\ObservadorJugadores.class
 Entidades\ColorEnum.class
 Fachada\Partida.class
+Configuraciones\ConfiguracionesPartida.class
 Fachada\PartidaComunicacion$1.class
 Observer\ObservadorInicio.class

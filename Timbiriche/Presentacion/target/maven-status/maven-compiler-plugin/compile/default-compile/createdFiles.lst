@@ -1,5 +1,6 @@
 MVCConfiguraciones\modelo\ModeloArranque.class
 org\itson\presentacion\Presentacion.class
+MVCConfiguraciones\vista\frmConfigurarPartida$1.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloJugadoresLectura.class
 MVCJuegoEnCurso\vista\FrmPartida.class
 MVCJuegoEnCurso\observer\ObservadorJugadores.class
@@ -7,10 +8,12 @@ MVCConfiguraciones\vista\FrmSalaEspera.class
 objetosPresentables\PuntoPresentable.class
 MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.class
 objetosPresentables\JugadorPresentable.class
+MVCConfiguraciones\vista\frmConfigurarPartida.class
 MVCJuegoEnCurso\observer\ObservablePartida.class
 MVCConfiguraciones\observer\Observador.class
 objetosPresentables\TableroPresentable.class
 MVCConfiguraciones\controlador\ControladorArranque.class
+MVCConfiguraciones\vista\frmInicio.class
 MVCJuegoEnCurso\observer\ObservadorTurno.class
 MVCJuegoEnCurso\observer\ObservadorTablero.class
 configuracionesPartida\ConfiguracionesPartida.class
@@ -20,6 +23,7 @@ MVCJuegoEnCurso\vista\PnlJugador.class
 MVCJuegoEnCurso\vista\PnlPunto$1.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloPartidaEscritura.class
 MVCJuegoEnCurso\vista\PnlTablero.class
+MVCConfiguraciones\modelo\IModeloArranqueLectura.class
 objetosPresentables\LineaPresentable.class
 MVCJuegoEnCurso\observer\ObservableTurno.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloTableroLectura.class
@@ -29,4 +33,5 @@ MVCConfiguraciones\observer\Observable.class
 objetosPresentables\CuadroPresentable.class
 MVCJuegoEnCurso\observer\ObservadorInicioPartida.class
 MVCJuegoEnCurso\vista\PnlJugadores.class
+MVCConfiguraciones\modelo\IModeloArranqueExcritura.class
 org\itson\presentacion\FrmMenuInicio.class
