@@ -133,8 +133,8 @@ public class DlgInicioJuego extends javax.swing.JFrame implements ObservadorSoli
     }//GEN-LAST:event_btnMasTiempoActionPerformed
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-//        frm.setStatusSesion(true);
-//        frm.cargarJugadores();
+        frm.setStatusSesion(true);
+        frm.cargarJugadores();
         
         this.jugador.setListo(true);
         controlador.confirmarInicioJuego(jugador);
