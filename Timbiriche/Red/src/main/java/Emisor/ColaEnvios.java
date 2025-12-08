@@ -43,6 +43,10 @@ public class ColaEnvios implements ObservableEnvios {
     }
 
     public String serializar(PaqueteDTO paquete) {
+        
+        if (paquete == null) {
+            return null; 
+        }
         String paqueteJson = serializador.toJson(paquete);
         return paqueteJson;
     }

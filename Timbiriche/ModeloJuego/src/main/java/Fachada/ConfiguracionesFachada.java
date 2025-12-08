@@ -11,6 +11,6 @@ import org.itson.dto.ConfiguracionesDTO;
  * @author erika
  */
 public interface ConfiguracionesFachada {
-     ConfiguracionesDTO getConfiguracionPartida();
+     
      public void setConfiguraciones(ConfiguracionesDTO configuraciones);
 }

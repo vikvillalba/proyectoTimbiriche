@@ -1,5 +1,7 @@
 package Fachada;
 
+import Entidades.AvatarEnum;
+import Entidades.ColorEnum;
 import Entidades.Cuadro;
 import Entidades.Jugador;
 import Entidades.Linea;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.itson.componenteemisor.IEmisor;
+import org.itson.dto.ConfiguracionesDTO;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 import org.itson.dto.PuntoDTO;
@@ -58,10 +61,21 @@ public class Partida implements PartidaFachada, ObservableEventos {
     public Partida(List<Jugador> jugadores, int alto, int ancho) {
         // tablero mock
         this.jugadores = jugadores;
-        this.tablero = new Tablero(alto, ancho);
+        this.tablero = null;
         this.mapperJugadores = new MapperJugadores();
         this.jugadorEnTurno = jugadores.get(0);
     }
+
+    public Partida() {
+        
+        this.tablero = new Tablero(5, 5); 
+        this.jugadores = new ArrayList<>(); 
+        this.mapperJugadores = new MapperJugadores();
+        
+        System.out.println("[Partida] Instancia creada con tablero mock 5x5.");
+    }
+    
+    
 
     @Override
     public Punto[] seleccionarPuntos(Punto origen, Punto destino, Jugador jugadorActual) {
@@ -232,14 +246,14 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-      
+
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
     }
 
     public void obtenerJugadorTurno(PaqueteDTO paquete) {
-          // Convertir contenido a List<JugadorDTO>
+        // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
         for (JugadorDTO dto : jugadoresDTO) {
@@ -279,9 +293,6 @@ public class Partida implements PartidaFachada, ObservableEventos {
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
-
-   
-
 
     @Override
     public void notificarEventoRecibido(Object evento) {
@@ -394,6 +405,60 @@ public class Partida implements PartidaFachada, ObservableEventos {
         }
 
         return resultado;
+    }
+
+    public void recibirConfiguracionInicial(ConfiguracionesDTO configuracion) {
+
+        System.out.println("[Partida] Recibiendo configuración: " + configuracion.getTamTablero());
+
+        inicializarPartida(configuracion);
+
+    }
+
+    private void inicializarPartida(ConfiguracionesDTO configuracion) {
+
+        String tamString = configuracion.getTamTablero();
+        int alto = 10;
+        int ancho = 10;
+
+        try {
+            String[] partes = tamString.split(" x ");
+            alto = Integer.parseInt(partes[0].trim());
+            ancho = Integer.parseInt(partes[1].trim());
+        } catch (Exception e) {
+            System.err.println("[Partida] Error al parsear tamaño de tablero: " + e.getMessage());
+        }
+
+        this.tablero = new Tablero(alto, ancho);
+        System.out.println("[Partida] Tablero creado: " + alto + "x" + ancho);
+
+        // --- B. Lógica del Número de Jugadores ---
+        int numJugadores = configuracion.getNumJugadores();
+        this.jugadores = crearJugadoresPorDefecto(numJugadores);
+        this.jugadorEnTurno = this.jugadores.get(0); // Establecer el primer turno
+
+        System.out.println("[Partida] Creados " + numJugadores + " jugadores.");
+
+        notificarEventoRecibido("Configuración interna completada.");
+    }
+
+    private List<Jugador> crearJugadoresPorDefecto(int numJugadores) {
+        List<Jugador> lista = new ArrayList<>();
+
+        if (numJugadores >= 1) {
+            lista.add(new Jugador("Jugador1 (Local)", AvatarEnum.TIBURON_MARTILLO, ColorEnum.VERDE_PASTEL, 0, true));
+        }
+        if (numJugadores >= 2) {
+            lista.add(new Jugador("Jugador2 (Remoto)", AvatarEnum.TIBURON_JUMP_BLUE, ColorEnum.AZUL_MARINO, 0, false));
+        }
+        if (numJugadores >= 3) {
+            lista.add(new Jugador("Jugador3 (Remoto)", AvatarEnum.TIBURON_BLANCO, ColorEnum.MORAS, 0, false));
+        }
+        if (numJugadores >= 4) {
+            lista.add(new Jugador("Jugador4 (Remoto)", AvatarEnum.TIBURON_STILL_BLUE, ColorEnum.MAGENTA, 0, false));
+        }
+
+        return lista;
     }
 
 }

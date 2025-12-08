@@ -6,22 +6,17 @@
         <artifactId>Timbiriche</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>Presentacion</artifactId>
+    <artifactId>Observadores</artifactId>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ModeloJuego</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Observadores</artifactId>
+            <artifactId>DTO</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
     <properties>
         <maven.compiler.release>24</maven.compiler.release>
-        <exec.mainClass>org.itson.presentacion.Presentacion</exec.mainClass>
+        <exec.mainClass>org.itson.observadores.Observadores</exec.mainClass>
     </properties>
 </project>

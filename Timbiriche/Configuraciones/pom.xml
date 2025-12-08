@@ -35,14 +35,19 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.itson</groupId>
+            <artifactId>Bus</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Presentacion</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.itson</groupId>
-            <artifactId>Bus</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Observadores</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <properties>

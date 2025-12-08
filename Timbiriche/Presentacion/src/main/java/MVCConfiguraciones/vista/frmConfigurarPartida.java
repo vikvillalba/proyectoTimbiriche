@@ -6,20 +6,22 @@ package MVCConfiguraciones.vista;
 
 import MVCConfiguraciones.controlador.ControladorArranque;
 import MVCConfiguraciones.observer.Observador;
+import org.itson.dto.ConfiguracionesDTO;
 
 /**
  *
  * @author erika
  */
-public class frmConfigurarPartida extends javax.swing.JFrame implements Observador{
+public class frmConfigurarPartida extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmConfigurarPartida.class.getName());
-
+    private ControladorArranque controlador; 
     /**
      * Creates new form frmConfigurarPartida
      */
     public frmConfigurarPartida(ControladorArranque controlador) {
         initComponents();
+        this.controlador = controlador;
     }
 
     /**
@@ -35,8 +37,8 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
         jLabel1 = new javax.swing.JLabel();
         lblTamanio = new javax.swing.JLabel();
         lblNumeroJugadores = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cmbJugadores = new javax.swing.JComboBox<>();
+        cmbTablero = new javax.swing.JComboBox<>();
         btnRegresar = new javax.swing.JButton();
         btnContinuar = new javax.swing.JButton();
 
@@ -59,11 +61,11 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
         lblNumeroJugadores.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 24)); // NOI18N
         lblNumeroJugadores.setText("Número de Jugadores");
 
-        jComboBox1.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 18)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4" }));
+        cmbJugadores.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 18)); // NOI18N
+        cmbJugadores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4" }));
 
-        jComboBox2.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 18)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10 x 10", "20 x 20", "30 x 30" }));
+        cmbTablero.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 18)); // NOI18N
+        cmbTablero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10 x 10", "20 x 20", "30 x 30" }));
 
         btnRegresar.setBackground(new java.awt.Color(224, 213, 255));
         btnRegresar.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 18)); // NOI18N
@@ -95,7 +97,7 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblNumeroJugadores)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cmbJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(225, 225, 225))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -104,7 +106,7 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(41, 41, 41)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cmbTablero, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(60, 60, 60)
                                 .addComponent(btnContinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -118,11 +120,11 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
                 .addGap(110, 110, 110)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNumeroJugadores)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(53, 53, 53)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTamanio)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbTablero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(103, 103, 103)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -151,7 +153,10 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
-        // TODO add your handling code here:
+        int numeroJugadores = Integer.parseInt(cmbJugadores.getSelectedItem().toString());
+        String tam = cmbTablero.getSelectedItem().toString();
+        controlador.manejarConfiguración(numeroJugadores, tam);
+        this.setVisible(false);
     }//GEN-LAST:event_btnContinuarActionPerformed
 
     
@@ -159,16 +164,15 @@ public class frmConfigurarPartida extends javax.swing.JFrame implements Observad
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
     private javax.swing.JButton btnRegresar;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> cmbJugadores;
+    private javax.swing.JComboBox<String> cmbTablero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblNumeroJugadores;
     private javax.swing.JLabel lblTamanio;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actualizar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+ 
+
+   
 }
