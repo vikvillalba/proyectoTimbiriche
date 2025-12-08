@@ -198,9 +198,10 @@ public class FrmRegistrarJugador extends javax.swing.JFrame implements ObserverR
                 System.out.println("[vista] No llegó respuesta, asumiendo primer jugador.");
 
                 JugadorNuevoDTO j = new JugadorNuevoDTO(txtName.getText().trim(), cbBoxColor.getSelectedItem().toString(), avatarSeleccionado);
-                FrmSalaEsperaFake frmEspera = new FrmSalaEsperaFake(controlador);
+                FrmSalaEsperaFake frm = new FrmSalaEsperaFake(controlador);
+                frm.agregarJugador(j);
+                frm.setVisible(true);
                 controlador.registrarJugador(j);
-                frmEspera.setVisible(true);
                 this.dispose();
             }
 

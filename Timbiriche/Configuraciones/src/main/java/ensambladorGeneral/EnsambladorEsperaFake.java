@@ -51,7 +51,7 @@ public class EnsambladorEsperaFake {
             throw new RuntimeException(e);
         }
     }
-
+ 
     public void iniciarEsperaFake() {
         ConfiguracionesPartida configPartida = new ConfiguracionesPartida();
         configPartida.setHost(host);
