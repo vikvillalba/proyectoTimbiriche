@@ -103,25 +103,22 @@ public class ManejadorTurnos implements IReceptor {
 
     public void abandonarPartida(PaqueteDTO paquete) {
         JugadorDTO jugador = convertirAJugadorDTO(paquete.getContenido());
-
+               
         synchronized (turnos) {
-            boolean eliminado = turnos.removeIf(j -> j.getId().equals(jugador.getId()));
-            if (eliminado) {
-                System.out.println("Se removió de los turnos al jugador: " + jugador);
-            }
+            turnos.removeIf(j -> j.getId().equals(jugador.getId()));            
 
             if (jugador.isTurno() == true) {
                 actualizarTurno();
-            }
+            }           
 
-//            if (turnos.size() < 2) {
-//                PaqueteDTO paquetes = new PaqueteDTO(jugador, "NUM_JUGADORES_INSUFICIENTE");
-//                paquetes.setHost(host);
-//                paquetes.setPuertoOrigen(puertoOrigen);
-//                paquetes.setPuertoDestino(puertoDestino);
-//
-//                emisor.enviarCambio(paquetes);
-//            }
+            if (turnos.size() == 1) {
+                PaqueteDTO paquetes = new PaqueteDTO(turnos.get(0), "NUM_JUGADORES_INSUFICIENTE");
+                paquetes.setHost(host);
+                paquetes.setPuertoOrigen(puertoOrigen);
+                paquetes.setPuertoDestino(puertoDestino);
+
+                emisor.enviarCambio(paquetes);
+            }
         }
 
         PaqueteDTO paquetes = new PaqueteDTO(jugador, "PARTIDA_ABANDONADA");

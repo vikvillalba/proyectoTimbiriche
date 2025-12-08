@@ -15,11 +15,11 @@ public class Presentacion {
 
     public static void main(String[] args) {
 
-        Jugador jugador1 = new Jugador("sol", AvatarEnum.TIBURON_MARTILLO, ColorEnum.VERDE_PASTEL, 0, true); // cambiar cuando se arreglen los constructores
-        Jugador jugador2 = new Jugador("pablo", AvatarEnum.TIBURON_JUMP_BLUE, ColorEnum.AZUL_MARINO, 0, false);
-        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
-        int alto = 10;
-        int ancho = 10;
-        ConfiguracionesPartida.iniciarPartida(jugadores, alto, ancho);
+//        Jugador jugador1 = new Jugador("sol", AvatarEnum.TIBURON_MARTILLO, ColorEnum.VERDE_PASTEL, 0, true); // cambiar cuando se arreglen los constructores
+//        Jugador jugador2 = new Jugador("pablo", AvatarEnum.TIBURON_JUMP_BLUE, ColorEnum.AZUL_MARINO, 0, false);
+//        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
+//        int alto = 10;
+//        int ancho = 10;
+//        ConfiguracionesPartida.iniciarPartida(jugadores, alto, ancho);
     }
 }

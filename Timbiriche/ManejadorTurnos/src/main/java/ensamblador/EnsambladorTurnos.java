@@ -67,7 +67,8 @@ public class EnsambladorTurnos {
         List<String> eventos = Arrays.asList(
                 "SOLICITAR_TURNOS",
                 "ACTUALIZAR_TURNO",
-                "ABANDONAR_PARTIDA"
+                "ABANDONAR_PARTIDA",
+                "NUM_JUGADORES_INSUFICIENTE"
         );
 
         PaqueteDTO paquete = new PaqueteDTO(eventos, "INICIAR_CONEXION");

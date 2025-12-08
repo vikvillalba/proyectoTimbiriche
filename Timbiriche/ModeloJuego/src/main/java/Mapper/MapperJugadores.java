@@ -54,6 +54,11 @@ public class MapperJugadores {
         }else{
             jugador.setTurno(true);
         }
+        if (jugadordto.isTurno()!=true) {
+            jugador.setTurno(false);
+        }else{
+            jugador.setTurno(true);
+        }
         return jugador;
     }
 }

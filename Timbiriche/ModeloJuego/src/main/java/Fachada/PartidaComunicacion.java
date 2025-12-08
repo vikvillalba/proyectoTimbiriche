@@ -17,15 +17,15 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author victoria
  */
-public class PartidaComunicacion implements IReceptor{
+public class PartidaComunicacion implements IReceptor {
+
     private Partida partida;
 
     public void setPartida(Partida partida) {
         this.partida = partida;
     }
 
-
-  @Override
+    @Override
     public void recibirCambio(PaqueteDTO paquete) {
         System.out.println("[Partida] evento recibido: " + paquete.getTipoEvento());
         TipoEvento tipo;
@@ -51,7 +51,7 @@ public class PartidaComunicacion implements IReceptor{
             case SOLICITAR_INICIAR_PARTIDA:
 
             case INICIO_PARTIDA: {
-                
+
                 partida.inicioPartida();
                 partida.obtenerJugadorTurno(paquete);
                 break;
@@ -78,8 +78,12 @@ public class PartidaComunicacion implements IReceptor{
                 partida.actualizarPuntos(paquete);
                 break;
 
+            case NUM_JUGADORES_INSUFICIENTE:
+                partida.finPartida(paquete);
+                break;
+
             default:
-               partida.notificarEventoRecibido("Evento no manejado: " + tipo);
+                partida.notificarEventoRecibido("Evento no manejado: " + tipo);
         }
     }
 }

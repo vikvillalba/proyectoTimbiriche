@@ -37,19 +37,16 @@ public class FrmMenuInicio extends javax.swing.JFrame implements ObservadorMostr
 
         lblTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/titulo.png"))); // NOI18N
 
-        btnNuevaPartida.setBackground(null);
         btnNuevaPartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/crearNuevaPartida.png"))); // NOI18N
         btnNuevaPartida.setBorder(null);
         btnNuevaPartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/crearNuevaPartidaHover.png"))); // NOI18N
         btnNuevaPartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/crearNuevaPartidaHover.png"))); // NOI18N
 
-        btnUnirsePartida.setBackground(null);
         btnUnirsePartida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/unirsePartida.png"))); // NOI18N
         btnUnirsePartida.setBorder(null);
         btnUnirsePartida.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/unirsePartidaHover.png"))); // NOI18N
         btnUnirsePartida.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/unirsePartidaHover.png"))); // NOI18N
 
-        btnSalir.setBackground(null);
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/salir.png"))); // NOI18N
         btnSalir.setBorder(null);
         btnSalir.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/botones/salirHover.png"))); // NOI18N

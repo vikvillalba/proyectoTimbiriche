@@ -21,3 +21,4 @@ Entidades\ColorEnum.class
 Fachada\Partida.class
 Fachada\PartidaComunicacion$1.class
 Observer\ObservadorInicio.class
+Observer\ObservadorPartidaFinalizada.class

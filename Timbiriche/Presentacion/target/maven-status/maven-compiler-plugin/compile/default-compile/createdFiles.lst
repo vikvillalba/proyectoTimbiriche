@@ -1,13 +1,17 @@
 MVCConfiguraciones\modelo\ModeloArranque.class
 org\itson\presentacion\Presentacion.class
 MVCJuegoEnCurso\observer\ObservadorCierrePantalla.class
+MVCJuegoEnCurso\modelo\interfaces\IModeloMostrarMenuLectura.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloJugadoresLectura.class
 MVCJuegoEnCurso\vista\FrmPartida.class
 MVCJuegoEnCurso\observer\ObservadorJugadores.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloAbandonarEscritura.class
 MVCConfiguraciones\vista\FrmSalaEspera.class
 objetosPresentables\PuntoPresentable.class
+MVCJuegoEnCurso\modelo\interfaces\IModeloCerrarPantallaLectura.class
+MVCJuegoEnCurso\observer\ObservableFinPartida.class
 excepciones\JugadaException.class
+MVCJuegoEnCurso\observer\ObservadorFinPartida.class
 MVCJuegoEnCurso\observer\ObservableMostrarMenu.class
 MVCJuegoEnCurso\vista\FrmPartida$2.class
 MVCJuegoEnCurso\vista\PnlPunto$1.class
@@ -25,6 +29,8 @@ MVCJuegoEnCurso\vista\PnlJugadores.class
 MVCJuegoEnCurso\observer\ObservadorAbandono.class
 MVCJuegoEnCurso\observer\ObservadorMostrarMenu.class
 MVCJuegoEnCurso\observer\ObservableMensaje.class
+org\itson\presentacion\FrmPartidaGanada$1.class
+MVCJuegoEnCurso\observer\ObservadorCierrePantallaGanada.class
 MVCJuegoEnCurso\modelo\implementaciones\ModeloPartida.class
 objetosPresentables\JugadorPresentable.class
 MVCJuegoEnCurso\observer\ObservablePartida.class
@@ -41,4 +47,7 @@ MVCJuegoEnCurso\vista\PnlJugador.class
 MVCJuegoEnCurso\observer\ObservableTurno.class
 MVCJuegoEnCurso\modelo\interfaces\IModeloTableroLectura.class
 MVCConfiguraciones\observer\Observable.class
+org\itson\presentacion\FrmPartidaGanada.class
+org\itson\presentacion\FrmPartidaGanada$2.class
 org\itson\presentacion\FrmMenuInicio.class
+MVCJuegoEnCurso\observer\ObservableCierrePantallaGanada.class

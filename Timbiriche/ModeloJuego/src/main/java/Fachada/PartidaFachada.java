@@ -120,4 +120,6 @@ public interface PartidaFachada extends Observable {
     void abandonarPartida(Jugador jugadorSesion);
     
     void partidaAbandonada(PaqueteDTO paquete);
+    
+    void finPartida(PaqueteDTO paquete);
 }

@@ -10,8 +10,10 @@ import Fachada.PartidaComunicacion;
 import MVCJuegoEnCurso.controlador.ControladorPartida;
 import MVCJuegoEnCurso.modelo.implementaciones.ModeloPartida;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloAbandonarEscritura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloCerrarPantallaLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloMostrarMenuLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
 import MVCJuegoEnCurso.vista.FrmPartida;
@@ -26,6 +28,7 @@ import org.itson.componenteemisor.IEmisor;
 import org.itson.dto.JugadorDTO;
 import org.itson.dto.PaqueteDTO;
 import org.itson.presentacion.FrmMenuInicio;
+import org.itson.presentacion.FrmPartidaGanada;
 
 /**
  * Ensamblador general para iniciar partidas del juego.
@@ -109,7 +112,8 @@ public class EnsambladorPartida {
                 "PARTIDA_ABANDONADA",
                 "CONFIGURAR_PARTIDA",
                 "SOLICITAR_FINALIZAR_PARTIDA",
-                "ACTUALIZAR_PUNTOS"
+                "ACTUALIZAR_PUNTOS",
+                "NUM_JUGADORES_INSUFICIENTE"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -134,14 +138,18 @@ public class EnsambladorPartida {
         IModeloPartidaEscritura impe = modelo;
         IModeloMensajeEscritura imme = modelo;
         IModeloAbandonarEscritura imap = modelo;
+        IModeloCerrarPantallaLectura imcpl = modelo;
+        IModeloMostrarMenuLectura immml = modelo;
 
-        ControladorPartida controlador = new ControladorPartida(impe,imme,imap);
+        ControladorPartida controlador = new ControladorPartida(impe,imme,imap,imcpl,immml);
         FrmPartida frm = new FrmPartida(imjl, imtl, controlador);
         FrmMenuInicio frmInicio = new FrmMenuInicio();
+        FrmPartidaGanada frmPartidaGanada = new FrmPartidaGanada(controlador);
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
         partida.agregarObservadorEventos(modelo);
         partida.agregarObservadorAbandonarJuego(modelo);
+        partida.agergarObservadorFinalizarPartida(modelo);
 
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
@@ -150,6 +158,10 @@ public class EnsambladorPartida {
         modelo.agregarObservadorMensaje(frm);
         modelo.agregarObservadorCierrePantalla(frm);
         modelo.agregarObservadorMostrarMenu(frmInicio);
+        modelo.agregarObservableFinPartida(frmPartidaGanada);
+        modelo.agregarObservadorCierrePantallaGanada(frmPartidaGanada);
+        
+        frmPartidaGanada.agregarObservadorMostrarMenu(frmInicio);
         
         partida.inicioPartida();
     }

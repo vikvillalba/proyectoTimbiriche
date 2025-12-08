@@ -1,7 +1,9 @@
 package MVCJuegoEnCurso.controlador;
 
 import MVCJuegoEnCurso.modelo.interfaces.IModeloAbandonarEscritura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloCerrarPantallaLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloMensajeEscritura;
+import MVCJuegoEnCurso.modelo.interfaces.IModeloMostrarMenuLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import excepciones.JugadaException;
 import objetosPresentables.PuntoPresentable;
@@ -16,12 +18,16 @@ public class ControladorPartida {
     private IModeloPartidaEscritura modelo;
     private IModeloMensajeEscritura modeloMensaje;
     private IModeloAbandonarEscritura modeloAbandonar;
+    private IModeloCerrarPantallaLectura modeloCerrarPantalla;
+    private IModeloMostrarMenuLectura modeloMostrarMenu;
     private PuntoPresentable[] puntosSeleccionados = new PuntoPresentable[2]; // puntos que el jugador selecciona
 
-    public ControladorPartida(IModeloPartidaEscritura modelo, IModeloMensajeEscritura modeloMensaje, IModeloAbandonarEscritura modeloAbandonar) {
+    public ControladorPartida(IModeloPartidaEscritura modelo, IModeloMensajeEscritura modeloMensaje, IModeloAbandonarEscritura modeloAbandonar,IModeloCerrarPantallaLectura modeloCerrarPantalla,IModeloMostrarMenuLectura modeloMostrarMenu) {
         this.modelo = modelo;
         this.modeloMensaje = modeloMensaje;
         this.modeloAbandonar = modeloAbandonar;
+        this.modeloCerrarPantalla = modeloCerrarPantalla;
+        this.modeloMostrarMenu = modeloMostrarMenu;
     }
 
     /**
@@ -62,12 +68,12 @@ public class ControladorPartida {
     public void abandonarPartida(){
         modeloAbandonar.abandonarPartida();
     }
-
-    /**
-     * Llamada al modelo para que actualice los turnos de la partida.
-     */
-//    public void actualizarTurno() {
-//        modelo.actualizarTurnos();
-//        System.out.println("Estuve en el controlador");
-//    }
+    
+    public void cerrarPantallaGanada(){
+        modeloCerrarPantalla.cerrarPantallaGanada();
+    }
+    
+    public void mostrarMenu(){
+        modeloMostrarMenu.mostrarMenu();
+    }
 }

@@ -1,27 +1,12 @@
 package Fachada;
 
-import Entidades.Cuadro;
-import Entidades.Jugador;
-import Entidades.Linea;
-import Entidades.Punto;
-import Entidades.Tablero;
-import Entidades.TipoEvento;
-import static Entidades.TipoEvento.*;
-import Mapper.MapperJugadores;
-import Observer.ObservableEventos;
-import Observer.ObservadorAbandonar;
-import Observer.ObservadorEventos;
-import Observer.ObservadorInicio;
-import Observer.ObservadorJugadores;
-import excepciones.PartidaExcepcion;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import org.itson.componenteemisor.IEmisor;
-import org.itson.dto.JugadorDTO;
-import org.itson.dto.PaqueteDTO;
-import org.itson.dto.PuntoDTO;
+import Entidades.*;
+import Mapper.*;
+import Observer.*;
+import excepciones.*;
+import java.util.*;
+import org.itson.componenteemisor.*;
+import org.itson.dto.*;
 
 /**
  * Clase que representa una partida de juego. Engloba a todas las clases
@@ -35,6 +20,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     private ObservadorInicio observadorInicioJuego;
     private ObservadorAbandonar observadorAbandonar;
+    private ObservadorPartidaFinalizada observadorFinalizarPartida;
     private List<Jugador> jugadores;
     private Jugador jugadorEnTurno;
     private Jugador jugadorSesion;
@@ -180,12 +166,12 @@ public class Partida implements PartidaFachada, ObservableEventos {
         System.out.println("[PARTIDA]: Se envió el cambio de abandonar partida");
         emisor.enviarCambio(paquete);
     }
-    
+
     @Override
     public void partidaAbandonada(PaqueteDTO paquete) {
         JugadorDTO jugador = convertirAJugadorDTO(paquete.getContenido());
-        System.out.println("[PARTIDA]: Jugador que abandono partida: "+jugadorSesion);
-        System.out.println("Nombre: "+jugador.getId());
+        System.out.println("[PARTIDA]: Jugador que abandono partida: " + jugadorSesion);
+        System.out.println("Nombre: " + jugador.getId());
         notificarObservadorAbandonarJuego(jugador.getId());
     }
 
@@ -383,6 +369,15 @@ public class Partida implements PartidaFachada, ObservableEventos {
         return null;
     }
 
+    private Jugador obtenerJugadorEntidad(JugadorDTO jugador) {
+        for (Jugador j : jugadores) {
+            if (j.getNombre().equals(jugador.getId())) {
+                return j;
+            }
+        }
+        return null;
+    }
+
     /**
      * Convierte el contenido del paquete a List de JugadorDTO.
      *
@@ -420,6 +415,24 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void notificarObservadorAbandonarJuego(String Nombrejugador) {
-            observadorAbandonar.actualizarAbandono(Nombrejugador);
+        observadorAbandonar.actualizarAbandono(Nombrejugador);
+    }
+
+    @Override
+    public void finPartida(PaqueteDTO paquete) {
+        JugadorDTO jugador = convertirAJugadorDTO(paquete.getContenido());
+        notificarObservadorFinalizarPartida(jugador);
+    }
+
+    @Override
+    public void agergarObservadorFinalizarPartida(ObservadorPartidaFinalizada ob) {
+        this.observadorFinalizarPartida = ob;
+    }
+
+    @Override
+    public void notificarObservadorFinalizarPartida(JugadorDTO jugador) {
+        Jugador jugadorEntidad = obtenerJugadorEntidad(jugador);
+        System.out.println("Jugador entidad: " + jugadorEntidad);
+        this.observadorFinalizarPartida.finalizarPartida(jugadorEntidad);
     }
 }

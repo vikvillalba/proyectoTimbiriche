@@ -19,4 +19,7 @@ public interface Observable {
     
     void agregarObservadorAbandonarJuego(ObservadorAbandonar ob);
     void notificarObservadorAbandonarJuego(String nombrejugador);
+    
+    void agergarObservadorFinalizarPartida(ObservadorPartidaFinalizada ob);
+    void notificarObservadorFinalizarPartida(JugadorDTO jugador);
 }
