@@ -22,7 +22,6 @@ public class FrmPartidaGanada extends javax.swing.JFrame implements ObservadorFi
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmPartidaGanada.class.getName());
 
     private ControladorPartida controlador;
-    private ObservadorMostrarMenu mostrarMenu;
     private JugadorPresentable jugador;
     
     /**
@@ -48,10 +47,6 @@ public class FrmPartidaGanada extends javax.swing.JFrame implements ObservadorFi
         this.nombre.setText(jugador.getNombre());
         this.score.setText(String.valueOf(jugador.getScore()));
         this.setVisible(true);
-    }
-    
-    public void agregarObservadorMostrarMenu(ObservadorMostrarMenu ob){
-        this.mostrarMenu = ob;
     }
     
     @Override

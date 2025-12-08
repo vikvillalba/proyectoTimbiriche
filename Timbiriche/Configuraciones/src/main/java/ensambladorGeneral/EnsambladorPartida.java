@@ -161,8 +161,6 @@ public class EnsambladorPartida {
         modelo.agregarObservableFinPartida(frmPartidaGanada);
         modelo.agregarObservadorCierrePantallaGanada(frmPartidaGanada);
         
-        frmPartidaGanada.agregarObservadorMostrarMenu(frmInicio);
-        
         partida.inicioPartida();
     }
 }
