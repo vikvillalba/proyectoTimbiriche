@@ -15,11 +15,7 @@ import java.util.List;
  *
  * @author pablo
  */
-public class EnsambladorJuego3 {
-
-    /**
-     * @param args the command line arguments
-     */
+public class EnsambladorJuego4 {
     public static void main(String[] args) {
         Jugador jugador1 = new Jugador(
                 "Sol",
@@ -58,10 +54,10 @@ public class EnsambladorJuego3 {
         int alto = 10;
         int ancho = 10;
 
-        // Jugador 2 es la sesion de esta ventana
+        // Jugador 1 es la sesion de esta ventana
         EnsambladorPartida
-                .getInstancia("config_partida3.properties")
-                .iniciarPartida(jugadores, alto, ancho, jugador3);
+                .getInstancia("config_partida4.properties")
+                .iniciarPartida(jugadores, alto, ancho, jugador4);
     }
     
 }

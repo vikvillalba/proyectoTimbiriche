@@ -17,7 +17,7 @@ public class EnsambladorJuego2 {
 
     public static void main(String[] args) {
         Jugador jugador1 = new Jugador(
-                "sol",
+                "Sol",
                 AvatarEnum.TIBURON_MARTILLO,
                 ColorEnum.VERDE_PASTEL,
                 0,
@@ -25,7 +25,7 @@ public class EnsambladorJuego2 {
         );
 
         Jugador jugador2 = new Jugador(
-                "pablo",
+                "Pablo",
                 AvatarEnum.TIBURON_JUMP_BLUE,
                 ColorEnum.AZUL_MARINO,
                 0,
@@ -33,22 +33,22 @@ public class EnsambladorJuego2 {
         );
 
         Jugador jugador3 = new Jugador(
-                "biki",
+                "Viki",
                 AvatarEnum.TIBURON_BLANCO,
                 ColorEnum.MORAS,
                 0,
                 false
         );
-//
-//        Jugador jugador4 = new Jugador(
-//                "lusia",
-//                AvatarEnum.TIBURON_STILL_BLUE,
-//                ColorEnum.MAGENTA,
-//                0,
-//                false
-//        );
 
-        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2,jugador3);
+        Jugador jugador4 = new Jugador(
+                "Lucia",
+                AvatarEnum.TIBURON_STILL_BLUE,
+                ColorEnum.MAGENTA,
+                0,
+                false
+        );
+
+        List<Jugador> jugadores = Arrays.asList(jugador1, jugador2,jugador3,jugador4);
 
         int alto = 10;
         int ancho = 10;
