@@ -33,7 +33,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
 
     public FrmPartida(IModeloJugadoresLectura modeloJugadores, IModeloTableroLectura modeloTablero, ControladorPartida controlador) {
         initComponents();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         tablero = new PnlTablero(modeloTablero, controlador);
         jugadores = new PnlJugadores(modeloJugadores, controlador);
@@ -57,6 +57,7 @@ public class FrmPartida extends JFrame implements ObservadorInicioPartida, Obser
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 controlador.abandonarPartida();
+                controlador.mostrarMenu();
             }
         });
     }
