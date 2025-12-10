@@ -54,6 +54,8 @@ public class EnsambladorJuegoConfig {
 
     private static List<Jugador> jugadoresIniciales;
 
+    private boolean esHostDePartida;
+
     // Config
     private String host;
     private int puertoEntrada; // Puerto de escucha local
@@ -62,7 +64,7 @@ public class EnsambladorJuegoConfig {
 
     private IEmisor emisor;
 
-    public EnsambladorJuegoConfig(String configFile) throws IOException {
+    public EnsambladorJuegoConfig(String configFile, boolean esHost) throws IOException {
         this.mapper = new MapperJugadores();
         Properties props = new Properties();
 
@@ -74,13 +76,17 @@ public class EnsambladorJuegoConfig {
         props.load(input);
 
         this.host = props.getProperty("host");
-
-        // Lectura de puertos
         this.puertoEntrada = Integer.parseInt(props.getProperty("puerto.cliente.entrada"));
         this.puertoServicio = Integer.parseInt(props.getProperty("puerto.bus.entrada"));
         this.puertoTurnos = Integer.parseInt(props.getProperty("puerto.turnos.entrada"));
 
+        this.esHostDePartida = esHost;
+
         System.out.println("[Configuración] Host: " + this.host + ", Puerto Local: " + this.puertoEntrada + ", Puerto Bus: " + this.puertoServicio + ", Puerto Turnos: " + this.puertoTurnos);
+    }
+
+    public EnsambladorJuegoConfig(String configFile) throws IOException {
+        this(configFile, false); // Por defecto, no es host si se usa el constructor simple
     }
 
     /**
@@ -109,13 +115,14 @@ public class EnsambladorJuegoConfig {
      * Inicia el ensamblador con la lista completa de jugadores inyectada desde
      * el Main.
      */
-    public static void iniciarPartidaCompleta(Jugador jugadorSesion, String configFile, List<Jugador> jugadores) {
+    public static void iniciarPartidaCompleta(Jugador jugadorSesion, String configFile, List<Jugador> jugadores, boolean esHost) {
         setJugadorSesion(jugadorSesion);
         EnsambladorJuegoConfig.jugadoresIniciales = jugadores; // Guardar la lista
 
         EventQueue.invokeLater(() -> {
             try {
-                EnsambladorJuegoConfig ensamblador = new EnsambladorJuegoConfig(configFile);
+                // **SE PASA EL NUEVO PARÁMETRO DE ROL DE HOST**
+                EnsambladorJuegoConfig ensamblador = new EnsambladorJuegoConfig(configFile, esHost);
                 ensamblador.ensamblar();
             } catch (Exception e) {
                 System.err.println("Fallo crítico en el ensamblaje: " + e.getMessage());
@@ -169,7 +176,7 @@ public class EnsambladorJuegoConfig {
         modeloJuego.agregarObservadorJugadores(frmPartida.getObservadorJugadores());
         modeloJuego.agregarObservadorTablero(frmPartida.getObservadorTablero());
 
-        if (jugadorSesionLocal.getNombre().equals("sol")) {
+        if (esHostDePartida) {
 
             ConfiguracionesPartida configuradorRed = new ConfiguracionesPartida();
             configuradorRed.setEmisor(emisor);
@@ -210,8 +217,6 @@ public class EnsambladorJuegoConfig {
             frmPartida.setVisible(true);
         }
     }
-
-   
 
     private void iniciarConexion(IEmisor emisor) {
         List<String> eventos = Arrays.asList(

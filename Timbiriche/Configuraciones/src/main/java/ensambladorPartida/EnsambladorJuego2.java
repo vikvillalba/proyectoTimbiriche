@@ -33,7 +33,10 @@ public class EnsambladorJuego2 {
         );
         List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
 
-        EnsambladorJuegoConfig.iniciarPartidaCompleta(jugador2, "config_partida2.properties", jugadores);
+        boolean esHost = false;
 
+        EnsambladorJuegoConfig.iniciarPartidaCompleta(jugador2, "config_partida2.properties", jugadores, esHost);
+
+        System.out.println("Jugador 'lusia' iniciado como CLIENTE y esperando la configuración del Host...");
     }
 }

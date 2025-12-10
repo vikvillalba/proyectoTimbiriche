@@ -1,6 +1,5 @@
 package ensambladorPartida;
 
-import ensambladorGeneral.EnsambladorPartida;
 import Entidades.AvatarEnum;
 import Entidades.ColorEnum;
 import Entidades.Jugador;
@@ -17,6 +16,7 @@ import java.util.List;
 public class EnsambladorJuego1 {
 
     public static void main(String[] args) {
+        // Jugadores
         Jugador jugador1 = new Jugador(
                 "sol",
                 AvatarEnum.TIBURON_MARTILLO,
@@ -32,9 +32,12 @@ public class EnsambladorJuego1 {
                 false
         );
         List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
+        
+        boolean esHost = true; 
 
-        EnsambladorJuegoConfig.iniciarPartidaCompleta(jugador1, "config_partida1.properties", jugadores);
 
-        System.out.println("Jugador 'sol' iniciado y configurando la partida...");
+        EnsambladorJuegoConfig.iniciarPartidaCompleta(jugador1, "config_partida1.properties", jugadores, esHost);
+
+        System.out.println("Jugador 'sol' iniciado como HOST y configurando la partida...");
     }
 }
