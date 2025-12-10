@@ -10,9 +10,9 @@ package DTO;
 public class JugadorConfigDTO {
 
     private String nombre;
-    private String avatar;  // Nombre del enum AvatarEnum (ej: "TIBURON_BALLENA")
-    private String color;   // Nombre del enum ColorEnum (ej: "AZUL_PASTEL")
-    private boolean listo;  // Indica si el jugador está listo para iniciar
+    private String avatar;
+    private String color;
+    private boolean listo;
     private boolean esHost; // Indica si el jugador es el host de la partida
     private String ip;
     private int puerto;
@@ -38,7 +38,6 @@ public class JugadorConfigDTO {
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
-    
 
     /**
      * Constructor completo para crear un jugador de configuración.

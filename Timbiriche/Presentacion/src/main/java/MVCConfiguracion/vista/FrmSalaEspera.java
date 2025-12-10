@@ -5,6 +5,7 @@ import MVCConfiguracion.modelo.IModeloArranqueLectura;
 import MVCConfiguracion.observer.INotificadorUnirsePartida;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
 import MVCConfiguracion.vista.unirsePartida.DlgSolicitudHost;
+import ModeloUnirsePartida.Observadores.INotificadorConsenso;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,7 +20,7 @@ import objetosPresentables.TableroConfig;
  *
  * @author victoria
  */
-public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfiguraciones, INotificadorUnirsePartida {
+public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfiguraciones, INotificadorUnirsePartida, INotificadorConsenso {
 
     private final Color COLOR_FONDO = new Color(224, 233, 255);
     private List<JugadorConfig> jugadores;
@@ -131,6 +132,53 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         dlgSolicitudHost.setLocationRelativeTo(this);
         dlgSolicitudHost.setVisible(true);
+    }
+
+    /**
+     * Método llamado cuando el proceso de consenso ha finalizado. Cierra el diálogo de votación si está abierto y muestra un mensaje con el resultado.
+     *
+     * @param aceptado true si el consenso fue aceptado, false si fue rechazado
+     * @param tipoRechazo El tipo de rechazo si aplica, null si fue aceptado
+     */
+    @Override
+    public void actualizarConsensoFinalizado(boolean aceptado, String tipoRechazo) {
+        System.out.println("[FrmSalaEspera] actualizarConsensoFinalizado() - Aceptado: " + aceptado
+                + ", TipoRechazo: " + tipoRechazo);
+
+        // Cerrar el diálogo de solicitud si está abierto
+        cerrarDialogosActivos();
+
+        // Crear el mensaje apropiado según el resultado del consenso
+        String mensaje = construirMensajeConsenso(aceptado, tipoRechazo);
+
+        // Mostrar el diálogo con el mensaje
+        MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje dlgMensaje
+                = new MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje(this, true, mensaje);
+        dlgMensaje.setLocationRelativeTo(this);
+        dlgMensaje.setVisible(true);
+    }
+
+    /**
+     * Construye el mensaje HTML apropiado según el resultado del consenso.
+     *
+     * @param aceptado true si fue aceptado, false si fue rechazado
+     * @param tipoRechazo El tipo de rechazo (ignorado - solo para compatibilidad)
+     * @return String con el mensaje HTML formateado
+     */
+    private String construirMensajeConsenso(boolean aceptado, String tipoRechazo) {
+        if (aceptado) {
+            return "<html><div style='text-align: center;'>"
+                    + "<b>¡Consenso Alcanzado!</b><br><br>"
+                    + "Todos los jugadores en sala aceptaron la solicitud.<br>"
+                    + "El nuevo jugador se ha unido a la partida."
+                    + "</div></html>";
+        } else {
+            return "<html><div style='text-align: center;'>"
+                    + "<b>Consenso No Alcanzado</b><br><br>"
+                    + "La solicitud no fue aceptada por todos los jugadores en sala.<br><br>"
+                    + "Fin del proceso de votación."
+                    + "</div></html>";
+        }
     }
 
     //CU_VIKI

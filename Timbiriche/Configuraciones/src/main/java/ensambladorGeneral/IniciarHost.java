@@ -82,8 +82,8 @@ public class IniciarHost {
         // Conectar UnirsePartida con ModeloArranque
         // UnirsePartida notifica a ModeloArranque cuando llega una solicitud
         unirsePartida.agregarNotificadorSolicitud(modeloArranque);
-        // También para notificar cuando se actualiza el host
-        unirsePartida.agregarNotificadorHostEncontrado(modeloArranque);
+        // HOST no busca hosts - solo recibe solicitudes de otros jugadores
+        // NOTA: El notificador de consenso se registra DESPUÉS de crear FrmSalaEspera (línea ~150)
 
         System.out.println("UnirsePartida conectado con ModeloArranque");
 
@@ -96,10 +96,11 @@ public class IniciarHost {
         jugadorHostDTO.setPuerto(PUERTO_HOST);
 
         // Configurar el host en UnirsePartida
-        // El host se suscribe a EN_SALA_ESPERA y SOLICITAR_UNIRSE
+        // El host se suscribe a EN_SALA_ESPERA, SOLICITAR_UNIRSE y CONSENSO_FINALIZADO
         List<String> eventos = Arrays.asList(
-                "EN_SALA_ESPERA", // Indica que está en sala de espera
-                "SOLICITAR_UNIRSE" // Recibe solicitudes de nuevos jugadores
+                "EN_SALA_ESPERA",       // Indica que está en sala de espera
+                "SOLICITAR_UNIRSE",     // Recibe solicitudes de nuevos jugadores
+                "CONSENSO_FINALIZADO"   // Recibe notificaciones cuando el consenso termina
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -148,7 +149,12 @@ public class IniciarHost {
         // Cuando llegue una solicitud, ModeloArranque notificará a FrmSalaEspera
         modeloArranque.agregarNotificador(frmSalaEspera);
 
+        // ✅ LAZY REGISTRATION: Registrar notificador de consenso DESPUÉS de crear FrmSalaEspera
+        // Cuando el consenso finalice, UnirsePartida notificará directamente a FrmSalaEspera
+        unirsePartida.agregarNotificadorConsenso(frmSalaEspera);
+
         System.out.println("[✓] FrmSalaEspera creado y conectado");
+        System.out.println("[✓] Notificador de consenso registrado");
 
         // Mostrar la interfaz gráfica
         java.awt.EventQueue.invokeLater(() -> {

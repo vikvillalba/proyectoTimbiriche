@@ -29,7 +29,7 @@ public class PublicadorEventos implements IReceptor {
         // Manejar eventos especiales
         switch (tipoEvento) {
             case "OBTENER_HOST":
-                eventBus.enviarHost(paquete);
+                eventBus.enviarJugadorEnSala(paquete);
                 return;
 
             case "SOLICITAR_UNIRSE":

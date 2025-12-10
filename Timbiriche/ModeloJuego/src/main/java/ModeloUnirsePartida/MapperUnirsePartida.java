@@ -13,11 +13,8 @@ import java.util.Map;
  */
 public class MapperUnirsePartida {
 
-    /**
-     * Constructor privado para prevenir instanciación.
-     */
+    
     private MapperUnirsePartida() {
-        throw new UnsupportedOperationException("Clase utilitaria, no debe ser instanciada");
     }
 
     /**
@@ -122,15 +119,15 @@ public class MapperUnirsePartida {
     /**
      * Mapea un Map a un JugadorSolicitanteDTO.
      *
-     * @param solMap Map con los datos del jugador solicitante
+     * @param jugadorSolicitante Map con los datos del jugador solicitante
      * @return JugadorSolicitanteDTO mapeado
      */
-    private static JugadorSolicitanteDTO mapearJugadorSolicitante(Map<String, Object> solMap) {
+    private static JugadorSolicitanteDTO mapearJugadorSolicitante(Map<String, Object> jugadorSolicitante) {
         JugadorSolicitanteDTO solicitante = new JugadorSolicitanteDTO();
 
-        solicitante.setIp((String) solMap.get("ip"));
+        solicitante.setIp((String) jugadorSolicitante.get("ip"));
 
-        Object puertoObj = solMap.get("puerto");
+        Object puertoObj = jugadorSolicitante.get("puerto");
         if (puertoObj instanceof Number) {
             solicitante.setPuerto(((Number) puertoObj).intValue());
         }
@@ -141,20 +138,20 @@ public class MapperUnirsePartida {
     /**
      * Mapea un Map a un JugadorConfigDTO.
      *
-     * @param hostMap Map con los datos del jugador host
+     * @param jugadorSala Map con los datos del jugador host
      * @return JugadorConfigDTO mapeado
      */
-    private static JugadorConfigDTO mapearJugadorConfig(Map<String, Object> hostMap) {
+    private static JugadorConfigDTO mapearJugadorConfig(Map<String, Object> jugadorSala) {
         JugadorConfigDTO host = new JugadorConfigDTO();
 
-        host.setIp((String) hostMap.get("ip"));
+        host.setIp((String) jugadorSala.get("ip"));
 
-        Object puertoObj = hostMap.get("puerto");
+        Object puertoObj = jugadorSala.get("puerto");
         if (puertoObj instanceof Number) {
             host.setPuerto(((Number) puertoObj).intValue());
         }
 
-        Object esHostObj = hostMap.get("esHost");
+        Object esHostObj = jugadorSala.get("esHost");
         if (esHostObj instanceof Boolean) {
             host.setEsHost((Boolean) esHostObj);
         }

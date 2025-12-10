@@ -260,9 +260,9 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     public void actualizar(SolicitudUnirse solicitud) {
         // Actualizar la solicitud en el modelo
         this.solicitud = solicitud;
-        
+
         //envia eventos que ahora escucha el jugadr que se unioo
-        if(solicitud.isSolicitudEstado()){
+        if (solicitud.isSolicitudEstado()) {
             unirsePartida.suscribirseASalaEspera();
         }
 
@@ -318,7 +318,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
      * @param jugador El jugador host encontrado (puede ser null)
      */
     @Override
-    public void actualizar(JugadorConfigDTO jugador) {
+    public void actualizarHostEncontrado(JugadorConfigDTO jugador) {
 
         this.jugadorHost = jugador;
         JugadorConfig jugadorHostEncontrado = mapearJugadorConfig(jugador);

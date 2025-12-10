@@ -10,6 +10,8 @@ import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
 import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
+import ModeloUnirsePartida.Observadores.INotificadorConsenso;
+import ModeloUnirsePartida.Observadores.IPublicadorConsenso;
 import SolicitudEntity.SolicitudUnirse;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +25,9 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author Jack Murrieta
  */
-public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPublicadorHostEncontrado {
+public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPublicadorHostEncontrado,
+        IPublicadorConsenso {
 
-    // Constantes de estado
-    private static final String ESTADO_EN_ESPERA = "EN_ESPERA";
-    private static final String ESTADO_INICIADA = "INICIADA";
-    private static final String ESTADO_FINALIZADA = "FINALIZADA";
 
     private JugadorConfigDTO jugadorHost;
     private JugadorSolicitanteDTO jugadorSolicitante;
@@ -46,8 +45,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     private int puertoOrigen;
     private int puertoDestino;
 
-    //notificadorHost encontrado a modeloArranque 
-    INotificadorHostEncontrado modeloArranque;
+    INotificadorHostEncontrado notificadorHost;
+    INotificadorConsenso notificadorConsenso;
 
     public UnirsePartida() {
     }
@@ -173,7 +172,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     /**
      * Cambia el estado de una solicitud y notifica a los observadores.
      *
-     * @param solicitud La solicitud a actualizar
+     * @param solicitud La solicitud a actualizarHostEncontrado
      * @param aceptada true si se acepta, false si se rechaza
      */
     @Override
@@ -386,7 +385,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     //NOTIFICAR HOST A MODELO ARRANQUE
     @Override
     public void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador) {
-        this.modeloArranque = notificador;
+        this.notificadorHost = notificador;
     }
 
     /**
@@ -396,7 +395,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      */
     @Override
     public void notificarHostEncontrado(JugadorConfigDTO jugador) {
-        modeloArranque.actualizar(jugador);
+        notificadorHost.actualizarHostEncontrado(jugador);
     }
 
     /**
@@ -406,7 +405,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     public void suscribirseASalaEspera() {
         List<String> eventosNuevos = Arrays.asList(
                 "EN_SALA_ESPERA",
-                "SOLICITAR_UNIRSE"
+                "SOLICITAR_UNIRSE",
+                "CONSENSO_FINALIZADO"
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventosNuevos, "INICIAR_CONEXION");
@@ -428,5 +428,16 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
 //        // TODO: Implementar lógica de desuscripción si es necesaria
 //        System.out.println("[UnirsePartida] Jugador se desuscribe de sala de espera");
 //    }
+
+    @Override
+    public void agregarNotificadorConsenso(INotificadorConsenso notificador) {
+        notificadorConsenso = notificador;
+
+    }
+
+    @Override
+    public void notificarConsensoFinalizado(boolean aceptado, String tipoRechazo) {
+        notificadorConsenso.actualizarConsensoFinalizado(aceptado, tipoRechazo);
+    }
 
 }

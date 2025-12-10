@@ -2,6 +2,7 @@ Entidades\Punto.class
 Observer\ObservableEventos.class
 Observer\ObservadorTurnos.class
 Mapper\MapperJugadores.class
+ModeloUnirsePartida\Observadores\IPublicadorConsenso.class
 Observer\Observable.class
 excepciones\PartidaExcepcion.class
 Entidades\Linea.class
@@ -29,5 +30,6 @@ ModeloUnirsePartida\IUnirsePartida.class
 ConfiguracionesFachada\Observer\ObservableEventos.class
 Entidades\ColorEnum.class
 Fachada\Partida.class
+ModeloUnirsePartida\Observadores\INotificadorConsenso.class
 ConfiguracionesFachada\ConfiguracionesPartida.class
 Observer\ObservadorInicio.class

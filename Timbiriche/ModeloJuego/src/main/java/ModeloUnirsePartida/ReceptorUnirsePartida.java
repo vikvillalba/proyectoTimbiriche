@@ -25,9 +25,6 @@ public class ReceptorUnirsePartida implements IReceptor {
         System.out.println("[ReceptorUnirsePartida] Paquete recibido: " + tipoEvento);
 
         switch (tipoEvento) {
-            case "RESPUESTA_SOLICITUD":
-                System.out.println("no debe de caer aqui se suponeeeee ");
-                break;
             case "RESPUESTA_HOST":
                 manejarRespuestaHost(paquete);
                 break;
@@ -35,46 +32,35 @@ public class ReceptorUnirsePartida implements IReceptor {
                 manejarSolicitudUnirse(paquete);
                 break;
             case "RESULTADO_CONSENSO":
+                // para el jugador a unirse
                 manejarResultadoConsenso(paquete);
+                break;
+            case "CONSENSO_FINALIZADO":
+                //para jugadores en sala 
+                manejarConsensoFinalizado(paquete);
                 break;
             default:
                 System.out.println("[ReceptorUnirsePartida] Evento no manejado: " + tipoEvento);
         }
     }
 
-//    /**
-//     * Maneja la respuesta de solicitud del host.
-//     */
-//    private void manejarRespuestaSolicitud(PaqueteDTO paquete) {
-//        try {
-//            SolicitudUnirse respuesta = MapperUnirsePartida.mapearSolicitud(paquete.getContenido());
-//
-//            if (respuesta == null) {
-//                System.err.println("ERROR: No se pudo mapear SolicitudUnirse");
-//                return;
-//            }
-//
-//            boolean aceptada = respuesta.isSolicitudEstado();
-//            String estadoTexto = aceptada ? "ACEPTADA" : "RECHAZADA";
-//
-//            System.out.println("Respuesta recibida del host: " + estadoTexto);
-//
-//            unirsePartida.cambiarEstadoSolicitud(respuesta, aceptada);
-//
-//        } catch (Exception e) {
-//            System.err.println("ERROR al manejar respuesta de solicitud: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
     /**
-     * Manejar respuesta del host cuando solicita OBTENER_HOST
+     * Manejar respuesta del host cuando solicita OBTENER_HOST.
+     * Este método es llamado SOLO en CLIENTES que buscan partidas existentes.
+     * El HOST nunca ejecuta esta lógica.
+     *
+     * Flujo:
+     * 1. Recibe JugadorConfigDTO del host encontrado
+     * 2. Notifica a ModeloArranque (que convierte DTO→Presentable)
+     * 3. ModeloArranque notifica a FrmMenuInicio
+     * 4. FrmMenuInicio muestra diálogo para unirse
      */
     private void manejarRespuestaHost(PaqueteDTO paquete) {
         try {
             JugadorConfigDTO jugadorHost = MapperUnirsePartida.mapearHost(paquete.getContenido());
 
-            // Usar actualizar() para que se notifique al modelo
-            unirsePartida.modeloArranque.actualizar(jugadorHost);
+            // Notificar a través del método público (no acceso directo a campo)
+            unirsePartida.notificarHostEncontrado(jugadorHost);
             unirsePartida.setJugadorHost(jugadorHost);
 
         } catch (Exception e) {
@@ -147,6 +133,37 @@ public class ReceptorUnirsePartida implements IReceptor {
 
         } catch (Exception e) {
             System.err.println("[ReceptorUnirsePartida] ERROR al manejar resultado de consenso: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Maneja la notificación de CONSENSO_FINALIZADO enviada por el EventBus. Este método es llamado en TODOS los jugadores en sala de espera cuando el consenso termina.
+     *
+     * @param paquete Paquete con los datos del consenso finalizado
+     */
+    private void manejarConsensoFinalizado(PaqueteDTO paquete) {
+        try {
+            // El contenido es un Map con: consensoAceptado, keySolicitud, tipoRechazo
+            java.util.Map<String, Object> contenido = (java.util.Map<String, Object>) paquete.getContenido();
+
+            boolean aceptado = (Boolean) contenido.get("consensoAceptado");
+            String keySolicitud = (String) contenido.get("keySolicitud");
+            String tipoRechazo = (String) contenido.get("tipoRechazo");
+
+            String estadoTexto = aceptado ? "ACEPTADO" : "RECHAZADO";
+            System.out.println("[ReceptorUnirsePartida] CONSENSO_FINALIZADO recibido - Estado: " + estadoTexto);
+            System.out.println("[ReceptorUnirsePartida] Key solicitud: " + keySolicitud);
+
+            if (!aceptado) {
+                System.out.println("[ReceptorUnirsePartida] Tipo de rechazo: " + tipoRechazo);
+            }
+
+            // Notificar a la vista (FrmSalaEspera) para que cierre el diálogo y muestre el mensaje
+            unirsePartida.notificarConsensoFinalizado(aceptado, tipoRechazo);
+
+        } catch (Exception e) {
+            System.err.println("[ReceptorUnirsePartida] ERROR al manejar CONSENSO_FINALIZADO: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -1,5 +1,6 @@
 package EventBus;
 
+import ConsensoSolicitud.ConsensoSolicitud;
 import Servicio.Servicio;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class EventBus {
     private IEmisor emisor;
 
     // Mapa para almacenar las solicitudes en proceso de consenso
-    // Key: IP:Puerto del solicitante, Value: [SolicitudUnirse, cantidadEsperada, votosAceptados, votosRechazados]
-    private Map<String, Object[]> solicitudesEnConsenso;
+    //String ip y puerto del votador 
+    private Map<String, ConsensoSolicitud> solicitudesEnConsenso;
 
     public EventBus() {
         this.servicios = new ConcurrentHashMap<>();
@@ -124,9 +125,8 @@ public class EventBus {
         }
     }
 
-    //obtener el host de la partida
-    public Servicio obtenerHostPartida() {
-        //el host es el primer suscriptor en sala de espera
+    //obtiene el primer jugador en la sala como validacion
+    public Servicio obtenerPrimerJugadorEnSala() {
         //esto se hace para validar que hay una partida existente si no hay usuarios en espera significa que no existe una partida
         List<Servicio> lista = servicios.get("EN_SALA_ESPERA");
         if (lista == null || lista.isEmpty()) {
@@ -135,6 +135,7 @@ public class EventBus {
         return lista.get(0);
     }
 
+    //CU_UNIRSEPARTIDA
     /**
      * Obtiene la cantidad de servicios suscritos a un tipo de evento específico.
      *
@@ -149,8 +150,8 @@ public class EventBus {
         return lista.size();
     }
 
-    public void enviarHost(PaqueteDTO paquete) {
-        Servicio host = obtenerHostPartida();
+    public void enviarJugadorEnSala(PaqueteDTO paquete) {
+        Servicio host = obtenerPrimerJugadorEnSala();
 
         PaqueteDTO respuesta = new PaqueteDTO();
         respuesta.setTipoEvento("RESPUESTA_HOST");
@@ -167,9 +168,9 @@ public class EventBus {
 
     }
 
+    //METODOS CONSNSO
     /**
-     * Inicia el proceso de consenso cuando se recibe una solicitud de unirse.
-     * Envía la solicitud a TODOS los servicios suscritos a SOLICITAR_UNIRSE.
+     * Inicia el proceso de consenso cuando se recibe una solicitud de unirse. Envía la solicitud a TODOS los servicios suscritos a SOLICITAR_UNIRSE.
      *
      * @param paquete Paquete con la solicitud
      */
@@ -180,7 +181,6 @@ public class EventBus {
         int cantidadJugadoresEnSala = obtenerCantidadSuscriptores("EN_SALA_ESPERA");
 
         if (cantidadJugadoresEnSala == 0) {
-            System.out.println("[EventBus] No hay jugadores en sala de espera");
             // Enviar rechazo automático al solicitante
             enviarResultadoConsenso(paquete, false, "NO_HAY_JUGADORES_EN_SALA");
             return;
@@ -189,25 +189,22 @@ public class EventBus {
         System.out.println("[EventBus] Iniciando consenso para solicitud de: " + keyConsenso);
         System.out.println("[EventBus] Cantidad de jugadores en sala: " + cantidadJugadoresEnSala);
 
-        // Almacenar la solicitud en el mapa de consenso
-        // [0] = contenido (solicitud), [1] = cantidad esperada, [2] = votos aceptados, [3] = votos rechazados
-        Object[] datosConsenso = new Object[]{
-            paquete.getContenido(),
-            cantidadJugadoresEnSala,
-            0, // votos aceptados
-            0  // votos rechazados
-        };
+        // Crear el objeto ConsensoSolicitud para almacenar los datos del consenso
+        ConsensoSolicitud consenso = new ConsensoSolicitud(
+                paquete.getContenido(),
+                cantidadJugadoresEnSala,
+                0, // votos aceptados
+                0 // votos rechazados
+        );
 
-        solicitudesEnConsenso.put(keyConsenso, datosConsenso);
+        solicitudesEnConsenso.put(keyConsenso, consenso);
 
         // Notificar a todos los servicios suscritos a SOLICITAR_UNIRSE
-        // (que son los jugadores en sala de espera)
         notificarServicios(paquete);
     }
 
     /**
-     * Procesa un voto de un jugador en sala de espera.
-     * Cuando se alcanza el consenso, envía el resultado al solicitante.
+     * Procesa un voto de un jugador en sala de espera. Cuando se alcanza el consenso, envía el resultado al solicitante.
      *
      * @param paquete Paquete con el voto (contiene SolicitudUnirse con respuesta)
      */
@@ -222,32 +219,39 @@ public class EventBus {
 
         String keyConsenso = ipSolicitante + ":" + puertoSolicitante;
 
-        Object[] datosConsenso = solicitudesEnConsenso.get(keyConsenso);
+        ConsensoSolicitud consenso = solicitudesEnConsenso.get(keyConsenso);
 
-        if (datosConsenso == null) {
+        if (consenso == null) {
             System.err.println("[EventBus] No se encontró solicitud en consenso para: " + keyConsenso);
             return;
         }
 
         boolean votoAceptado = (Boolean) solicitudMap.get("solicitudEstado");
-        int cantidadEsperada = (int) datosConsenso[1];
-        int votosAceptados = (int) datosConsenso[2];
-        int votosRechazados = (int) datosConsenso[3];
+        int cantidadEsperada = consenso.getJugadoresEnSala();
+        int votosAceptados = consenso.getVotosAceptados();
+        int votosRechazados = consenso.getVotosRechazados();
 
         // Incrementar contador según el voto
         if (votoAceptado) {
             votosAceptados++;
-            datosConsenso[2] = votosAceptados;
+            consenso.setVotosAceptados(votosAceptados);
         } else {
             votosRechazados++;
-            datosConsenso[3] = votosRechazados;
+            consenso.setVotosRechazados(votosRechazados);
 
-            // Si hay UN solo rechazo, se rechaza inmediatamente (consenso unánime)
+            // Si hay UN solo rechazo se rechaza inmediatamente
             System.out.println("[EventBus] Solicitud rechazada por un jugador. Consenso: RECHAZADO");
             String tipoRechazo = (String) solicitudMap.get("tipoRechazo");
-            enviarResultadoConsenso(crearPaqueteSolicitante(ipSolicitante, puertoSolicitante, datosConsenso[0]),
-                                   false,
-                                   tipoRechazo != null ? tipoRechazo : "RECHAZADO_POR_JUGADOR");
+            String tipoRechazoFinal = tipoRechazo != null ? tipoRechazo : "RECHAZADO_POR_JUGADOR";
+
+            // Enviar resultado al solicitante
+            enviarResultadoConsenso(crearPaqueteSolicitante(ipSolicitante, puertoSolicitante, consenso.getSolicitudContenido()),
+                    false,
+                    tipoRechazoFinal);
+
+            // Notificar a los jugadores en sala que el consenso terminó
+            notificarFinConsensoASala(keyConsenso, false, tipoRechazoFinal);
+
             solicitudesEnConsenso.remove(keyConsenso);
             return;
         }
@@ -255,18 +259,23 @@ public class EventBus {
         int totalVotos = votosAceptados + votosRechazados;
 
         System.out.println("[EventBus] Votos recibidos: " + totalVotos + "/" + cantidadEsperada
-                         + " (Aceptados: " + votosAceptados + ", Rechazados: " + votosRechazados + ")");
+                + " (Aceptados: " + votosAceptados + ", Rechazados: " + votosRechazados + ")");
 
-        // Verificar si se alcanzó el consenso
+        // Verificar si se alcanzo el consenso
         if (totalVotos >= cantidadEsperada) {
-            // Consenso unánime: TODOS deben aceptar
+            // TODOS deben aceptar
             boolean consensoAlcanzado = (votosAceptados == cantidadEsperada);
+            String tipoRechazoFinal = consensoAlcanzado ? null : "NO_HAY_CONSENSO";
 
             System.out.println("[EventBus] Consenso alcanzado: " + (consensoAlcanzado ? "ACEPTADO" : "RECHAZADO"));
 
-            enviarResultadoConsenso(crearPaqueteSolicitante(ipSolicitante, puertoSolicitante, datosConsenso[0]),
-                                   consensoAlcanzado,
-                                   consensoAlcanzado ? null : "NO_HAY_CONSENSO");
+            // Enviar resultado al solicitante
+            enviarResultadoConsenso(crearPaqueteSolicitante(ipSolicitante, puertoSolicitante, consenso.getSolicitudContenido()),
+                    consensoAlcanzado,
+                    tipoRechazoFinal);
+
+            // Notificar a los jugadores en sala que el consenso terminó
+            notificarFinConsensoASala(keyConsenso, consensoAlcanzado, tipoRechazoFinal);
 
             // Eliminar solicitud del mapa
             solicitudesEnConsenso.remove(keyConsenso);
@@ -297,8 +306,8 @@ public class EventBus {
         respuesta.setPuertoOrigen(0); // El EventBus es el origen
 
         System.out.println("[EventBus] Enviando RESULTADO_CONSENSO a "
-                         + paqueteSolicitante.getHost() + ":" + paqueteSolicitante.getPuertoOrigen()
-                         + " - Estado: " + (aceptado ? "ACEPTADO" : "RECHAZADO"));
+                + paqueteSolicitante.getHost() + ":" + paqueteSolicitante.getPuertoOrigen()
+                + " - Estado: " + (aceptado ? "ACEPTADO" : "RECHAZADO"));
 
         emisor.enviarCambio(respuesta);
     }
@@ -312,6 +321,45 @@ public class EventBus {
         paquete.setPuertoOrigen(puerto);
         paquete.setContenido(contenido);
         return paquete;
+    }
+
+    private void notificarFinConsensoASala(String keyConsenso, boolean aceptado, String tipoRechazo) {
+        System.out.println("[EventBus] Notificando fin de consenso a jugadores en sala - Estado: "
+                + (aceptado ? "ACEPTADO" : "RECHAZADO"));
+
+        // Obtener todos los servicios suscritos a SOLICITAR_UNIRSE
+        List<Servicio> votadores = servicios.get("SOLICITAR_UNIRSE");
+
+        if (votadores == null || votadores.isEmpty()) {
+            System.out.println("[EventBus] No hay votadores para notificar");
+            return;
+        }
+
+        // Crear el paquete de notificación
+        PaqueteDTO notificacion = new PaqueteDTO();
+        notificacion.setTipoEvento("CONSENSO_FINALIZADO");
+        notificacion.setPuertoOrigen(0);
+
+        // Crear el contenido con información del consenso
+        Map<String, Object> contenido = new java.util.HashMap<>();
+        contenido.put("consensoAceptado", aceptado);
+        contenido.put("keySolicitud", keyConsenso);
+
+        if (!aceptado && tipoRechazo != null) {
+            contenido.put("tipoRechazo", tipoRechazo);
+        }
+
+        notificacion.setContenido(contenido);
+
+        // Enviar notificación a cada votador en sala
+        for (Servicio votador : votadores) {
+            notificacion.setHost(votador.getHost());
+            notificacion.setPuertoDestino(votador.getPuerto());
+            emisor.enviarCambio(notificacion);
+
+            System.out.println("[EventBus] CONSENSO_FINALIZADO enviado a "
+                    + votador.getHost() + ":" + votador.getPuerto());
+        }
     }
 
 }
