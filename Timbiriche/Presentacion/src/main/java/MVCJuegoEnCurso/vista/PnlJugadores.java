@@ -13,6 +13,7 @@ import objetosPresentables.JugadorPresentable;
 
 /**
  * Representación gráfica de los jugadores de la partida.
+ *
  * @author victoria
  */
 public class PnlJugadores extends JPanel implements ObservadorJugadores, ObservableTurno {
@@ -42,7 +43,6 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores, Observa
             panelesJugadores.add(panel);
             add(panel);
         }
-
         revalidate();
         repaint();
     }
@@ -55,7 +55,6 @@ public class PnlJugadores extends JPanel implements ObservadorJugadores, Observa
             panelesJugadores.get(i).setJugador(jugadores.get(i));
             panelesJugadores.get(i).cargarDatos();
         }
-
         revalidate();
         repaint();
         notificar();

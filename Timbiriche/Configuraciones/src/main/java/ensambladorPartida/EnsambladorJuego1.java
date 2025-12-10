@@ -50,8 +50,8 @@ public class EnsambladorJuego1 {
 
         List<Jugador> jugadores = Arrays.asList(jugador1, jugador2);
 
-        int alto = 10;
-        int ancho = 10;
+        int alto = 2;
+        int ancho = 2;
 
         // Jugador 1 es la sesion de esta ventana
         EnsambladorPartida

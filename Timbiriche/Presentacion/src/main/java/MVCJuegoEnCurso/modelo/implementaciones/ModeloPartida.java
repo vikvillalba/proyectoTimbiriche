@@ -8,6 +8,7 @@ import Fachada.PartidaFachada;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloJugadoresLectura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloPartidaEscritura;
 import MVCJuegoEnCurso.modelo.interfaces.IModeloTableroLectura;
+import MVCJuegoEnCurso.observer.ObservableFinalVista;
 import MVCJuegoEnCurso.observer.ObservablePartida;
 import MVCJuegoEnCurso.observer.ObservadorJugadores;
 import MVCJuegoEnCurso.observer.ObservadorTablero;
@@ -25,6 +26,7 @@ import objetosPresentables.LineaPresentable;
 import objetosPresentables.PuntoPresentable;
 import objetosPresentables.TableroPresentable;
 import MVCJuegoEnCurso.observer.ObservadorInicioPartida;
+import MVCJuegoEnCurso.observer.ObserverFinalVista;
 import Observer.ObservadorInicio;
 import excepciones.JugadaException;
 import excepciones.PartidaExcepcion;
@@ -42,12 +44,15 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         ObservadorInicio,
         ObservadorTurnos,
         Observer.ObservadorJugadores,
-        Observer.ObservadorEventos {
+        Observer.ObservadorEventos,
+        Observer.ObserverFinal,
+        ObservableFinalVista{
 
     private PartidaFachada partida;
     private ObservadorJugadores observadorJugadores;
     private ObservadorTablero observadorTablero;
     private ObservadorInicioPartida observadorInicioJuego;
+    private ObserverFinalVista observadorFinalVista;
     private static final Map<String, Color> COLORES = new HashMap<>();
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
@@ -261,6 +266,23 @@ public class ModeloPartida implements IModeloJugadoresLectura,
         System.out.println("[ModeloPartida] Evento recibido: " + cambio.toString());
         // notificar a vista CAMBIO TABLEROO
         notificarObservadorTablero();
+    }
+
+    @Override
+    public void finalizarPartida(List<Jugador> jugadores) {
+        System.out.println("modelo finalizar");
+        notificarObserverFinalVista(jugadores);
+    }
+
+    @Override
+    public void agregarObserverFinalVista(ObserverFinalVista o) {
+        observadorFinalVista = o;
+    }
+
+    @Override
+    public void notificarObserverFinalVista(List<Jugador> jugadores) {
+        System.out.println("modelo partida");
+        observadorFinalVista.finalizarPartida(jugadoresEntidadAPresentable(jugadores));
     }
 
 }

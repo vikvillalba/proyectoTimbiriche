@@ -9,9 +9,11 @@ import Entidades.TipoEvento;
 import static Entidades.TipoEvento.*;
 import Mapper.MapperJugadores;
 import Observer.ObservableEventos;
+import Observer.ObservableFinal;
 import Observer.ObservadorEventos;
 import Observer.ObservadorInicio;
 import Observer.ObservadorJugadores;
+import Observer.ObserverFinal;
 import excepciones.PartidaExcepcion;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ import org.itson.dto.PuntoDTO;
  *
  * @author victoria
  */
-public class Partida implements PartidaFachada, ObservableEventos {
+public class Partida implements PartidaFachada, ObservableEventos, ObservableFinal {
 
     private Tablero tablero;
 
@@ -40,6 +42,7 @@ public class Partida implements PartidaFachada, ObservableEventos {
     private MapperJugadores mapperJugadores;
     private List<ObservadorJugadores> observadoresJugadores = new ArrayList<>();
     private List<ObservadorEventos<?>> observadoresEventos = new ArrayList<>();
+    private List<ObserverFinal> observadoresFinal = new ArrayList<>();
 
     private String host;
     private int puertoOrigen;
@@ -105,8 +108,20 @@ public class Partida implements PartidaFachada, ObservableEventos {
             puntajeActualizado.setPuertoOrigen(this.puertoOrigen);
             puntajeActualizado.setPuertoDestino(puertoDestino);
             emisor.enviarCambio(puntajeActualizado);
+            if (tablero.getCuadrosCompletados().size() == tablero.getCuadrosExistentes().size()) {
+                PaqueteDTO pqueteFinal = new PaqueteDTO(jugadoresDTO, TipoEvento.FINAL_PARTIDA.toString());
+                pqueteFinal.setHost(this.host);
+                pqueteFinal.setPuertoOrigen(this.puertoOrigen);
+                pqueteFinal.setPuertoDestino(this.puertoDestino);
+                emisor.enviarCambio(pqueteFinal);
+            }
         }
         return cuadroCompletado;
+    }
+
+    public void finalizarPartida() {
+        System.out.println("finalizar partida");
+        notificarObserverFinal(jugadores);
     }
 
     @Override
@@ -232,14 +247,14 @@ public class Partida implements PartidaFachada, ObservableEventos {
 
     @Override
     public void inicioPartida() {
-      
+
         notificarObservadorInicioJuego();
         notificarObservadorJugadores();
         notificarEventoRecibido("Partida iniciada");
     }
 
     public void obtenerJugadorTurno(PaqueteDTO paquete) {
-          // Convertir contenido a List<JugadorDTO>
+        // Convertir contenido a List<JugadorDTO>
         List<JugadorDTO> jugadoresDTO = convertirAListaJugadoresDTO(paquete.getContenido());
 
         for (JugadorDTO dto : jugadoresDTO) {
@@ -279,9 +294,6 @@ public class Partida implements PartidaFachada, ObservableEventos {
     public void setEmisor(IEmisor emisor) {
         this.emisor = emisor;
     }
-
-   
-
 
     @Override
     public void notificarEventoRecibido(Object evento) {
@@ -394,6 +406,19 @@ public class Partida implements PartidaFachada, ObservableEventos {
         }
 
         return resultado;
+    }
+
+    @Override
+    public void agregarObserverFinal(ObserverFinal o) {
+        observadoresFinal.add(o);
+    }
+
+    @Override
+    public void notificarObserverFinal(List<Jugador> jugadores) {
+        System.out.println("observerFinal partida");
+        for (ObserverFinal ob : observadoresFinal) {
+            ob.finalizarPartida(jugadores);
+        }
     }
 
 }

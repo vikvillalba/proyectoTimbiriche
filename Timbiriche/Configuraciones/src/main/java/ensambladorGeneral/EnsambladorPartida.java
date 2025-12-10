@@ -105,7 +105,8 @@ public class EnsambladorPartida {
                 "ABANDONAR_PARTIDA",
                 "CONFIGURAR_PARTIDA",
                 "SOLICITAR_FINALIZAR_PARTIDA",
-                "ACTUALIZAR_PUNTOS"
+                "ACTUALIZAR_PUNTOS", 
+                "FINAL_PARTIDA"
         );
 
         PaqueteDTO solicitarConexion = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -134,10 +135,12 @@ public class EnsambladorPartida {
         partida.agregarObservadorInicioJuego(modelo);
         partida.agregarObservadorJugadores(modelo);
         partida.agregarObservadorEventos(modelo);
+        partida.agregarObserverFinal(modelo);
 
         modelo.agregarObservadorJugadores(frm.getObservadorJugadores());
         modelo.agregarObservadorTablero(frm.getObservadorTablero());
         modelo.agregarObservadorInicioJuego(frm);
+        modelo.agregarObserverFinalVista(frm);
         partida.inicioPartida();
     }
 }

@@ -76,7 +76,11 @@ public class PartidaComunicacion implements IReceptor{
             case ACTUALIZAR_PUNTOS:
                 partida.actualizarPuntos(paquete);
                 break;
-
+            
+            case FINAL_PARTIDA:
+                System.out.println("partidacomunicacion enterao");
+                partida.finalizarPartida();
+                break;
             default:
                partida.notificarEventoRecibido("Evento no manejado: " + tipo);
         }

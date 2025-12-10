@@ -166,4 +166,8 @@ public class Tablero {
         return cuadrosExistentes;
     }
 
+    public List<Cuadro> getCuadrosCompletados() {
+        return cuadrosCompletados;
+    }
+
 }

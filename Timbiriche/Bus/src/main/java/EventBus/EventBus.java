@@ -77,10 +77,10 @@ public class EventBus {
         if (lista != null) {
 
             for (Servicio servicio : lista) {
-                if (Objects.equals(servicio.getHost(), paquete.getHost())
-                        && servicio.getPuerto() == paquete.getPuertoOrigen()) {
-                    continue;
-                }
+//                if (Objects.equals(servicio.getHost(), paquete.getHost())
+//                        && servicio.getPuerto() == paquete.getPuertoOrigen()) {
+//                    continue;
+//                }
 
                 paquete.setHost(servicio.getHost());
                 paquete.setPuertoDestino(servicio.getPuerto());
