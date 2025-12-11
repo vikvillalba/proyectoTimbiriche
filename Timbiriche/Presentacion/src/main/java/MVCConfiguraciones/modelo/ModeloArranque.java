@@ -84,7 +84,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void validarJugador(List<String> usados) {
-        observerRegistro.validarJugador(usados);
+        notificarObserver(usados);
     }
 
     @Override
