@@ -2,9 +2,9 @@ package MVCConfiguracion.vista;
 
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.IModeloArranqueLectura;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
+import MVCConfiguracion.UnirsePartida.Observers.INotificadorUnirsePartida;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
-import MVCConfiguracion.vista.unirsePartida.DlgSolicitudHost;
+import MVCConfiguracion.vista.unirsePartida.DlgSolicitudSalaEspera;
 import ModeloUnirsePartida.Observadores.INotificadorConsenso;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
@@ -32,7 +32,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
     private IModeloArranqueLectura modelo;
     private ControladorArranque controlador;
     //dialogo cuando se manda solicitud 
-    private DlgSolicitudHost dlgSolicitudHost;
+    private DlgSolicitudSalaEspera dlgSolicitudHost;
 
     public FrmSalaEspera(IModeloArranqueLectura modelo, ControladorArranque controlador) {
         initComponents();
@@ -127,7 +127,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         System.out.println("[FrmSalaEspera] Mostrando diálogo de solicitud...");
 
-        dlgSolicitudHost = new DlgSolicitudHost(this, true);
+        dlgSolicitudHost = new DlgSolicitudSalaEspera(this, true);
         dlgSolicitudHost.setControlador(controlador);
 
         dlgSolicitudHost.setLocationRelativeTo(this);

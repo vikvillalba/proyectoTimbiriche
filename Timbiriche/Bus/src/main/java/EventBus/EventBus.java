@@ -150,11 +150,12 @@ public class EventBus {
         return lista.size();
     }
 
+    //valida la existencia de una partida si en cuentar un servicio suscrito al evento SALA_ESPERA
     public void enviarJugadorEnSala(PaqueteDTO paquete) {
         Servicio host = obtenerPrimerJugadorEnSala();
 
         PaqueteDTO respuesta = new PaqueteDTO();
-        respuesta.setTipoEvento("RESPUESTA_HOST");
+        respuesta.setTipoEvento("RESPUESTA_JUGADOR");
 
         respuesta.setHost(paquete.getHost()); // ip del solicitante
 

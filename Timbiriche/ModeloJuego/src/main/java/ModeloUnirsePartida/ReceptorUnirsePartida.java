@@ -25,8 +25,9 @@ public class ReceptorUnirsePartida implements IReceptor {
         System.out.println("[ReceptorUnirsePartida] Paquete recibido: " + tipoEvento);
 
         switch (tipoEvento) {
-            case "RESPUESTA_HOST":
-                manejarRespuestaHost(paquete);
+            //RESPUESTA DEL EVENTBUS SI ENCONTRO UN JUGADOR EN SALA_ESPERA
+            case "RESPUESTA_JUGADOR":
+                manejarRespuestaJugador(paquete);
                 break;
             case "SOLICITAR_UNIRSE":
                 manejarSolicitudUnirse(paquete);
@@ -55,13 +56,11 @@ public class ReceptorUnirsePartida implements IReceptor {
      * 3. ModeloArranque notifica a FrmMenuInicio
      * 4. FrmMenuInicio muestra diálogo para unirse
      */
-    private void manejarRespuestaHost(PaqueteDTO paquete) {
+    private void manejarRespuestaJugador(PaqueteDTO paquete) {
         try {
-            JugadorConfigDTO jugadorHost = MapperUnirsePartida.mapearHost(paquete.getContenido());
+            JugadorConfigDTO jugadorEnSala = MapperUnirsePartida.mapearJugadorEnSala(paquete.getContenido());
 
-            // Notificar a través del método público (no acceso directo a campo)
-            unirsePartida.notificarHostEncontrado(jugadorHost);
-            unirsePartida.setJugadorHost(jugadorHost);
+            unirsePartida.notificarJugadorEncontrado(jugadorEnSala);
 
         } catch (Exception e) {
             System.err.println("ERROR al manejar RESPUESTA_HOST: " + e.getMessage());

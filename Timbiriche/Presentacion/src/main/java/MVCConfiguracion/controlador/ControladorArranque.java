@@ -14,7 +14,7 @@ import objetosPresentables.PartidaPresentable;
  *
  * @author victoria
  */
-public class ControladorArranque implements ObservadorEventoInicio, ControladorUnisePartida {
+public class ControladorArranque implements ObservadorEventoInicio, IControladorUnisePartida {
 
     private ControladorPartida controladorPartida;
     private JugadorConfig sesion;
@@ -41,7 +41,6 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
     //CU_UNIRSEPARTIDA
     /**
      * Envía una solicitud para unirse a una partida existente.
@@ -83,12 +82,10 @@ public class ControladorArranque implements ObservadorEventoInicio, ControladorU
     }
 
     @Override
-    public void buscarHostPartida(String ip, int puerto) {
+    public void buscarJugadorEnSalaEspera(String ip, int puerto) {
         //llamar a modelo que busque host partida
         JugadorSolicitanteDTO jugadorSolicitante = new JugadorSolicitanteDTO(ip, puerto);
-        modelo.buscarHostPartida(jugadorSolicitante);
+        modelo.buscarJugadorEnSalaEspera(jugadorSolicitante);
     }
-    
-    
 
 }

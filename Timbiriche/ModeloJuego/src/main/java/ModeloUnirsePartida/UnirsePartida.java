@@ -4,10 +4,8 @@
  */
 package ModeloUnirsePartida;
 
-import ModeloUnirsePartida.Observadores.IPublicadorHostEncontrado;
 import ModeloUnirsePartida.Observadores.IPublicadorSolicitud;
 import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
-import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import ModeloUnirsePartida.Observadores.INotificadorConsenso;
@@ -19,17 +17,18 @@ import java.util.List;
 import org.itson.componenteemisor.IEmisor;
 import org.itson.componentereceptor.IReceptor;
 import org.itson.dto.PaqueteDTO;
+import ModeloUnirsePartida.Observadores.IPublicadorJugadorEncontrado;
+import ModeloUnirsePartida.Observadores.INotificadorJugadorEncontrado;
 
 /**
  * Clase que maneja la lógica para unirse a una partida. Gestiona las solicitudes de jugadores que quieren unirse a una partida existente.
  *
  * @author Jack Murrieta
  */
-public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPublicadorHostEncontrado,
+public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPublicadorJugadorEncontrado,
         IPublicadorConsenso {
 
-
-    private JugadorConfigDTO jugadorHost;
+    private JugadorConfigDTO jugadorEnSala;
     private JugadorSolicitanteDTO jugadorSolicitante;
     private SolicitudUnirse solicitudActual;
     private Fachada.Partida partida; // Referencia a la partida real
@@ -45,8 +44,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     private int puertoOrigen;
     private int puertoDestino;
 
-    INotificadorHostEncontrado notificadorHost;
-    INotificadorConsenso notificadorConsenso;
+    INotificadorJugadorEncontrado notificadorHost;// MODELO ARRANQUE
+    INotificadorConsenso notificadorConsenso; //FRMALAESPERA
 
     public UnirsePartida() {
     }
@@ -73,12 +72,12 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      * @param jugador El jugador que solicita el host
      */
     @Override
-    public void solicitarHost(JugadorSolicitanteDTO jugador) {
+    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
         this.jugadorSolicitante = jugador;
 
         PaqueteDTO paquete = new PaqueteDTO();
-        paquete.setContenido("SOLICITUD_HOST");
-        paquete.setTipoEvento("OBTENER_HOST");
+        paquete.setContenido("SOLICITUD_JUGADOR_EN_SALA");
+        paquete.setTipoEvento("OBTENER_JUGADOR_SALA");
         paquete.setHost(this.jugadorSolicitante.getIp());
         paquete.setPuertoOrigen(this.jugadorSolicitante.getPuerto());
         paquete.setPuertoDestino(puertoDestino);
@@ -89,12 +88,13 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     @Override
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
 
-        if (this.jugadorHost == null) {
-            throw new IllegalStateException("No existe un jugador host en la partida.");
+        if (this.jugadorEnSala == null) {
+            //en donde cachar esta excepcion
+            throw new IllegalStateException("No existe un jugador en sala espera.");
         }
 
         SolicitudUnirse solicitud
-                = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorHost);
+                = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorEnSala);
 
         this.solicitudActual = solicitud;
 
@@ -132,7 +132,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         // Enviar evento VOTAR_SOLICITUD al EventBus
         PaqueteDTO paquete = new PaqueteDTO(solicitud, "VOTAR_SOLICITUD");
 
-        paquete.setHost(this.jugadorHost != null ? this.jugadorHost.getIp() : "localhost");
+        paquete.setHost(this.jugadorEnSala != null ? this.jugadorEnSala.getIp() : "localhost");
         paquete.setPuertoOrigen(this.puertoOrigen);
         paquete.setPuertoDestino(this.puertoDestino);
 
@@ -142,37 +142,9 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     }
 
     /**
-     * Envía la respuesta de una solicitud al cliente solicitante vía EventBus.
-     *
-     * @param solicitud La solicitud con el estado actualizado (aceptada/rechazada)
-     */
-//    @Override
-//    public void enviarRespuestaSolicitud(SolicitudUnirse solicitud) {
-//        if (solicitud == null) {
-//            throw new IllegalArgumentException("La solicitud no puede ser nula");
-//        }
-//
-//        String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
-//        System.out.println("[UnirsePartida] Enviando RESPUESTA_SOLICITUD al cliente. Estado: " + estado);
-//        System.out.println("[UnirsePartida] Solicitante: " + solicitud.getJugadorSolicitante().getIp() + ":" + solicitud.getJugadorSolicitante().getPuerto());
-//
-//        // Enviar evento RESPUESTA_SOLICITUD al EventBus
-//        // Este evento solo será recibido por el Solicitante (único suscrito)
-//        PaqueteDTO paquete = new PaqueteDTO(solicitud, "RESPUESTA_SOLICITUD");
-//
-//        // Configurar campos de red (igual que en Partida)
-//        paquete.setHost(solicitud.getJugadorHost().getIp());
-//        paquete.setPuertoOrigen(this.puertoOrigen);
-//        paquete.setPuertoDestino(this.puertoDestino);
-//
-//        emisorSolicitud.enviarCambio(paquete);
-//
-//        System.out.println("[UnirsePartida] Paquete RESPUESTA_SOLICITUD enviado al EventBus");
-//    }
-    /**
      * Cambia el estado de una solicitud y notifica a los observadores.
      *
-     * @param solicitud La solicitud a actualizarHostEncontrado
+     * @param solicitud La solicitud a actualizarJugadorEncontrado
      * @param aceptada true si se acepta, false si se rechaza
      */
     @Override
@@ -221,11 +193,9 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         return this.partida.getEstadoPartida();
     }
 
-    public void setJugadorHost(JugadorConfigDTO jugadorHost) {
-        this.jugadorHost = jugadorHost;
-        if (this.jugadorHost != null) {
-            this.jugadorHost.setEsHost(true);
-        }
+    public void setJugadorEnSala(JugadorConfigDTO jugadorEnSala) {
+        this.jugadorEnSala = jugadorEnSala;
+
     }
 
     @Override
@@ -352,7 +322,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     @Override
     public void notificarSolicitud(SolicitudUnirse solicitud) {
         for (INotificadorSolicitud notificado : notificados) {
-            notificado.actualizar(solicitud);
+            notificado.actualizarSolicitudUnirse(solicitud);
 
         }
     }
@@ -384,7 +354,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
 
     //NOTIFICAR HOST A MODELO ARRANQUE
     @Override
-    public void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador) {
+    public void agregarNotificadorJugadorEncontrado(INotificadorJugadorEncontrado notificador) {
         this.notificadorHost = notificador;
     }
 
@@ -394,8 +364,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      * @param jugador El jugador host encontrado (puede ser null)
      */
     @Override
-    public void notificarHostEncontrado(JugadorConfigDTO jugador) {
-        notificadorHost.actualizarHostEncontrado(jugador);
+    public void notificarJugadorEncontrado(JugadorConfigDTO jugador) {
+        notificadorHost.actualizarJugadorEncontrado(jugador);
     }
 
     /**
@@ -419,15 +389,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         System.out.println("[UnirsePartida] Suscribiéndose a eventos de sala de espera: " + eventosNuevos);
         emisorSolicitud.enviarCambio(registroEventBus);
     }
-//
-//    /**
-//     * Desuscribe a un jugador de los eventos de sala de espera.
-//     * Debe llamarse cuando un jugador abandona la sala o cuando inicia la partida.
-//     */
-//    public void desuscribirseASalaEspera() {
-//        // TODO: Implementar lógica de desuscripción si es necesaria
-//        System.out.println("[UnirsePartida] Jugador se desuscribe de sala de espera");
-//    }
 
     @Override
     public void agregarNotificadorConsenso(INotificadorConsenso notificador) {

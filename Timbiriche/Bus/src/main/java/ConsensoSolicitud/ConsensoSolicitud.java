@@ -30,16 +30,8 @@ public class ConsensoSolicitud {
         return solicitudContenido;
     }
 
-    public void setSolicitudContenido(Object solicitudContenido) {
-        this.solicitudContenido = solicitudContenido;
-    }
-
     public int getJugadoresEnSala() {
         return jugadoresEnSala;
-    }
-
-    public void setJugadoresEnSala(int jugadoresEnSala) {
-        this.jugadoresEnSala = jugadoresEnSala;
     }
 
     public int getVotosAceptados() {

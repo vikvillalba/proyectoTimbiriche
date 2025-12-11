@@ -4,8 +4,8 @@
  */
 package MVCConfiguracion.vista.unirsePartida;
 
-import MVCConfiguracion.controlador.ControladorUnisePartida;
 import SolicitudEntity.SolicitudUnirse;
+import MVCConfiguracion.controlador.IControladorUnisePartida;
 
 /**
  *
@@ -14,7 +14,7 @@ import SolicitudEntity.SolicitudUnirse;
 public class DlgEnviarSolicitud extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgEnviarSolicitud.class.getName());
-    private ControladorUnisePartida controlador;
+    private IControladorUnisePartida controlador;
     private SolicitudUnirse solicitud;
 
     /**
@@ -28,7 +28,7 @@ public class DlgEnviarSolicitud extends javax.swing.JDialog {
         setSize(759, 481);
     }
 
-    public void setControlador(ControladorUnisePartida controlador) {
+    public void setControlador(IControladorUnisePartida controlador) {
         this.controlador = controlador;
     }
 

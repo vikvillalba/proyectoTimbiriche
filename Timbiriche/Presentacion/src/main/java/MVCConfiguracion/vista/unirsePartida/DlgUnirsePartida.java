@@ -5,10 +5,10 @@
 package MVCConfiguracion.vista.unirsePartida;
 
 import DTO.JugadorSolicitanteDTO;
-import MVCConfiguracion.controlador.ControladorUnisePartida;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
+import MVCConfiguracion.UnirsePartida.Observers.INotificadorUnirsePartida;
 import javax.swing.JOptionPane;
 import objetosPresentables.JugadorConfig;
+import MVCConfiguracion.controlador.IControladorUnisePartida;
 
 /**
  *
@@ -17,7 +17,7 @@ import objetosPresentables.JugadorConfig;
 public class DlgUnirsePartida extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgUnirsePartida.class.getName());
-    private ControladorUnisePartida controlador;
+    private IControladorUnisePartida controlador;
     private String ip;
     private int puerto;
 
@@ -51,7 +51,7 @@ public class DlgUnirsePartida extends javax.swing.JDialog {
 
    
 
-    public void setControlador(ControladorUnisePartida controlador) {
+    public void setControlador(IControladorUnisePartida controlador) {
         this.controlador = controlador;
     }
 

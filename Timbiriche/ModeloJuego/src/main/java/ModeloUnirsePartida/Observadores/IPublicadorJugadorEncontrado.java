@@ -11,9 +11,9 @@ import DTO.JugadorConfigDTO;
  *
  * @author Jack Murrieta
  */
-public interface IPublicadorHostEncontrado {
+public interface IPublicadorJugadorEncontrado {
 
-    void agregarNotificadorHostEncontrado(INotificadorHostEncontrado notificador);
+    void agregarNotificadorJugadorEncontrado(INotificadorJugadorEncontrado notificador);
 
-    void notificarHostEncontrado(JugadorConfigDTO jugador);
+    void notificarJugadorEncontrado(JugadorConfigDTO jugador);
 }

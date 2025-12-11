@@ -6,20 +6,17 @@ import SolicitudEntity.SolicitudUnirse;
 import java.util.Map;
 
 /**
- * Clase utilitaria para mapear objetos recibidos desde el EventBus a DTOs específicos.
- * Centraliza la lógica de conversión para evitar duplicación en los receptores.
+ * Clase utilitaria para mapear objetos recibidos desde el EventBus a DTOs específicos. Centraliza la lógica de conversión para evitar duplicación en los receptores.
  *
  * @author Jack Murrieta
  */
 public class MapperUnirsePartida {
 
-    
     private MapperUnirsePartida() {
     }
 
     /**
-     * Mapea el contenido de un paquete a un objeto SolicitudUnirse.
-     * Maneja tanto objetos SolicitudUnirse directos como Maps con la estructura esperada.
+     * Mapea el contenido de un paquete a un objeto SolicitudUnirse. Maneja tanto objetos SolicitudUnirse directos como Maps con la estructura esperada.
      *
      * @param contenido El contenido a mapear (puede ser SolicitudUnirse o Map)
      * @return SolicitudUnirse mapeada o null si el contenido es inválido
@@ -51,13 +48,6 @@ public class MapperUnirsePartida {
             solicitud.setJugadorSolicitante(solicitante);
         }
 
-        // Mapear jugadorHost
-        Object hostObj = map.get("jugadorHost");
-        if (hostObj instanceof Map) {
-            JugadorConfigDTO host = mapearJugadorConfig((Map<String, Object>) hostObj);
-            solicitud.setJugadorHost(host);
-        }
-
         // Mapear estado de solicitud
         Object estadoObj = map.get("solicitudEstado");
         if (estadoObj instanceof Boolean) {
@@ -74,13 +64,12 @@ public class MapperUnirsePartida {
     }
 
     /**
-     * Mapea el contenido de un paquete a un objeto JugadorConfigDTO (host).
-     * Este método se usa cuando el EventBus responde con información del host.
+     * Mapea el contenido de un paquete a un objeto JugadorConfigDTO (host). Este método se usa cuando el EventBus responde con información del host.
      *
      * @param contenido El contenido a mapear (debe ser un Map)
      * @return JugadorConfigDTO mapeado o null si el contenido es inválido
      */
-    public static JugadorConfigDTO mapearHost(Object contenido) {
+    public static JugadorConfigDTO mapearJugadorEnSala(Object contenido) {
         if (contenido == null) {
             System.err.println("[MapperUnirsePartida] mapearHost: contenido NULO");
             return null;
@@ -111,7 +100,6 @@ public class MapperUnirsePartida {
         JugadorConfigDTO host = new JugadorConfigDTO();
         host.setIp(hostIp);
         host.setPuerto(puerto);
-        host.setEsHost(true);
 
         return host;
     }
@@ -135,27 +123,4 @@ public class MapperUnirsePartida {
         return solicitante;
     }
 
-    /**
-     * Mapea un Map a un JugadorConfigDTO.
-     *
-     * @param jugadorSala Map con los datos del jugador host
-     * @return JugadorConfigDTO mapeado
-     */
-    private static JugadorConfigDTO mapearJugadorConfig(Map<String, Object> jugadorSala) {
-        JugadorConfigDTO host = new JugadorConfigDTO();
-
-        host.setIp((String) jugadorSala.get("ip"));
-
-        Object puertoObj = jugadorSala.get("puerto");
-        if (puertoObj instanceof Number) {
-            host.setPuerto(((Number) puertoObj).intValue());
-        }
-
-        Object esHostObj = jugadorSala.get("esHost");
-        if (esHostObj instanceof Boolean) {
-            host.setEsHost((Boolean) esHostObj);
-        }
-
-        return host;
-    }
 }

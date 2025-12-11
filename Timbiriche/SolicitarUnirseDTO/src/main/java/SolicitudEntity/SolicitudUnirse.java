@@ -8,19 +8,15 @@ import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 
 /**
- * Clase que representa una solicitud para unirse a una partida. Contiene información del jugador solicitante, el jugador host, y el estado de la solicitud.
+ * Clase que representa una solicitud para unirse a una partida. Contiene información del jugador solicitante, el estado de solicitud si es aceptada o rechazada y un tipo de rechazo. (El tipo de rechazo puede variar dependiendo si la partida en curso rechazo la solicitud ya que si esta en curso deberia de hacerlo )
  *
  * @author Jack Murrieta
  */
 public class SolicitudUnirse {
 
-    // Información de conexión del jugador solicitante (IP y puerto)
+    // Información de conexión del jugador solicitante
     private JugadorSolicitanteDTO jugadorSolicitante;
 
-    // Jugador Host quien creo la partida
-    private JugadorConfigDTO jugadorHost;
-
-    // Estado de la solicitud: true = aceptada, false = rechazada/pendiente
     private boolean solicitudEstado;
 
     private String tipoRechazo;
@@ -31,7 +27,6 @@ public class SolicitudUnirse {
     public SolicitudUnirse() {
     }
 
-
     /**
      * Constructor completo para crear una solicitud de unirse.
      *
@@ -41,7 +36,6 @@ public class SolicitudUnirse {
     public SolicitudUnirse(JugadorSolicitanteDTO jugadorSolicitante,
             JugadorConfigDTO jugadorHost) {
         this.jugadorSolicitante = jugadorSolicitante;
-        this.jugadorHost = jugadorHost;
         this.solicitudEstado = false;
     }
 
@@ -62,14 +56,6 @@ public class SolicitudUnirse {
         this.jugadorSolicitante = jugadorSolicitante;
     }
 
-    public JugadorConfigDTO getJugadorHost() {
-        return jugadorHost;
-    }
-
-    public void setJugadorHost(JugadorConfigDTO jugadorHost) {
-        this.jugadorHost = jugadorHost;
-    }
-
     public boolean isSolicitudEstado() {
         return solicitudEstado;
     }
@@ -77,15 +63,13 @@ public class SolicitudUnirse {
     public void setSolicitudEstado(boolean solicitudEstado) {
         this.solicitudEstado = solicitudEstado;
     }
-    
 
     @Override
     public String toString() {
         return "SolicitudUnirse{"
                 + "jugadorSolicitante=" + jugadorSolicitante
-                + ", jugadorHost=" + jugadorHost
                 + ", solicitudEstado=" + solicitudEstado
                 + '}';
     }
-    
+
 }

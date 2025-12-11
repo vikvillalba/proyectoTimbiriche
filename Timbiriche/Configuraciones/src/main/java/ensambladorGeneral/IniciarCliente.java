@@ -77,15 +77,14 @@ public class IniciarCliente {
         // Conectar UnirsePartida con ModeloArranque
         // UnirsePartida notifica a ModeloArranque cuando llega una respuesta
         unirsePartida.agregarNotificadorSolicitud(modeloArranque);
-        unirsePartida.agregarNotificadorHostEncontrado(modeloArranque);
 
         System.out.println("[✓] UnirsePartida conectado con ModeloArranque");
 
         // El cliente se suscribe inicialmente solo a eventos de respuesta
         // Cuando se una a una sala, se suscribirá a EN_SALA_ESPERA y SOLICITAR_UNIRSE
         List<String> eventos = Arrays.asList(
-                "RESPUESTA_HOST",        // Para obtener info del host
-                "RESULTADO_CONSENSO"     // Para recibir resultado del consenso de votación
+                "RESPUESTA_HOST", // Para obtener info del host
+                "RESULTADO_CONSENSO" // Para recibir resultado del consenso de votación
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
@@ -116,7 +115,7 @@ public class IniciarCliente {
         // Registrar la vista como observador del modelo
         // Cuando llegue una respuesta, ModeloArranque notificará a FrmMenuInicio
         modeloArranque.agregarNotificador(frmMenuInicio);
-        modeloArranque.agregarNotificadorHostUnirsePartida(frmMenuInicio);
+        unirsePartida.agregarNotificadorJugadorEncontrado(frmMenuInicio);
 
         System.out.println("[✓] FrmMenuInicio creado y conectado");
 

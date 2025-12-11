@@ -11,7 +11,7 @@ import DTO.JugadorConfigDTO;
  * @author Jack Murrieta
  * actualiza la notificacion que Modelo Unirse Partida mando
  */
-public interface INotificadorHostEncontrado {
-    public void actualizarHostEncontrado(JugadorConfigDTO jugador);
+public interface INotificadorJugadorEncontrado {
+    public void actualizarJugadorEncontrado(JugadorConfigDTO jugador);
     
 }

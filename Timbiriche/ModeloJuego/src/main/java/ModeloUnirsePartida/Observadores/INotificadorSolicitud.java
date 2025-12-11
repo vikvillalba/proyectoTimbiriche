@@ -8,10 +8,10 @@ import SolicitudEntity.SolicitudUnirse;
 
 /**
  *
- * @author Jack Murrieta
- * actualiza a vista paa que se muesten sus jdialogs 
+ * @author Jack Murrieta actualiza a vista paa que se muesten sus jdialogs
  */
 public interface INotificadorSolicitud {
-    public void actualizar(SolicitudUnirse solicitud);
-    
+
+    public void actualizarSolicitudUnirse(SolicitudUnirse solicitud);
+
 }

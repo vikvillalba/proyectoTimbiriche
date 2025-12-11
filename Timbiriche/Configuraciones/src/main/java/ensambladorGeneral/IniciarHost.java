@@ -91,7 +91,6 @@ public class IniciarHost {
         jugadorHostDTO.setNombre("HOST_PLAYER");
         jugadorHostDTO.setAvatar("tiburonBallena");
         jugadorHostDTO.setColor("azul_pastel");
-        jugadorHostDTO.setEsHost(true);
         jugadorHostDTO.setIp(HOST_EVENTBUS);
         jugadorHostDTO.setPuerto(PUERTO_HOST);
 

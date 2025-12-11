@@ -13,7 +13,6 @@ public class JugadorConfigDTO {
     private String avatar;
     private String color;
     private boolean listo;
-    private boolean esHost; // Indica si el jugador es el host de la partida
     private String ip;
     private int puerto;
 
@@ -46,26 +45,12 @@ public class JugadorConfigDTO {
      * @param avatar Avatar del jugador (nombre del enum)
      * @param color Color del jugador (nombre del enum)
      * @param listo Si el jugador está listo para iniciar
-     * @param esHost Si el jugador es el host de la partida
      */
-    public JugadorConfigDTO(String nombre, String avatar, String color, boolean listo, boolean esHost) {
+    public JugadorConfigDTO(String nombre, String avatar, String color, boolean listo) {
         this.nombre = nombre;
         this.avatar = avatar;
         this.color = color;
         this.listo = listo;
-        this.esHost = esHost;
-    }
-
-    /**
-     * Constructor sin especificar si es host (por defecto false).
-     *
-     * @param nombre Nombre del jugador
-     * @param avatar Avatar del jugador (nombre del enum)
-     * @param color Color del jugador (nombre del enum)
-     * @param listo Si el jugador está listo para iniciar
-     */
-    public JugadorConfigDTO(String nombre, String avatar, String color, boolean listo) {
-        this(nombre, avatar, color, listo, false);
     }
 
     // Getters y Setters
@@ -101,14 +86,6 @@ public class JugadorConfigDTO {
         this.listo = listo;
     }
 
-    public boolean isEsHost() {
-        return esHost;
-    }
-
-    public void setEsHost(boolean esHost) {
-        this.esHost = esHost;
-    }
-
     @Override
     public String toString() {
         return "JugadorConfigDTO{"
@@ -116,7 +93,6 @@ public class JugadorConfigDTO {
                 + ", avatar='" + avatar + '\''
                 + ", color='" + color + '\''
                 + ", listo=" + listo
-                + ", esHost=" + esHost
                 + '}';
     }
 }

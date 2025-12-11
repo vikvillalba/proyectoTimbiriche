@@ -4,28 +4,28 @@
  */
 package MVCConfiguracion.vista.unirsePartida;
 
-import MVCConfiguracion.controlador.ControladorUnisePartida;
+import MVCConfiguracion.controlador.IControladorUnisePartida;
 
 /**
  *
  * @author Jack Murrieta
  */
-public class DlgSolicitudHost extends javax.swing.JDialog {
+public class DlgSolicitudSalaEspera extends javax.swing.JDialog {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgSolicitudHost.class.getName());
-    private ControladorUnisePartida controlador;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgSolicitudSalaEspera.class.getName());
+    private IControladorUnisePartida controlador;
 
     /**
      * Creates new form DlgSolicitudHost
      */
-    public DlgSolicitudHost(java.awt.Frame parent, boolean modal) {
+    public DlgSolicitudSalaEspera(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
         initComponents();
         setSize(750, 480);
     }
 
-    public void setControlador(ControladorUnisePartida controlador) {
+    public void setControlador(IControladorUnisePartida controlador) {
         this.controlador = controlador;
     }
 
@@ -33,7 +33,7 @@ public class DlgSolicitudHost extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(() -> {
             java.awt.Frame parent = new java.awt.Frame();
 
-            DlgSolicitudHost dialog = new DlgSolicitudHost(parent, true);
+            DlgSolicitudSalaEspera dialog = new DlgSolicitudSalaEspera(parent, true);
 
             dialog.setLocationRelativeTo(null);
 
@@ -66,7 +66,7 @@ public class DlgSolicitudHost extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(65, 77, 106));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html><div style='text-align: center;'>Un usuario desea unisrse a la partida.</div></html>");
+        jLabel1.setText("<html><div style='text-align: center;'>Un usuario desea unirse a la partida.</div></html>");
         jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         jPanel2.setBackground(new java.awt.Color(221, 238, 255));

@@ -4,13 +4,10 @@ import ConfiguracionesFachada.ConfiguracionesFachada;
 import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import Fachada.Partida;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
-import MVCConfiguracion.observer.IPublicadorUnirsePartida;
-import MVCConfiguracion.observer.ObservableConfiguraciones;
+import MVCConfiguracion.UnirsePartida.Observers.INotificadorUnirsePartida;
+import MVCConfiguracion.UnirsePartida.Observers.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
-import MVCConfiguracion.observer.ObservadorEventoInicio;
 import ModeloUnirsePartida.IUnirsePartida;
-import ModeloUnirsePartida.Observadores.INotificadorHostEncontrado;
 import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
@@ -21,16 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
-import objetosPresentables.JugadorConfig;
-import objetosPresentables.PartidaPresentable;
 
 /**
  * Modelo de arranque que maneja la configuración de la partida y el proceso de unirse a partidas existentes.
  *
  * @author victoria
  */
-public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura, ObservableConfiguraciones,
-        IPublicadorUnirsePartida, INotificadorSolicitud, INotificadorHostEncontrado, IPublicadorHostUnirsePartida {
+public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranqueLectura,
+        IPublicadorUnirsePartida, INotificadorSolicitud {
 
     private ObservadorConfiguraciones observadorConfiguraciones;
     private ConfiguracionesFachada configuracionesPartida;
@@ -43,8 +38,6 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
-
-    private INotificadorHostUnirsePartida frmMenuInicio;
 
     //Solicitud de UnirsePartida
     private SolicitudUnirse solicitud;
@@ -88,46 +81,6 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
             System.out.println("No se encontró la imagen: " + nombreArchivo);
             return null;
         }
-    }
-
-    @Override
-    public void iniciarConexion(List<JugadorConfig> jugadores, int altoTablero, int anchoTablero, JugadorConfig sesion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void solicitarInicioConexion(JugadorConfig jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void confirmarInicioJuego(JugadorConfig jugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public PartidaPresentable getConfiguracionesPartida() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void agregarObservadorConfiguraciones(ObservadorConfiguraciones ob) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void agregarObservadorEventoInicio(ObservadorEventoInicio ob) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void notificarInicioPartida(PartidaPresentable partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void notificarConfiguraciones(PartidaPresentable partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     //CU UNIRSE PARTIDA
@@ -257,7 +210,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
      * @param solicitud La solicitud actualizada
      */
     @Override
-    public void actualizar(SolicitudUnirse solicitud) {
+    public void actualizarSolicitudUnirse(SolicitudUnirse solicitud) {
         // Actualizar la solicitud en el modelo
         this.solicitud = solicitud;
 
@@ -281,6 +234,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         unirsePartida.enviarSolicitudSalaEspera(solicitud);
     }
 
+    //revisar METODO PARA PROBAR CUANDO UNA PARTIDA ESTA EN CURSO Y RECHAZAR SOLICITUDES 
     /**
      * Conecta la PartidaPresentable con el módulo UnirsePartida SOLO SI este ModeloArranque pertenece a un HOST.
      *
@@ -308,66 +262,8 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     }
 
     @Override
-    public void buscarHostPartida(JugadorSolicitanteDTO jugadorSolicitante) {
-        unirsePartida.solicitarHost(jugadorSolicitante);
+    public void buscarJugadorEnSalaEspera(JugadorSolicitanteDTO jugadorSolicitante) {
+        unirsePartida.SolicitarJugadorEnSala(jugadorSolicitante);
     }
 
-    /**
-     * Cuando se encuentra el host de la partida, convierte el DTO y notifica a la vista. Implementa INotificadorHostEncontrado.
-     *
-     * @param jugador El jugador host encontrado (puede ser null)
-     */
-    @Override
-    public void actualizarHostEncontrado(JugadorConfigDTO jugador) {
-
-        this.jugadorHost = jugador;
-        JugadorConfig jugadorHostEncontrado = mapearJugadorConfig(jugador);
-
-        // Notificar a FrmMenuInicio
-        notificar(jugadorHostEncontrado);
-    }
-
-    //mappear JugadorConfigDTO a jugadrConfig 
-    private JugadorConfig mapearJugadorConfig(JugadorConfigDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        JugadorConfig jugador = new JugadorConfig();
-        jugador.setNombre(dto.getNombre());
-        jugador.setAvatar(AVATARES.get(dto.getAvatar()));
-        jugador.setColor(COLORES.get(dto.getColor()));
-
-        jugador.setEsHost(dto.isEsHost());
-
-        return jugador;
-    }
-
-    /**
-     * Registra el notificador que recibirá actualizaciones cuando se encuentre un host. Implementa IPublicadorHostUnirsePartida.
-     *
-     * @param notificador El notificador a registrar (FrmMenuInicio)
-     */
-    @Override
-    public void agregarNotificadorHostUnirsePartida(INotificadorHostUnirsePartida notificador) {
-        System.out.println("[ModeloArranque] Registrando notificador para host encontrado: " + (notificador != null ? notificador.getClass().getSimpleName() : "NULL"));
-        this.frmMenuInicio = notificador;
-    }
-
-    /**
-     * Notifica a FrmMenuInicio que se encontró un host. Implementa IPublicadorHostUnirsePartida.
-     *
-     * @param jugadorHost El jugador host encontrado (puede ser null)
-     */
-    @Override
-    public void notificar(JugadorConfig jugadorHost) {
-        System.out.println("[ModeloArranque] notificar(JugadorConfig) - Notificando a FrmMenuInicio. Host: " + (jugadorHost != null ? jugadorHost.getNombre() : "NULL"));
-
-        if (frmMenuInicio == null) {
-            System.err.println("[ERROR] frmMenuInicio es NULL - no se puede notificar");
-            return;
-        }
-
-        frmMenuInicio.actualizar(jugadorHost);
-    }
 }

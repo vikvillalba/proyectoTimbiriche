@@ -37,12 +37,12 @@ public class IniciarJugadorSalaEspera {
     private static int PUERTO_JUGADOR;
     private static int PUERTO_SERVIDOR;
     private static int PUERTO_TURNOS;
-    
+
     public static void main(String[] args) {
 
         // 1. CARGAR CONFIGURACIÓN DESDE config_partida1.properties
         cargarConfiguracion("config_partida1.properties");
-        
+
         System.out.println("  INICIAR JUGADOR EN SALA DE ESPERA");
         System.out.println("Host EventBus: " + HOST_EVENTBUS);
         System.out.println("Puerto EventBus: " + PUERTO_EVENTBUS);
@@ -59,7 +59,7 @@ public class IniciarJugadorSalaEspera {
         // ClienteTCP observa la cola y envía los paquetes por red
         ClienteTCP clienteTCP = new ClienteTCP(colaEnvios, PUERTO_EVENTBUS, HOST_EVENTBUS);
         colaEnvios.agregarObservador(clienteTCP);
-        
+
         System.out.println("Emisor configurado para EventBus en " + HOST_EVENTBUS + ":" + PUERTO_EVENTBUS);
 
         // CONFIGURAR RECEPTOR (recibir mensajes del EventBus)
@@ -67,37 +67,36 @@ public class IniciarJugadorSalaEspera {
 
         // ServidorTCP escucha en el puerto del JUGADOR
         ServidorTCP servidorTCP = new ServidorTCP(colaRecibos, PUERTO_JUGADOR);
-        
+
         System.out.println("Servidor TCP configurado en puerto " + PUERTO_JUGADOR);
-        
+
         UnirsePartida unirsePartida = new UnirsePartida();
         unirsePartida.setPuertoOrigen(PUERTO_JUGADOR);
         unirsePartida.setPuertoDestino(PUERTO_EVENTBUS);
         unirsePartida.setEmisorSolicitud(emisor);
-        
+
         System.out.println("UnirsePartida creado");
-        
+
         IReceptor receptorJugador = new ReceptorUnirsePartida(unirsePartida);
         unirsePartida.setReceptorSolicitud(receptorJugador);
-        
+
         System.out.println("ReceptorUnirsePartida configurado");
-        
+
         Receptor receptor = new Receptor();
         receptor.setCola(colaRecibos);
         receptor.setReceptor(receptorJugador);
         colaRecibos.agregarObservador(receptor);
-        
+
         System.out.println("Receptor genérico conectado");
 
         //CREAR MODELO Y CONTROLADOR
         ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartida);
         ControladorArranque controladorArranque = new ControladorArranque(null, null, modeloArranque);
-        
+
         System.out.println("Modelo y Controlador creados");
 
         // Conectar UnirsePartida con ModeloArranque
         unirsePartida.agregarNotificadorSolicitud(modeloArranque);
-        unirsePartida.agregarNotificadorHostEncontrado(modeloArranque);
         System.out.println("UnirsePartida conectado con ModeloArranque");
 
         //CREAR JUGADOR
@@ -105,7 +104,6 @@ public class IniciarJugadorSalaEspera {
         jugadorDTO.setNombre("JUGADOR_1");
         jugadorDTO.setAvatar("tiburonMartillo");
         jugadorDTO.setColor("verde_pastel");
-        jugadorDTO.setEsHost(false); //atributo ya no necesario 
         jugadorDTO.setIp(HOST_EVENTBUS);
         jugadorDTO.setPuerto(PUERTO_JUGADOR);
 
@@ -115,12 +113,12 @@ public class IniciarJugadorSalaEspera {
                 "SOLICITAR_UNIRSE" // Notificaciones de nuevos jugadores
         // "RESULTADO_CONSENSO"     // puede ir logica de actaulizar jugadores en sala partida
         );
-        
+
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());
         registroEventBus.setHost(HOST_EVENTBUS);
         registroEventBus.setPuertoOrigen(PUERTO_JUGADOR);
         registroEventBus.setPuertoDestino(PUERTO_EVENTBUS);
-        
+
         System.out.println("Enviando registro al EventBus: " + eventos);
         emisor.enviarCambio(registroEventBus);
 
@@ -129,13 +127,13 @@ public class IniciarJugadorSalaEspera {
             System.out.println("[→] Servidor TCP iniciando...");
             servidorTCP.iniciar();
         }).start();
-        
+
         System.out.println("[✓] Servidor TCP iniciado correctamente\n");
 
         // 9. CREAR INTERFAZ GRÁFICA - SALA DE ESPERA
         java.awt.Image avatarImage = cargarAvatar(jugadorDTO.getAvatar());
         java.awt.Color colorAWT = obtenerColor(jugadorDTO.getColor());
-        
+
         JugadorConfig jugadorConfig = new JugadorConfig(
                 jugadorDTO.getNombre(),
                 avatarImage,
@@ -143,9 +141,9 @@ public class IniciarJugadorSalaEspera {
                 false, // si esta listo
                 false // si es host
         );
-        
+
         List<JugadorConfig> jugadoresInicial = Arrays.asList(jugadorConfig);
-        
+
         TableroConfig tableroConfig = new TableroConfig(8, 8);
 
         // Crear el Frame de Sala de Espera
@@ -157,7 +155,7 @@ public class IniciarJugadorSalaEspera {
         // Registrar la vista como observador del modelo
         modeloArranque.agregarNotificador(frmSalaEspera);
         unirsePartida.agregarNotificadorConsenso(frmSalaEspera);
-        
+
         System.out.println("[✓] FrmSalaEspera creado y conectado");
 
         // Mostrar la interfaz gráfica
@@ -165,7 +163,7 @@ public class IniciarJugadorSalaEspera {
             frmSalaEspera.setLocationRelativeTo(null);
             frmSalaEspera.setVisible(true);
         });
-        
+
         System.out.println("  JUGADOR INICIADO CORRECTAMENTE");
     }
 
@@ -176,13 +174,13 @@ public class IniciarJugadorSalaEspera {
      */
     private static void cargarConfiguracion(String nombreArchivo) {
         Properties prop = new Properties();
-        
+
         try {
             // Intentar cargar desde classpath (src/main/resources)
             InputStream inputStream = IniciarJugadorSalaEspera.class
                     .getClassLoader()
                     .getResourceAsStream(nombreArchivo);
-            
+
             if (inputStream != null) {
                 prop.load(inputStream);
                 System.out.println("Configuración cargada desde classpath: " + nombreArchivo);
@@ -200,7 +198,7 @@ public class IniciarJugadorSalaEspera {
             PUERTO_JUGADOR = Integer.parseInt(prop.getProperty("puerto.servidor", "6000"));  // Puerto donde escucha este JUGADOR
             PUERTO_SERVIDOR = Integer.parseInt(prop.getProperty("puerto.servidor", "6000"));
             PUERTO_TURNOS = Integer.parseInt(prop.getProperty("puerto.turnos", "6001"));
-            
+
         } catch (IOException | NumberFormatException e) {
             System.err.println("[ERROR] No se pudo cargar la configuración desde " + nombreArchivo);
             System.err.println("[ERROR] " + e.getMessage());
@@ -225,7 +223,7 @@ public class IniciarJugadorSalaEspera {
         try {
             String nombreArchivo = nombreAvatar + ".png";
             java.net.URL url = IniciarJugadorSalaEspera.class.getResource("/avatares/" + nombreArchivo);
-            
+
             if (url != null) {
                 System.out.println("[✓] Avatar cargado: " + nombreArchivo);
                 return new javax.swing.ImageIcon(url).getImage();

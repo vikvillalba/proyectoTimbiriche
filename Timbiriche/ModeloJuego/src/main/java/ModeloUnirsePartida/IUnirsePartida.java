@@ -28,7 +28,8 @@ public interface IUnirsePartida {
     //respuesta de un jugador en la sala de espera true o false
     public void enviarVotoSolicitud(SolicitudUnirse solicitud);
 
-    public void solicitarHost(JugadorSolicitanteDTO jugador);
+    //metodo de enviar una peticion al eventBus para validar si hay un jugador en sala espera y confirmando trayendo su datos 
+    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador);
 
     public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante);
 

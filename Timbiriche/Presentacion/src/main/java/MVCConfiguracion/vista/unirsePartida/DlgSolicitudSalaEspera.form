@@ -55,7 +55,7 @@
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="&quot;&lt;html&gt;&lt;div style=&apos;text-align: center;&apos;&gt;Un usuario desea unisrse a la partida.&lt;/div&gt;&lt;/html&gt;&quot;" type="code"/>
+              <Connection code="&quot;&lt;html&gt;&lt;div style=&apos;text-align: center;&apos;&gt;Un usuario desea unirse a la partida.&lt;/div&gt;&lt;/html&gt;&quot;" type="code"/>
             </Property>
           </Properties>
           <Constraints>

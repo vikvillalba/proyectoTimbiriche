@@ -10,7 +10,7 @@ import SolicitudEntity.SolicitudUnirse;
  *
  * @author Jack Murrieta
  */
-public interface ControladorUnisePartida {
+public interface IControladorUnisePartida {
 
     public void enviarSolicitud(String ip, int puerto); //ip y puerto del jugador a unirse
 
@@ -18,6 +18,6 @@ public interface ControladorUnisePartida {
     //metodo lado del host
     public void aceptarSolicitud(boolean esAceptada);
     
-   public void buscarHostPartida(String ip, int puerto);
+   public void buscarJugadorEnSalaEspera(String ip, int puerto);
 
 }

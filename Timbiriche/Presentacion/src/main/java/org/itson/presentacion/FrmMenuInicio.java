@@ -1,20 +1,20 @@
 package org.itson.presentacion;
 
+import DTO.JugadorConfigDTO;
 import MVCConfiguracion.controlador.ControladorArranque;
-import MVCConfiguracion.modelo.INotificadorHostUnirsePartida;
-import MVCConfiguracion.observer.INotificadorUnirsePartida;
+import MVCConfiguracion.UnirsePartida.Observers.INotificadorUnirsePartida;
 import MVCConfiguracion.vista.unirsePartida.DlgEnviarSolicitud;
 import MVCConfiguracion.vista.unirsePartida.DlgUnirsePartida;
 import MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje;
+import ModeloUnirsePartida.Observadores.INotificadorJugadorEncontrado;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
-import objetosPresentables.JugadorConfig;
 
 /**
  *
  * @author victoria
  */
-public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUnirsePartida, INotificadorHostUnirsePartida {
+public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUnirsePartida, INotificadorJugadorEncontrado {
 
     private final Color COLOR_FONDO = new Color(224, 233, 255);
     private ControladorArranque controlador;
@@ -301,7 +301,7 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     private void btnUnirsePartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnirsePartidaActionPerformed
         // TODO add your handling code here:
         //controlador llama a buscar a un host 
-        controlador.buscarHostPartida(ip, puerto);
+        controlador.buscarJugadorEnSalaEspera(ip, puerto);
     }//GEN-LAST:event_btnUnirsePartidaActionPerformed
 
 
@@ -312,20 +312,14 @@ public class FrmMenuInicio extends javax.swing.JFrame implements INotificadorUni
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Muestra el diálogo de unirse a partida cuando se encuentra un host. Implementa INotificadorHostUnirsePartida.
-     *
-     * @param jugadorHost El jugador host encontrado (null si no se encontró)
-     */
     @Override
-    public void actualizar(JugadorConfig jugadorHost) {
-        System.out.println("[FrmMenuInicio] actualizar(JugadorConfig) llamado. Host: " + (jugadorHost != null ? jugadorHost.getNombre() : "NULL"));
+    public void actualizarJugadorEncontrado(JugadorConfigDTO jugador) {
 
         // Cerrar cualquier diálogo activo antes de mostrar uno nuevo
         cerrarDialogosActivos();
 
         //si es null mostrar Jdialog no se encontro una partida existente
-        if (jugadorHost == null) {
+        if (jugador == null) {
             String mensaje = "<html><div style='text-align: center;'>"
                     + "No se encontró ninguna partida disponible.<br><br>"
                     + "Puedes crear una nueva partida desde el menú principal."
