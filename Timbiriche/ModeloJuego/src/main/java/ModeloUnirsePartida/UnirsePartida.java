@@ -97,20 +97,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         return solicitudActual;
     }
 
-    public boolean validarEspacioJugador() {
-        if (this.partida == null) {
-            return false;
-        }
-        return !this.partida.isPartidaLlena();
-    }
-
-    public String obtenerEstadoPartida() {
-        if (this.partida == null) {
-            return null;
-        }
-        return this.partida.getEstadoPartida();
-    }
-
     public void setJugadorEnSala(JugadorConfigDTO jugadorEnSala) {
         this.jugadorEnSala = jugadorEnSala;
     }
@@ -118,117 +104,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     @Override
     public void setPartida(Fachada.Partida partida) {
         this.partida = partida;
-    }
-
-    public Fachada.Partida getPartida() {
-        return this.partida;
-    }
-
-    // Getters adicionales
-    /**
-     * Obtiene el número actual de jugadores.
-     *
-     * @return Número de jugadores
-     */
-    public int getNumeroJugadores() {
-        if (this.partida == null) {
-            return 0;
-        }
-        return this.partida.getJugadores().size();
-    }
-
-    /**
-     * Verifica si la partida está llena.
-     *
-     * @return true si está llena
-     */
-    public boolean isPartidaLlena() {
-        if (this.partida == null) {
-            return false;
-        }
-        return this.partida.isPartidaLlena();
-    }
-
-    /**
-     * Verifica si la partida ha iniciado.
-     *
-     * @return true si ha iniciado
-     */
-    public boolean isPartidaIniciada() {
-        if (this.partida == null) {
-            return false;
-        }
-        return this.partida.isPartidaIniciada();
-    }
-
-    /**
-     * Verifica si la partida ha finalizado.
-     *
-     * @return true si ha finalizado
-     */
-    public boolean isPartidaFinalizada() {
-        if (this.partida == null) {
-            return false;
-        }
-        return this.partida.isPartidaFinalizada();
-    }
-
-    /**
-     * Obtiene el máximo de jugadores permitidos.
-     *
-     * @return Máximo de jugadores
-     */
-    public int getMaxJugadores() {
-        if (this.partida == null) {
-            return 0;
-        }
-        return this.partida.getMaxJugadores();
-    }
-
-    /**
-     * Determina el tipo de rechazo basado en el estado actual de la partida. Este método puede ser usado por el Host para determinar por qué rechazar una solicitud.
-     *
-     * @return String con el tipo de rechazo
-     */
-    public String asignarTipoRechazo() {
-        if (this.partida == null) {
-            return "RECHAZADO_POR_HOST"; // No hay partida configurada
-        }
-
-        // Verificar si la partida está llena
-        if (this.partida.isPartidaLlena()) {
-            return "PARTIDA_LLENA";
-        }
-
-        // Verificar si la partida ya ha iniciado
-        if (this.partida.isPartidaIniciada()) {
-            return "PARTIDA_INICIADA";
-        }
-
-        // Verificar si la partida ha finalizado
-        if (this.partida.isPartidaFinalizada()) {
-            return "PARTIDA_FINALIZADA";
-        }
-
-        // Rechazo genérico (por ejemplo, por decisión manual del host)
-        return "RECHAZADO_POR_HOST";
-    }
-
-    /**
-     * Rechaza una solicitud estableciendo su estado y tipo de rechazo.
-     *
-     * @param solicitud La solicitud a rechazar
-     */
-    public void rechazarSolicitud(SolicitudUnirse solicitud) {
-        if (solicitud == null) {
-            throw new IllegalArgumentException("La solicitud no puede ser nula");
-        }
-
-        String tipoRechazo = asignarTipoRechazo();
-        solicitud.setSolicitudEstado(false);
-        solicitud.setTipoRechazo(tipoRechazo);
-
-        System.out.println("[UnirsePartida] Solicitud rechazada - Tipo: " + tipoRechazo);
     }
 
     @Override
