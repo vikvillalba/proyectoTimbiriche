@@ -82,7 +82,7 @@ public class EmisorUnirsePartida implements IUnirsePartidaEnvio {
     }
 
     @Override
-    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
+    public void solicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
         unirsePartida.setJugadorSolicitante(jugador);
 
         PaqueteDTO paquete = new PaqueteDTO();

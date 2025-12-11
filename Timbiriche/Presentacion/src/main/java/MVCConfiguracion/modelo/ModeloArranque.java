@@ -259,7 +259,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void buscarJugadorEnSalaEspera(JugadorSolicitanteDTO jugadorSolicitante) {
-        unirsePartidaFachada.SolicitarJugadorEnSala(jugadorSolicitante);
+        unirsePartidaFachada.solicitarJugadorEnSala(jugadorSolicitante);
     }
 
 }

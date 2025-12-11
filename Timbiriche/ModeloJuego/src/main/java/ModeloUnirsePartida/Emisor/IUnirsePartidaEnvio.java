@@ -20,7 +20,7 @@ public interface IUnirsePartidaEnvio {
     public void enviarVotoSolicitud(SolicitudUnirse solicitud);
 
     //metodo de enviar una peticion al eventBus para validar si hay un jugador en sala espera y confirmando trayendo su datos 
-    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador);
+    public void solicitarJugadorEnSala(JugadorSolicitanteDTO jugador);
 
     //cuando un jugador se una a la sala espera podra votar para futuras solicitudes
     public void suscribirseASalaEspera();

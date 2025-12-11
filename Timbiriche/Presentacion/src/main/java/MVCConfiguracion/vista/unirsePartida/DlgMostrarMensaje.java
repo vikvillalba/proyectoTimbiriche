@@ -4,14 +4,19 @@
  */
 package MVCConfiguracion.vista.unirsePartida;
 
+import javax.swing.Timer;
+
 /**
  * Diálogo genérico para mostrar mensajes de rechazo de solicitud.
+ * Se cierra automáticamente después de 3 segundos.
  *
  * @author Jack Murrieta
  */
 public class DlgMostrarMensaje extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DlgMostrarMensaje.class.getName());
+    private static final int AUTO_CLOSE_DELAY = 3000; // 3 segundos en milisegundos
+    private Timer autoCloseTimer;
 
     /**
      * Creates new form DlgPartidaEnCurso con mensaje por defecto
@@ -33,6 +38,30 @@ public class DlgMostrarMensaje extends javax.swing.JDialog {
         initComponents();
         setSize(750, 480);
         setMensaje(mensaje);
+        iniciarTemporizadorAutoCierre();
+    }
+
+    /**
+     * Inicia un temporizador que cerrará automáticamente el diálogo después de 3 segundos.
+     */
+    private void iniciarTemporizadorAutoCierre() {
+        autoCloseTimer = new Timer(AUTO_CLOSE_DELAY, e -> {
+            System.out.println("[DlgMostrarMensaje] Auto-cierre después de 3 segundos");
+            dispose();
+        });
+        autoCloseTimer.setRepeats(false); // Solo ejecutar una vez
+        autoCloseTimer.start();
+    }
+
+    /**
+     * Sobrescribe dispose para detener el timer si existe.
+     */
+    @Override
+    public void dispose() {
+        if (autoCloseTimer != null && autoCloseTimer.isRunning()) {
+            autoCloseTimer.stop();
+        }
+        super.dispose();
     }
 
     /**

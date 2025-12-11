@@ -92,8 +92,8 @@ public class UnirsePartidaFachada implements IUnirsePartidaFachada {
     }
 
     @Override
-    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
-        emisor.SolicitarJugadorEnSala(jugador);
+    public void solicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
+        emisor.solicitarJugadorEnSala(jugador);
     }
 
     @Override

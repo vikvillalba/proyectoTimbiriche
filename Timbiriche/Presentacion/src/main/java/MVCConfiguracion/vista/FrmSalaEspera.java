@@ -127,7 +127,7 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
 
         System.out.println("[FrmSalaEspera] Mostrando diálogo de solicitud...");
 
-        dlgSolicitudHost = new DlgSolicitudSalaEspera(this, true);
+        dlgSolicitudHost = new DlgSolicitudSalaEspera(this, false);
         dlgSolicitudHost.setControlador(controlador);
 
         dlgSolicitudHost.setLocationRelativeTo(this);
@@ -151,9 +151,9 @@ public class FrmSalaEspera extends javax.swing.JFrame implements ObservadorConfi
         // Crear el mensaje apropiado según el resultado del consenso
         String mensaje = construirMensajeConsenso(aceptado, tipoRechazo);
 
-        // Mostrar el diálogo con el mensaje
+        // Mostrar el diálogo con el mensaje (no modal para permitir auto-cierre)
         MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje dlgMensaje
-                = new MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje(this, true, mensaje);
+                = new MVCConfiguracion.vista.unirsePartida.DlgMostrarMensaje(this, false, mensaje);
         dlgMensaje.setLocationRelativeTo(this);
         dlgMensaje.setVisible(true);
     }
