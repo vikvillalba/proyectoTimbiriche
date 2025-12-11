@@ -24,16 +24,16 @@ import org.itson.dto.JugadorNuevoDTO;
  *
  * @author Maryr
  */
-public class FrmSalaEsperaFake extends javax.swing.JFrame implements ObserverPrueba {
+public class FrmSalaEsperaMock extends javax.swing.JFrame implements ObserverPrueba {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmSalaEsperaFake.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmSalaEsperaMock.class.getName());
     private List<JugadorNuevoDTO> jugadores;
     private ControladorArranque controlador;
 
     /**
      * Creates new form FrmSalaEsperaFake
      */
-    public FrmSalaEsperaFake(ControladorArranque controlador) {
+    public FrmSalaEsperaMock(ControladorArranque controlador) {
         this.controlador = controlador;
         this.jugadores = new ArrayList<>();
         initComponents();

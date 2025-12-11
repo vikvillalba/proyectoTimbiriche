@@ -14,7 +14,7 @@ import MVCConfiguraciones.controlador.ControladorArranque;
 import MVCConfiguraciones.modelo.IModeloArranqueEscritura;
 import MVCConfiguraciones.modelo.IModeloArranqueLectura;
 import MVCConfiguraciones.modelo.ModeloArranque;
-import MVCConfiguraciones.vista.FrmSalaEsperaFake;
+import MVCConfiguraciones.vista.FrmSalaEsperaMock;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
 import Receptor.ServidorTCP;
@@ -83,7 +83,7 @@ public class EnsambladorEsperaFake {
         IModeloArranqueEscritura ime = modelo;
 
         ControladorArranque controlador = new ControladorArranque(ime);
-        FrmSalaEsperaFake frm = new FrmSalaEsperaFake(controlador);
+        FrmSalaEsperaMock frm = new FrmSalaEsperaMock(controlador);
 
         configPartida.agregarObserverPrueba(frm);
 
