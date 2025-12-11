@@ -97,9 +97,9 @@ public class IniciarHost {
         // Configurar el host en UnirsePartida
         // El host se suscribe a EN_SALA_ESPERA, SOLICITAR_UNIRSE y CONSENSO_FINALIZADO
         List<String> eventos = Arrays.asList(
-                "EN_SALA_ESPERA",       // Indica que está en sala de espera
-                "SOLICITAR_UNIRSE",     // Recibe solicitudes de nuevos jugadores
-                "CONSENSO_FINALIZADO"   // Recibe notificaciones cuando el consenso termina
+                "EN_SALA_ESPERA", // Indica que está en sala de espera
+                "SOLICITAR_UNIRSE", // Recibe solicitudes de nuevos jugadores
+                "CONSENSO_FINALIZADO" // Recibe notificaciones cuando el consenso termina
         );
 
         PaqueteDTO registroEventBus = new PaqueteDTO(eventos, TipoEvento.INICIAR_CONEXION.toString());

@@ -7,12 +7,13 @@ import org.itson.dto.PaqueteDTO;
  *
  * @author erika
  */
-public class Emisor implements IEmisor{
+public class Emisor implements IEmisor {
+
     private ColaEnvios cola;
-    
+
     public Emisor(ColaEnvios cola) {
         this.cola = cola;
-      
+
     }
 
     @Override
@@ -21,6 +22,6 @@ public class Emisor implements IEmisor{
             throw new IllegalArgumentException("El paquete no puede ser null");
         }
         System.out.println("[Emisor] cambio recibio:" + paquete.getContenido().toString());
-        cola.queue(paquete); 
+        cola.queue(paquete);
     }
 }

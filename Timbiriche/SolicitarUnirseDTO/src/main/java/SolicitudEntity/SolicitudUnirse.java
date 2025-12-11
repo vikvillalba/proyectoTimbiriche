@@ -28,13 +28,11 @@ public class SolicitudUnirse {
     }
 
     /**
-     * Constructor completo para crear una solicitud de unirse.
+     * Constructor para crear una solicitud de unirse.
      *
      * @param jugadorSolicitante Datos de conexión del solicitante
-     * @param jugadorHost Jugador que es host de la partida
      */
-    public SolicitudUnirse(JugadorSolicitanteDTO jugadorSolicitante,
-            JugadorConfigDTO jugadorHost) {
+    public SolicitudUnirse(JugadorSolicitanteDTO jugadorSolicitante) {
         this.jugadorSolicitante = jugadorSolicitante;
         this.solicitudEstado = false;
     }

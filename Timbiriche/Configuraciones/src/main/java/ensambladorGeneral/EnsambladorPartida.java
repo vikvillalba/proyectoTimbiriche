@@ -88,7 +88,7 @@ public class EnsambladorPartida {
         if (modeloArranque != null) {
             modeloArranque.setPartida(partida);
         }
-        
+
         // emisor del servicio
         ColaEnvios colaEnvios = new ColaEnvios();
         IEmisor emisor = new Emisor(colaEnvios);

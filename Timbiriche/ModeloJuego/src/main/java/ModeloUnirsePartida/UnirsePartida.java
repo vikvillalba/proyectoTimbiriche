@@ -44,7 +44,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     private int puertoOrigen;
     private int puertoDestino;
 
-    INotificadorJugadorEncontrado notificadorHost;// MODELO ARRANQUE
+    INotificadorJugadorEncontrado notificadorJugadorEncontrado;// MODELO ARRANQUE
     INotificadorConsenso notificadorConsenso; //FRMALAESPERA
 
     public UnirsePartida() {
@@ -89,12 +89,13 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     public SolicitudUnirse crearSolicitud(JugadorSolicitanteDTO jugadorSolicitanteDTO) {
 
         if (this.jugadorEnSala == null) {
-            //en donde cachar esta excepcion
-            throw new IllegalStateException("No existe un jugador en sala espera.");
+            //notificar a modeloUnirsePartida de esto
+            notificarJugadorEncontrado(jugadorEnSala);
+            return null;
         }
+        //validar que no sea null
 
-        SolicitudUnirse solicitud
-                = new SolicitudUnirse(jugadorSolicitanteDTO, jugadorEnSala);
+        SolicitudUnirse solicitud = new SolicitudUnirse(jugadorSolicitanteDTO);
 
         this.solicitudActual = solicitud;
 
@@ -195,7 +196,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
 
     public void setJugadorEnSala(JugadorConfigDTO jugadorEnSala) {
         this.jugadorEnSala = jugadorEnSala;
-
     }
 
     @Override
@@ -355,7 +355,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     //NOTIFICAR HOST A MODELO ARRANQUE
     @Override
     public void agregarNotificadorJugadorEncontrado(INotificadorJugadorEncontrado notificador) {
-        this.notificadorHost = notificador;
+        this.notificadorJugadorEncontrado = notificador;
     }
 
     /**
@@ -365,7 +365,7 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
      */
     @Override
     public void notificarJugadorEncontrado(JugadorConfigDTO jugador) {
-        notificadorHost.actualizarJugadorEncontrado(jugador);
+        notificadorJugadorEncontrado.actualizarJugadorEncontrado(jugador);
     }
 
     /**

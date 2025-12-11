@@ -64,19 +64,24 @@ public class MapperUnirsePartida {
     }
 
     /**
-     * Mapea el contenido de un paquete a un objeto JugadorConfigDTO (host). Este método se usa cuando el EventBus responde con información del host.
+     * Mapea el contenido de un paquete a un objeto JugadorConfigDTO. Este método se usa cuando el EventBus responde con información del host.
      *
-     * @param contenido El contenido a mapear (debe ser un Map)
-     * @return JugadorConfigDTO mapeado o null si el contenido es inválido
+     * @param contenido El contenido a mapear (Map con host/puerto o String indicando no disponible)
+     * @return JugadorConfigDTO mapeado, o null si no hay partida disponible
      */
     public static JugadorConfigDTO mapearJugadorEnSala(Object contenido) {
         if (contenido == null) {
-            System.err.println("[MapperUnirsePartida] mapearHost: contenido NULO");
             return null;
         }
 
+        // Si es un String, significa que no hay partida disponible
+        if (contenido instanceof String) {
+            return null;
+        }
+
+        // Si no es un Map, no se puede mapear
         if (!(contenido instanceof Map)) {
-            System.err.println("[MapperUnirsePartida] mapearHost: contenido NO es Map");
+            System.err.println("[MapperUnirsePartida] ERROR: contenido tipo inesperado: " + contenido.getClass().getName());
             return null;
         }
 
@@ -85,7 +90,7 @@ public class MapperUnirsePartida {
         // Obtener la IP del host
         String hostIp = (String) hostMap.get("host");
         if (hostIp == null) {
-            System.err.println("[MapperUnirsePartida] mapearHost: No se encontró 'host' en el Map");
+            System.err.println("[MapperUnirsePartida] ERROR: No se encontró 'host' en el Map");
             return null;
         }
 
@@ -96,12 +101,8 @@ public class MapperUnirsePartida {
             puerto = ((Number) puertoObj).intValue();
         }
 
-        // Crear y devolver el JugadorConfigDTO
-        JugadorConfigDTO host = new JugadorConfigDTO();
-        host.setIp(hostIp);
-        host.setPuerto(puerto);
-
-        return host;
+        // Crear y devolver el JugadorConfigDTO usando constructor de validación
+        return new JugadorConfigDTO(hostIp, puerto);
     }
 
     /**

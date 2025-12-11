@@ -156,17 +156,20 @@ public class EventBus {
 
         PaqueteDTO respuesta = new PaqueteDTO();
         respuesta.setTipoEvento("RESPUESTA_JUGADOR");
+        respuesta.setHost(paquete.getHost());
+        respuesta.setPuertoDestino(paquete.getPuertoOrigen());
 
-        respuesta.setHost(paquete.getHost()); // ip del solicitante
-
-        respuesta.setPuertoDestino(paquete.getPuertoOrigen()); // el solicitante va a recibir la respuesta
-
-        respuesta.setPuertoOrigen(host != null ? host.getPuerto() : 0);
-
-        respuesta.setContenido(host);
+        if (host != null) {
+            // Hay un jugador en sala - enviar sus datos
+            respuesta.setPuertoOrigen(host.getPuerto());
+            respuesta.setContenido(host);
+        } else {
+            // No hay jugadores en sala - enviar mensaje descriptivo
+            respuesta.setPuertoOrigen(0);
+            respuesta.setContenido("NO_HAY_PARTIDA_DISPONIBLE");
+        }
 
         emisor.enviarCambio(respuesta);
-
     }
 
     //METODOS CONSNSO

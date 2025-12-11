@@ -8,10 +8,10 @@ import DTO.JugadorConfigDTO;
 
 /**
  *
- * @author Jack Murrieta
- * actualiza la notificacion que Modelo Unirse Partida mando
+ * @author Jack Murrieta actualiza la notificacion que Modelo Unirse Partida mando
  */
 public interface INotificadorJugadorEncontrado {
+
     public void actualizarJugadorEncontrado(JugadorConfigDTO jugador);
-    
+
 }

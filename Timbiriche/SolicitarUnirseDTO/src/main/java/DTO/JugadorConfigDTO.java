@@ -22,19 +22,14 @@ public class JugadorConfigDTO {
     public JugadorConfigDTO() {
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
+    /**
+     * Constructor para validación de existencia de partida. Solo se usa para verificar que existe un host con ip y puerto.
+     *
+     * @param ip IP del host
+     * @param puerto Puerto del host
+     */
+    public JugadorConfigDTO(String ip, int puerto) {
         this.ip = ip;
-    }
-
-    public int getPuerto() {
-        return puerto;
-    }
-
-    public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
 
@@ -51,6 +46,22 @@ public class JugadorConfigDTO {
         this.avatar = avatar;
         this.color = color;
         this.listo = listo;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
     }
 
     // Getters y Setters

@@ -45,25 +45,17 @@ public class ReceptorUnirsePartida implements IReceptor {
         }
     }
 
-    /**
-     * Manejar respuesta del host cuando solicita OBTENER_HOST.
-     * Este método es llamado SOLO en CLIENTES que buscan partidas existentes.
-     * El HOST nunca ejecuta esta lógica.
-     *
-     * Flujo:
-     * 1. Recibe JugadorConfigDTO del host encontrado
-     * 2. Notifica a ModeloArranque (que convierte DTO→Presentable)
-     * 3. ModeloArranque notifica a FrmMenuInicio
-     * 4. FrmMenuInicio muestra diálogo para unirse
-     */
+
     private void manejarRespuestaJugador(PaqueteDTO paquete) {
         try {
             JugadorConfigDTO jugadorEnSala = MapperUnirsePartida.mapearJugadorEnSala(paquete.getContenido());
 
+            unirsePartida.setJugadorEnSala(jugadorEnSala);
+
             unirsePartida.notificarJugadorEncontrado(jugadorEnSala);
 
         } catch (Exception e) {
-            System.err.println("ERROR al manejar RESPUESTA_HOST: " + e.getMessage());
+            System.err.println("ERROR al manejar RESPUESTA_JUGADOR: " + e.getMessage());
             e.printStackTrace();
         }
     }
