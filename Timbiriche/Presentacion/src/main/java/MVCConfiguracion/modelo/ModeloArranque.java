@@ -7,7 +7,7 @@ import Fachada.Partida;
 import MVCConfiguracion.UnirsePartida.Observers.INotificadorUnirsePartida;
 import MVCConfiguracion.UnirsePartida.Observers.IPublicadorUnirsePartida;
 import MVCConfiguracion.observer.ObservadorConfiguraciones;
-import ModeloUnirsePartida.IUnirsePartida;
+import ModeloUnirsePartida.Fachada.IUnirsePartidaFachada;
 import ModeloUnirsePartida.Observadores.INotificadorSolicitud;
 import SolicitudEntity.SolicitudUnirse;
 import java.awt.Color;
@@ -33,8 +33,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
     private static final Map<String, Image> AVATARES = new HashMap<>();
 
     //CU_UnirsePartida
-    //modelo unirse partida LOGICA
-    private IUnirsePartida unirsePartida;
+    private IUnirsePartidaFachada unirsePartidaFachada;
 
     //lista de los frms Notificados UNIRSE PARTIDA
     private List<INotificadorUnirsePartida> notificadosUnirsePartida = new ArrayList<>();
@@ -44,9 +43,9 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     private JugadorConfigDTO jugadorHost;
 
-    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, IUnirsePartida unirsePartida) {
+    public ModeloArranque(ConfiguracionesFachada configuracionesPartida, IUnirsePartidaFachada unirsePartida) {
         this.configuracionesPartida = configuracionesPartida;
-        this.unirsePartida = unirsePartida;
+        this.unirsePartidaFachada = unirsePartida;
     }
 
     static {
@@ -107,18 +106,18 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         }
 
         // Establecer el jugador solicitante
-        unirsePartida.setJugadorSolicitante(jugadorsolicitante);
+        unirsePartidaFachada.setJugadorSolicitante(jugadorsolicitante);
 
         // Obtener la solicitud actual si existe
         solicitud = obtenerSolicitud();
 
         // Si no existe solicitud, crear una nueva
         if (solicitud == null) {
-            solicitud = unirsePartida.crearSolicitud(jugadorsolicitante);
+            solicitud = unirsePartidaFachada.crearSolicitud(jugadorsolicitante);
         }
 
         // Enviar la solicitud al host
-        unirsePartida.enviarSolicitudSalaEspera(solicitud);
+        unirsePartidaFachada.enviarSolicitudSalaEspera(solicitud);
     }
 
     /**
@@ -128,7 +127,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
      */
     @Override
     public SolicitudUnirse obtenerSolicitud() {
-        solicitud = unirsePartida.getSolicitudActual();
+        solicitud = unirsePartidaFachada.getSolicitudActual();
 
         if (solicitud == null) {
             return null;
@@ -145,7 +144,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         }
 
         // Cambiar el estado de la solicitud
-        unirsePartida.cambiarEstadoSolicitud(solicitud, estadoSolicitud);
+        unirsePartidaFachada.cambiarEstadoSolicitud(solicitud, estadoSolicitud);
 
         // Obtener la solicitud actualizada
         solicitud = obtenerSolicitud();
@@ -163,14 +162,11 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
      */
     private void enviarRespuestaASolicitante(SolicitudUnirse solicitud) {
         try {
-            // Verificar que UnirsePartida tenga el método
-            if (unirsePartida instanceof ModeloUnirsePartida.UnirsePartida) {
-                ModeloUnirsePartida.UnirsePartida unirse = (ModeloUnirsePartida.UnirsePartida) unirsePartida;
-                unirse.enviarVotoSolicitud(solicitud);
+            // Usar la fachada directamente que implementa IUnirsePartidaEnvio
+            unirsePartidaFachada.enviarVotoSolicitud(solicitud);
 
-                String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
-                System.out.println("✓ Respuesta " + estado + " enviada al solicitante");
-            }
+            String estado = solicitud.isSolicitudEstado() ? "ACEPTADA" : "RECHAZADA";
+            System.out.println("✓ Respuesta " + estado + " enviada al solicitante");
         } catch (Exception e) {
             System.err.println("ERROR al enviar respuesta al solicitante: " + e.getMessage());
             e.printStackTrace();
@@ -216,7 +212,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
         //envia eventos que ahora escucha el jugadr que se unioo
         if (solicitud.isSolicitudEstado()) {
-            unirsePartida.suscribirseASalaEspera();
+            unirsePartidaFachada.suscribirseASalaEspera();
         }
 
         // Notificar a los diálogos registrados para que actualicen su vista
@@ -231,7 +227,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
         this.solicitud = solicitud;
         this.solicitud.setSolicitudEstado(false);
         this.solicitud.setTipoRechazo("");
-        unirsePartida.enviarSolicitudSalaEspera(solicitud);
+        unirsePartidaFachada.enviarSolicitudSalaEspera(solicitud);
     }
 
     //revisar METODO PARA PROBAR CUANDO UNA PARTIDA ESTA EN CURSO Y RECHAZAR SOLICITUDES 
@@ -247,10 +243,10 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
             return;
         }
 
-        if (unirsePartida != null) {
+        if (unirsePartidaFachada != null) {
 
             try {
-                unirsePartida.setPartida(partida);
+                unirsePartidaFachada.setPartida(partida);
 
             } catch (Exception e) {
                 System.err.println("ERROR al conectar partida a UnirsePartida: " + e.getMessage());
@@ -263,7 +259,7 @@ public class ModeloArranque implements IModeloArranqueEscritura, IModeloArranque
 
     @Override
     public void buscarJugadorEnSalaEspera(JugadorSolicitanteDTO jugadorSolicitante) {
-        unirsePartida.SolicitarJugadorEnSala(jugadorSolicitante);
+        unirsePartidaFachada.SolicitarJugadorEnSala(jugadorSolicitante);
     }
 
 }

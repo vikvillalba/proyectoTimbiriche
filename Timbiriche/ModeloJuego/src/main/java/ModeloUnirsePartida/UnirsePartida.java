@@ -12,11 +12,7 @@ import ModeloUnirsePartida.Observadores.INotificadorConsenso;
 import ModeloUnirsePartida.Observadores.IPublicadorConsenso;
 import SolicitudEntity.SolicitudUnirse;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.itson.componenteemisor.IEmisor;
-import org.itson.componentereceptor.IReceptor;
-import org.itson.dto.PaqueteDTO;
 import ModeloUnirsePartida.Observadores.IPublicadorJugadorEncontrado;
 import ModeloUnirsePartida.Observadores.INotificadorJugadorEncontrado;
 
@@ -33,16 +29,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     private SolicitudUnirse solicitudActual;
     private Fachada.Partida partida; // Referencia a la partida real
 
-    //enviar solicitud al eventBus
-    private IEmisor emisorSolicitud;
-    private IReceptor receptorSolicitud;
-
     //enviar a MVC UnirsePartida cambio
     private List<INotificadorSolicitud> notificados = new ArrayList<>();
-
-    // Configuración de red para EventBus
-    private int puertoOrigen;
-    private int puertoDestino;
 
     INotificadorJugadorEncontrado notificadorJugadorEncontrado;// MODELO ARRANQUE
     INotificadorConsenso notificadorConsenso; //FRMALAESPERA
@@ -50,39 +38,8 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     public UnirsePartida() {
     }
 
-    public UnirsePartida(IEmisor emisorSolicitud) {
-        this.emisorSolicitud = emisorSolicitud;
-    }
-
     public void setSolicitudActual(SolicitudUnirse solicitudActual) {
         this.solicitudActual = solicitudActual;
-    }
-
-    public void setReceptorSolicitud(IReceptor receptorSolicitud) {
-        this.receptorSolicitud = receptorSolicitud;
-    }
-
-    public void setEmisorSolicitud(IEmisor emisorSolicitud) {
-        this.emisorSolicitud = emisorSolicitud;
-    }
-
-    /**
-     * Solicita al EventBus que envíe la información del host de la partida.
-     *
-     * @param jugador El jugador que solicita el host
-     */
-    @Override
-    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador) {
-        this.jugadorSolicitante = jugador;
-
-        PaqueteDTO paquete = new PaqueteDTO();
-        paquete.setContenido("SOLICITUD_JUGADOR_EN_SALA");
-        paquete.setTipoEvento("OBTENER_JUGADOR_SALA");
-        paquete.setHost(this.jugadorSolicitante.getIp());
-        paquete.setPuertoOrigen(this.jugadorSolicitante.getPuerto());
-        paquete.setPuertoDestino(puertoDestino);
-
-        emisorSolicitud.enviarCambio(paquete);
     }
 
     @Override
@@ -100,46 +57,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         this.solicitudActual = solicitud;
 
         return solicitud;
-    }
-
-    @Override
-    public void enviarSolicitudSalaEspera(SolicitudUnirse solicitud) {
-        // Enviar evento SOLICITAR_UNIRSE al EventBus
-        // Este evento será recibido por TODOS los jugadores en sala de espera
-        PaqueteDTO paquete = new PaqueteDTO(solicitud, "SOLICITAR_UNIRSE");
-
-        paquete.setHost(solicitud.getJugadorSolicitante().getIp());
-        paquete.setPuertoOrigen(this.puertoOrigen);
-        paquete.setPuertoDestino(this.puertoDestino);
-
-        System.out.println("[UnirsePartida] Enviando SOLICITAR_UNIRSE a todos los jugadores en sala");
-        emisorSolicitud.enviarCambio(paquete);
-    }
-
-    /**
-     * Envía un voto (aceptar/rechazar) para una solicitud al EventBus. Este método es llamado por cada jugador en sala de espera.
-     *
-     * @param solicitud La solicitud con el voto (aceptada/rechazada)
-     */
-    @Override
-    public void enviarVotoSolicitud(SolicitudUnirse solicitud) {
-        if (solicitud == null) {
-            throw new IllegalArgumentException("La solicitud no puede ser nula");
-        }
-
-        String estadoVoto = solicitud.isSolicitudEstado() ? "ACEPTADO" : "RECHAZADO";
-        System.out.println("[UnirsePartida] Enviando voto: " + estadoVoto);
-
-        // Enviar evento VOTAR_SOLICITUD al EventBus
-        PaqueteDTO paquete = new PaqueteDTO(solicitud, "VOTAR_SOLICITUD");
-
-        paquete.setHost(this.jugadorEnSala != null ? this.jugadorEnSala.getIp() : "localhost");
-        paquete.setPuertoOrigen(this.puertoOrigen);
-        paquete.setPuertoDestino(this.puertoDestino);
-
-        emisorSolicitud.enviarCambio(paquete);
-
-        System.out.println("[UnirsePartida] Voto enviado al EventBus");
     }
 
     /**
@@ -327,22 +244,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         }
     }
 
-    public void setPuertoOrigen(int puertoOrigen) {
-        this.puertoOrigen = puertoOrigen;
-    }
-
-    public void setPuertoDestino(int puertoDestino) {
-        this.puertoDestino = puertoDestino;
-    }
-
-    public int getPuertoOrigen() {
-        return puertoOrigen;
-    }
-
-    public int getPuertoDestino() {
-        return puertoDestino;
-    }
-
     public JugadorSolicitanteDTO getJugadorSolicitante() {
         return jugadorSolicitante;
     }
@@ -368,28 +269,6 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
         notificadorJugadorEncontrado.actualizarJugadorEncontrado(jugador);
     }
 
-    /**
-     * Suscribe a un jugador a los eventos de sala de espera. Debe llamarse cuando un jugador se une exitosamente a una partida. Esto permite que reciba solicitudes de nuevos jugadores y pueda votar.
-     */
-    @Override
-    public void suscribirseASalaEspera() {
-        List<String> eventosNuevos = Arrays.asList(
-                "EN_SALA_ESPERA",
-                "SOLICITAR_UNIRSE",
-                "CONSENSO_FINALIZADO"
-        );
-
-        PaqueteDTO registroEventBus = new PaqueteDTO(eventosNuevos, "INICIAR_CONEXION");
-        registroEventBus.setHost(this.jugadorSolicitante != null
-                ? this.jugadorSolicitante.getIp()
-                : "localhost");
-        registroEventBus.setPuertoOrigen(this.puertoOrigen);
-        registroEventBus.setPuertoDestino(this.puertoDestino);
-
-        System.out.println("[UnirsePartida] Suscribiéndose a eventos de sala de espera: " + eventosNuevos);
-        emisorSolicitud.enviarCambio(registroEventBus);
-    }
-
     @Override
     public void agregarNotificadorConsenso(INotificadorConsenso notificador) {
         notificadorConsenso = notificador;
@@ -399,6 +278,11 @@ public class UnirsePartida implements IUnirsePartida, IPublicadorSolicitud, IPub
     @Override
     public void notificarConsensoFinalizado(boolean aceptado, String tipoRechazo) {
         notificadorConsenso.actualizarConsensoFinalizado(aceptado, tipoRechazo);
+    }
+
+    @Override
+    public JugadorConfigDTO getJugadorEnSala() {
+        return jugadorEnSala;
     }
 
 }

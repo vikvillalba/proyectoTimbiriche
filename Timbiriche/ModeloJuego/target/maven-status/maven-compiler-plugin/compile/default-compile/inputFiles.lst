@@ -15,6 +15,10 @@ C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\Fachada\PartidaComunicacion.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\Fachada\PartidaFachada.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\Mapper\MapperJugadores.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Emisor\EmisorUnirsePartida.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Emisor\IUnirsePartidaEnvio.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Fachada\IUnirsePartidaFachada.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Fachada\UnirsePartidaFachada.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\IUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\MapperUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Observadores\INotificadorConsenso.java
@@ -23,7 +27,7 @@ C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Observadores\IPublicadorConsenso.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Observadores\IPublicadorJugadorEncontrado.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Observadores\IPublicadorSolicitud.java
-C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\ReceptorUnirsePartida.java
+C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\Receptor\ReceptorUnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\ModeloUnirsePartida\UnirsePartida.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\Observer\Observable.java
 C:\Users\Usuario\Documents\GitHub\proyectoTimbiriche\Timbiriche\ModeloJuego\src\main\java\Observer\ObservableEventos.java

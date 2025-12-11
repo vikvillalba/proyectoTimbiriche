@@ -8,7 +8,10 @@ import Entidades.TipoEvento;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
 import MVCConfiguracion.vista.FrmSalaEspera;
-import ModeloUnirsePartida.ReceptorUnirsePartida;
+import ModeloUnirsePartida.Emisor.EmisorUnirsePartida;
+import ModeloUnirsePartida.Fachada.IUnirsePartidaFachada;
+import ModeloUnirsePartida.Fachada.UnirsePartidaFachada;
+import ModeloUnirsePartida.Receptor.ReceptorUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
@@ -50,9 +53,6 @@ public class IniciarJugadorSalaEspera {
         System.out.println("Puerto Servidor: " + PUERTO_SERVIDOR);
         System.out.println("Puerto Turnos: " + PUERTO_TURNOS);
 
-        // ═══════════════════════════════════════════════════════════════
-        // 2. CONFIGURAR EMISOR (enviar mensajes al EventBus)
-        // ═══════════════════════════════════════════════════════════════
         ColaEnvios colaEnvios = new ColaEnvios();
         IEmisor emisor = new Emisor(colaEnvios);
 
@@ -71,26 +71,35 @@ public class IniciarJugadorSalaEspera {
         System.out.println("Servidor TCP configurado en puerto " + PUERTO_JUGADOR);
 
         UnirsePartida unirsePartida = new UnirsePartida();
-        unirsePartida.setPuertoOrigen(PUERTO_JUGADOR);
-        unirsePartida.setPuertoDestino(PUERTO_EVENTBUS);
-        unirsePartida.setEmisorSolicitud(emisor);
 
-        System.out.println("UnirsePartida creado");
+        // Inicializar EmisorUnirsePartida Singleton
+        EmisorUnirsePartida.inicializar(emisor, PUERTO_JUGADOR, PUERTO_EVENTBUS, unirsePartida);
 
+        System.out.println("[✓] UnirsePartida creado");
+        System.out.println("[✓] EmisorUnirsePartida inicializado");
+
+        // Crear receptor que maneja los paquetes entrantes
         IReceptor receptorJugador = new ReceptorUnirsePartida(unirsePartida);
-        unirsePartida.setReceptorSolicitud(receptorJugador);
 
-        System.out.println("ReceptorUnirsePartida configurado");
+        System.out.println("[✓] ReceptorUnirsePartida configurado");
 
+        // Conectar receptor genérico con la cola de recibos
         Receptor receptor = new Receptor();
         receptor.setCola(colaRecibos);
         receptor.setReceptor(receptorJugador);
         colaRecibos.agregarObservador(receptor);
 
-        System.out.println("Receptor genérico conectado");
+        // Crear la fachada que combina emisor y lógica de negocio
+        IUnirsePartidaFachada unirsePartidaFachada = UnirsePartidaFachada.getInstancia(
+                EmisorUnirsePartida.getInstancia(),
+                unirsePartida
+        );
 
-        //CREAR MODELO Y CONTROLADOR
-        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartida);
+        System.out.println("[✓] UnirsePartidaFachada creada");
+        System.out.println("[✓] Receptor genérico conectado");
+
+        // Crear ModeloArranque con la fachada
+        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartidaFachada);
         ControladorArranque controladorArranque = new ControladorArranque(null, null, modeloArranque);
 
         System.out.println("Modelo y Controlador creados");
@@ -122,7 +131,6 @@ public class IniciarJugadorSalaEspera {
         System.out.println("Enviando registro al EventBus: " + eventos);
         emisor.enviarCambio(registroEventBus);
 
-        // 8. INICIAR SERVIDOR TCP EN HILO SEPARADO
         new Thread(() -> {
             System.out.println("[→] Servidor TCP iniciando...");
             servidorTCP.iniciar();
@@ -130,7 +138,6 @@ public class IniciarJugadorSalaEspera {
 
         System.out.println("[✓] Servidor TCP iniciado correctamente\n");
 
-        // 9. CREAR INTERFAZ GRÁFICA - SALA DE ESPERA
         java.awt.Image avatarImage = cargarAvatar(jugadorDTO.getAvatar());
         java.awt.Color colorAWT = obtenerColor(jugadorDTO.getColor());
 

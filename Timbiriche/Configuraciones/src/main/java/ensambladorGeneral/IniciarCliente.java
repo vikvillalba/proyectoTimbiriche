@@ -6,7 +6,10 @@ import Emisor.Emisor;
 import Entidades.TipoEvento;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
-import ModeloUnirsePartida.ReceptorUnirsePartida;
+import ModeloUnirsePartida.Emisor.EmisorUnirsePartida;
+import ModeloUnirsePartida.Fachada.IUnirsePartidaFachada;
+import ModeloUnirsePartida.Fachada.UnirsePartidaFachada;
+import ModeloUnirsePartida.Receptor.ReceptorUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
@@ -48,26 +51,35 @@ public class IniciarCliente {
         System.out.println("Servidor TCP configurado en puerto " + PUERTO_CLIENTE);
 
         UnirsePartida unirsePartida = new UnirsePartida();
-        unirsePartida.setPuertoOrigen(PUERTO_CLIENTE);
-        unirsePartida.setPuertoDestino(PUERTO_EVENTBUS);
-        unirsePartida.setEmisorSolicitud(emisor);
+
+        // Inicializar EmisorUnirsePartida Singleton
+        EmisorUnirsePartida.inicializar(emisor, PUERTO_CLIENTE, PUERTO_EVENTBUS, unirsePartida);
 
         System.out.println("[✓] UnirsePartida creado");
+        System.out.println("[✓] EmisorUnirsePartida inicializado");
 
+        // Crear receptor que maneja los paquetes entrantes
         IReceptor receptorCliente = new ReceptorUnirsePartida(unirsePartida);
-        unirsePartida.setReceptorSolicitud(receptorCliente);
 
-        System.out.println("[✓] ReceptorSolicitudCliente configurado");
+        System.out.println("[✓] ReceptorUnirsePartida configurado");
 
+        // Conectar receptor genérico con la cola de recibos
         Receptor receptor = new Receptor();
         receptor.setCola(colaRecibos);
-        receptor.setReceptor(receptorCliente); // Cuando llegue un paquete, se envía a ReceptorSolicitudCliente
+        receptor.setReceptor(receptorCliente);
         colaRecibos.agregarObservador(receptor);
 
+        // Crear la fachada que combina emisor y lógica de negocio
+        IUnirsePartidaFachada unirsePartidaFachada = UnirsePartidaFachada.getInstancia(
+                EmisorUnirsePartida.getInstancia(),
+                unirsePartida
+        );
+
+        System.out.println("[✓] UnirsePartidaFachada creada");
         System.out.println("[✓] Receptor genérico conectado");
 
-        // Crear ModeloArranque
-        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartida);
+        // Crear ModeloArranque con la fachada
+        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartidaFachada);
 
         // Crear ControladorArranque
         ControladorArranque controladorArranque = new ControladorArranque(null, null, modeloArranque);

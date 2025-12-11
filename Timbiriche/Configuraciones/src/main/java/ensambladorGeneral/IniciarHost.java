@@ -8,7 +8,10 @@ import Entidades.TipoEvento;
 import MVCConfiguracion.controlador.ControladorArranque;
 import MVCConfiguracion.modelo.ModeloArranque;
 import MVCConfiguracion.vista.FrmSalaEspera;
-import ModeloUnirsePartida.ReceptorUnirsePartida;
+import ModeloUnirsePartida.Emisor.EmisorUnirsePartida;
+import ModeloUnirsePartida.Fachada.IUnirsePartidaFachada;
+import ModeloUnirsePartida.Fachada.UnirsePartidaFachada;
+import ModeloUnirsePartida.Receptor.ReceptorUnirsePartida;
 import ModeloUnirsePartida.UnirsePartida;
 import Receptor.ColaRecibos;
 import Receptor.Receptor;
@@ -51,28 +54,35 @@ public class IniciarHost {
 
         System.out.println("Servidor TCP configurado en puerto " + PUERTO_HOST);
 
-        // ═══════════════════════════════════════════════════════════════
-        // 3. CREAR UnirsePartida (lógica de negocio)
-        // ═══════════════════════════════════════════════════════════════
         UnirsePartida unirsePartida = new UnirsePartida();
-        unirsePartida.setPuertoOrigen(PUERTO_HOST);
-        unirsePartida.setPuertoDestino(PUERTO_EVENTBUS);
-        unirsePartida.setEmisorSolicitud(emisor);
 
-        System.out.println("UnirsePartida creado");
+        // Inicializar EmisorUnirsePartida Singleton
+        EmisorUnirsePartida.inicializar(emisor, PUERTO_HOST, PUERTO_EVENTBUS, unirsePartida);
 
+        System.out.println("[✓] UnirsePartida creado");
+        System.out.println("[✓] EmisorUnirsePartida inicializado");
+
+        // Crear receptor que maneja los paquetes entrantes
         IReceptor receptorHost = new ReceptorUnirsePartida(unirsePartida);
-        unirsePartida.setReceptorSolicitud(receptorHost);
 
-        System.out.println("ReceptorSolicitudHost configurado");
+        System.out.println("[✓] ReceptorUnirsePartida configurado");
 
+        // Conectar receptor genérico con la cola de recibos
         Receptor receptor = new Receptor();
         receptor.setCola(colaRecibos);
-        receptor.setReceptor(receptorHost); // Cuando llegue un paquete, se envía a ReceptorSolicitudHost
+        receptor.setReceptor(receptorHost);
         colaRecibos.agregarObservador(receptor);
 
-        // Crear ModeloArranque (necesita ConfiguracionesFachada null por ahora)
-        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartida);
+        // Crear la fachada que combina emisor y lógica de negocio
+        IUnirsePartidaFachada unirsePartidaFachada = UnirsePartidaFachada.getInstancia(
+                EmisorUnirsePartida.getInstancia(),
+                unirsePartida
+        );
+
+        System.out.println("[✓] UnirsePartidaFachada creada");
+
+        // Crear ModeloArranque con la fachada
+        ModeloArranque modeloArranque = new ModeloArranque(null, unirsePartidaFachada);
 
         // Crear ControladorArranque
         ControladorArranque controladorArranque = new ControladorArranque(null, null, modeloArranque);

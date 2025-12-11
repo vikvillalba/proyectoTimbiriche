@@ -4,6 +4,7 @@
  */
 package ModeloUnirsePartida;
 
+import DTO.JugadorConfigDTO;
 import DTO.JugadorSolicitanteDTO;
 import Fachada.Partida;
 import SolicitudEntity.SolicitudUnirse;
@@ -22,20 +23,12 @@ public interface IUnirsePartida {
     //obtener solicitud
     public SolicitudUnirse getSolicitudActual();
 
-    //envia la solicitud por el Iemisor
-    public void enviarSolicitudSalaEspera(SolicitudUnirse solicitud);
-
-    //respuesta de un jugador en la sala de espera true o false
-    public void enviarVotoSolicitud(SolicitudUnirse solicitud);
-
-    //metodo de enviar una peticion al eventBus para validar si hay un jugador en sala espera y confirmando trayendo su datos 
-    public void SolicitarJugadorEnSala(JugadorSolicitanteDTO jugador);
-
     public void setJugadorSolicitante(JugadorSolicitanteDTO jugadorSolicitante);
 
-    public void setPartida(Partida partida);
+    public JugadorSolicitanteDTO getJugadorSolicitante();
 
-    //cuando un jugador se una a la sala espera podra votar para futuras solicitudes
-    public void suscribirseASalaEspera();
+    public JugadorConfigDTO getJugadorEnSala();
+
+    public void setPartida(Partida partida);
 
 }
